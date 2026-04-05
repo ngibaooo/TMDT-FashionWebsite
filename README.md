@@ -1,20 +1,27 @@
 # 🛍️ TMDT Fashion Website
 
 ## 📌 Giới thiệu
-1. Tổng quan:
-2. Người dùng có thể:
-* Xem sản phẩm
-* Tìm kiếm, lọc sản phẩm
-* Thêm vào giỏ hàng
+### 🌐 Tổng quan
+Website Thương mại điện tử Thời trang là nền tảng bán hàng trực tuyến, cho phép người dùng tìm kiếm, lựa chọn và mua sắm các sản phẩm thời trang một cách nhanh chóng và tiện lợi thông qua Internet. Hệ thống được xây dựng nhằm mô phỏng một website bán hàng thực tế với đầy đủ các chức năng cơ bản.
+
+### 👤 Đối với người dùng (Customer)
+Người dùng có thể:
+* Xem danh sách sản phẩm
+* Tìm kiếm và lọc sản phẩm theo nhu cầu
+* Xem chi tiết sản phẩm
+* Thêm sản phẩm vào giỏ hàng
 * Đặt hàng và thanh toán
-* ...
+* Quản lý tài khoản và theo dõi đơn hàng
+* Đánh giá sản phẩm sau khi mua
 
-3. Admin có thể:
-* Quản lý sản phẩm, danh mục
+### 🛠️ Đối với quản trị viên (Admin)
+Admin có thể:
+* Quản lý sản phẩm (thêm, sửa, xóa)
+* Quản lý danh mục sản phẩm
 * Quản lý đơn hàng
-* Xem báo cáo
-* ...
-
+* Quản lý người dùng
+* Quản lý khuyến mãi
+* Xem báo cáo và thống kê hệ thống
 ---
 
 ## 🛠️ Công nghệ sử dụng
