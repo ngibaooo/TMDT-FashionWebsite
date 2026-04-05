@@ -1,18 +1,15 @@
-# TMDT-FashionWebsite
 # 🛍️ TMDT Fashion Website
 
 ## 📌 Giới thiệu
-
-Website thương mại điện tử bán thời trang, cho phép người dùng:
-
+1. Tổng quan:
+2. Người dùng có thể:
 * Xem sản phẩm
 * Tìm kiếm, lọc sản phẩm
 * Thêm vào giỏ hàng
 * Đặt hàng và thanh toán
 * ...
 
-Admin có thể:
-
+3. Admin có thể:
 * Quản lý sản phẩm, danh mục
 * Quản lý đơn hàng
 * Xem báo cáo
