@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>THE MONOLITH | TRANG CHỦ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { primary: "#000000", surface: "#f9f9f9" },
+                    fontFamily: { headline: ["Space Grotesk"], body: ["Inter"], label: ["Inter"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .headline {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .slider-container {
+            position: relative;
+            height: 921px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 0;
+        }
+
+            .slide.active {
+                opacity: 1;
+                z-index: 10;
+            }
+
+        .dot {
+            cursor: pointer;
+            height: 8px;
+            width: 8px;
+            margin: 0 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+            .dot.active {
+                background-color: #ffffff;
+                width: 24px;
+                border-radius: 4px;
+            }
+    </style>
+</head>
+<body class="bg-surface text-black">
+    <div class="bg-black text-white py-2 px-4 text-center">
+        <p class="text-[0.6875rem] font-bold tracking-[0.1em] font-label uppercase">MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG</p>
+    </div>
+
+    <header class="bg-[#f9f9f9] opacity-80 backdrop-blur-md sticky top-0 z-50 border-b border-black/10">
+        <div class="flex justify-between items-center w-full px-8 py-6 max-w-[1920px] mx-auto">
+            <div class="flex-1 hidden md:flex"></div>
+            <div class="flex-1 flex justify-center">
+                <a class="text-4xl font-black text-black tracking-tighter font-headline" href="/">THE MONOLITH</a>
+            </div>
+            <div class="flex-1 flex justify-end gap-6 items-center">
+                <button class="hover:bg-black hover:text-white transition-all duration-200 p-1"><span class="material-symbols-outlined">search</span></button>
+                <button class="hover:bg-black hover:text-white transition-all duration-200 p-1"><span class="material-symbols-outlined">person</span></button>
+                <button class="hover:bg-black hover:text-white transition-all duration-200 p-1"><span class="material-symbols-outlined">shopping_bag</span></button>
+            </div>
+        </div>
+        <nav class="overflow-x-auto border-t border-black/10">
+            <ul class="flex justify-center items-center gap-8 py-4 whitespace-nowrap px-8">
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-black border-b-2 border-black pb-1" href="#">NEW ARRIVALS</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-[#5e5e5e] hover:text-black" href="#">TOPS</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-[#5e5e5e] hover:text-black" href="#">BOTTOMS</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-[#5e5e5e] hover:text-black" href="#">SALE</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="slider-container bg-black" id="hero-slider">
+            <div class="slide active">
+                <img alt="Hero Collection 1" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida/ADBb0ui_aTSSKacRtd_pIy7q99-T5H3EvK--DA8KSn7XPWLnMyu3s-oG7IY1ahoWsGfZeWJWf6Rt3IIwFlfPVH6TIF3UflIFh6LqR6rJA7V-d0ITzaClYR6QM7IQ_WdHqBeJAlWoo8zBjFTQTIMh1629QppPv817o0ax7D5i5FnIcloPnM11p4pSYurIdfqLREK-JRtI6itaQlLP-CNNUBATVb4MHRaUTVXssGlnPKfh-y0pxNhN0K2ddEZCkgUjqBs-xcJCVMR0IkbmWdI">
+            </div>
+            <div class="slide">
+                <img alt="Hero Collection 2" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida/ADBb0ugpijSl_a5mzA2qMht64enUWWjx-eCWfs_86oc5iZ4rRs0aYdt_B3NrVeu7qZGY8wETnFj5k3UlTJBV0Ig6j3LDn2lImGP06NDEt1_I-dDPmDqQzkUwSLkgQQ7jbH33c_PJW7kCn5jhHc8z0XUvj3VXwq8z2PXOxrJnan-CJNunzJGx_cMtL2AScVJvBpkAo3ATQVr907ek3k_px_3w1HfwKjLZtVGe2CcmDpqhEdc0aPj95CziIZ5mmIM2xuB6vPcHgmrYxebRZ1A">
+            </div>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-black text-white pt-24 pb-12 px-8 text-center text-xs tracking-widest uppercase">
+        <p>© 2026 THE MONOLITH EDITORIAL. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlideIndex = index;
+        }
+        function nextSlide() { showSlide((currentSlideIndex + 1) % slides.length); }
+        let slideInterval = setInterval(nextSlide, 5000);
+        function currentSlide(index) {
+            showSlide(index);
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+    </script>
+</body>
+</html>

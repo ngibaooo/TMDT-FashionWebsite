@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>THE MONOLITH | DASHBOARD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = { theme: { extend: { colors: { primary: "#000000", surface: "#f9f9f9" }, fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] } } } }
+    </script>
+</head>
+<body class="bg-surface text-black flex">
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col py-8 z-50">
+        <div class="px-8 mb-12">
+            <h1 class="text-2xl font-black tracking-tighter uppercase font-headline">THE MONOLITH</h1>
+            <p class="text-[10px] tracking-[0.2em] font-headline uppercase text-gray-500 mt-1">EDITORIAL ADMIN</p>
+        </div>
+        <nav class="flex-1 space-y-1">
+            <a class="flex items-center px-8 py-3 text-black font-bold border-l-4 border-black font-headline uppercase tracking-tight text-sm bg-gray-100" href="#"><span class="material-symbols-outlined mr-4">dashboard</span>DASHBOARD</a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100" href="product_management.html"><span class="material-symbols-outlined mr-4">inventory_2</span>PRODUCTS</a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100" href="order_management.html"><span class="material-symbols-outlined mr-4">shopping_cart</span>ORDERS</a>
+        </nav>
+    </aside>
+
+    <main class="ml-64 w-full pt-16 px-12 pb-12 min-h-screen">
+        <header class="mb-12">
+            <h3 class="text-4xl font-black uppercase tracking-tighter mb-2 font-headline">EDITORIAL_OVERVIEW</h3>
+            <p class="text-gray-500 font-body text-sm tracking-wide">METRICS RECAP // DATA REFRESH: REALTIME</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">NET_REVENUE</p>
+                    <span class="text-[10px] font-bold text-green-600">+12.4%</span>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">$142,805.00</h4></div>
+            </div>
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">TOTAL_ORDERS</p>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">1,204</h4></div>
+            </div>
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">ACTIVE_SKUS</p>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">84</h4></div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
