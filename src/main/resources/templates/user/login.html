@@ -1,57 +1,83 @@
 ﻿<!DOCTYPE html>
-<html class="light" lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" class="dark">
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>EAZY VIBES | ĐĂNG NHẬP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script id="tailwind-config">
         tailwind.config = {
-            theme: { extend: { colors: { primary: "#000000", surface: "#f9f9f9" }, fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] } } }
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { primary: "#ffffff", surface: "#000000" },
+                    fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] }
+                }
+            }
         }
     </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+    </style>
 </head>
-<body class="bg-surface font-body text-black antialiased overflow-x-hidden">
-    <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-black/10">
-        <div class="flex justify-between items-center px-8 py-6 w-full max-w-screen-2xl mx-auto">
-            <div class="text-2xl font-black tracking-tighter uppercase font-headline">EAZY VIBES</div>
-            <a class="font-headline tracking-tighter uppercase font-bold text-gray-500 hover:text-black transition-opacity" href="index.html">QUAY LẠI CỬA HÀNG</a>
+<body class="dark bg-surface text-primary overflow-x-hidden">
+
+    <header class="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-zinc-800">
+        <div class="flex-1"></div>
+        <div class="flex-1 flex justify-center">
+            <a th:href="@{/}" class="text-3xl md:text-5xl font-extrabold text-white tracking-tighter font-headline uppercase">EAZY VIBES</a>
+        </div>
+        <div class="flex-1 flex justify-end">
+            <a th:href="@{/}" class="text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white transition-all font-headline">QUAY LẠI CỬA HÀNG</a>
         </div>
     </header>
 
-    <main class="min-h-screen flex flex-col md:flex-row pt-[80px]">
-        <div class="hidden md:flex md:w-1/2 lg:w-3/5 bg-gray-200 relative overflow-hidden h-[calc(100vh-80px)]">
-            <img class="absolute inset-0 w-full h-full object-cover grayscale contrast-125 brightness-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-zq1hQDfeEB-BnYrpgzfItbjWd9GeN0tq1WRFxwZtiyZWVDAWpPbnuS-WWGJHSRgsOj5i8v9p6bbsdORtj8rCXeVjAGkDBtIKOdITAeV-zlV_OwbzFbpw9yJ6n4gUFzStrfFqiCKx3NcPwte7XMAiVpopcl_VKASnwLft5W0jCCzakzdDTDdEEherz7AXR1jRajgc02Y0U1GTOZVVSbKGNlSm4sa_XvVTeL30Fx6jU9UyFL2ssiw7UkWov1ZdttgJrvebvtiVVjD8" />
-            <div class="absolute bottom-16 left-16 z-10">
-                <h1 class="font-headline text-[8rem] leading-[0.8] font-black tracking-tighter text-white mix-blend-difference">CỔNG<br />ĐĂNG NHẬP</h1>
+    <main class="flex min-h-screen pt-20">
+        <div class="hidden lg:block w-1/2 relative overflow-hidden bg-black border-r border-zinc-800">
+            <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop" 
+                 class="w-full h-full object-cover opacity-50" alt="Login Background"/>
+            <div class="absolute inset-0 flex items-center justify-center p-20">
+                <h2 class="text-[10rem] font-black text-white leading-[0.8] tracking-tighter font-headline uppercase select-none opacity-20">
+                    CỔNG<br/>ĐĂNG<br/>NHẬP.
+                </h2>
             </div>
         </div>
 
-        <div class="w-full md:w-1/2 lg:w-2/5 flex flex-col justify-center px-8 md:px-16 py-20 bg-surface">
+        <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-24 py-12">
             <div class="max-w-md w-full mx-auto">
-                <div class="mb-12">
-                    <span class="text-[10px] tracking-[0.3em] uppercase text-gray-500 mb-4 block">XÁC THỰC TÀI KHOẢN</span>
-                    <h2 class="font-headline text-4xl font-black tracking-tighter uppercase text-black">ĐĂNG NHẬP</h2>
-                </div>
-                <form class="space-y-10">
-                    <div class="relative">
-                        <input class="block w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:ring-0 focus:border-black peer text-sm" id="email" placeholder="ĐỊA CHỈ EMAIL" required type="email" />
+                <p class="text-[10px] font-bold tracking-[0.3em] text-zinc-500 uppercase mb-4">XÁC THỰC TÀI KHOẢN</p>
+                <h1 class="text-5xl font-black font-headline tracking-tighter uppercase mb-12 text-white">ĐĂNG NHẬP</h1>
+
+                <form action="#" class="space-y-8">
+                    <div class="relative group">
+                        <input type="email" id="email" 
+                               class="w-full border-b border-zinc-800 bg-transparent py-4 focus:outline-none focus:border-white transition-colors uppercase text-xs tracking-widest text-white placeholder:text-zinc-600"
+                               placeholder="ĐỊA CHỈ EMAIL"/>
                     </div>
-                    <div class="relative">
-                        <input class="block w-full px-0 py-3 bg-transparent border-0 border-b border-gray-300 focus:ring-0 focus:border-black peer text-sm" id="password" placeholder="MẬT KHẨU" required type="password" />
-                        <a class="absolute right-0 top-3 text-[9px] tracking-wider uppercase text-gray-400 hover:text-black" href="#">QUÊN MẬT KHẨU?</a>
+
+                    <div class="relative group">
+                        <input type="password" id="password" 
+                               class="w-full border-b border-zinc-800 bg-transparent py-4 focus:outline-none focus:border-white transition-colors uppercase text-xs tracking-widest text-white placeholder:text-zinc-600"
+                               placeholder="MẬT KHẨU"/>
+                        <button type="button" class="absolute right-0 top-1/2 -translate-y-1/2 text-[10px] font-bold text-zinc-500 hover:text-white uppercase tracking-tighter">QUÊN?</button>
                     </div>
-                    <div class="pt-4">
-                        <button class="w-full bg-black text-white font-headline font-black py-5 px-8 text-sm tracking-[0.2em] uppercase hover:bg-gray-800 transition-all duration-300 active:scale-95" type="submit">ĐĂNG NHẬP</button>
-                    </div>
+
+                    <button type="submit" class="w-full bg-white text-black py-6 font-bold text-sm tracking-[0.2em] uppercase hover:bg-zinc-200 transition-all mt-12">
+                        ĐĂNG NHẬP
+                    </button>
                 </form>
-                <div class="mt-16 pt-8 border-t border-gray-200">
-                    <p class="text-[10px] tracking-widest uppercase text-gray-500 mb-4">BẠN CHƯA CÓ TÀI KHOẢN?</p>
-                    <a class="font-headline font-bold text-lg tracking-tighter uppercase text-black hover:underline" href="register.html">TẠO TÀI KHOẢN MỚI →</a>
+
+                <div class="mt-20 pt-8 border-t border-zinc-800">
+                    <p class="text-[10px] font-bold text-zinc-500 tracking-widest uppercase mb-4">BẠN CHƯA CÓ TÀI KHOẢN?</p>
+                    <a th:href="@{/register}" class="text-lg font-black font-headline uppercase tracking-tighter text-white hover:opacity-50 transition-all flex items-center gap-2">
+                        TẠO TÀI KHOẢN MỚI <span class="text-2xl">→</span>
+                    </a>
                 </div>
             </div>
         </div>
     </main>
+
 </body>
 </html>
