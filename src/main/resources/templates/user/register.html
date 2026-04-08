@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>EAZY VIBES | ĐĂNG KÝ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = { theme: { extend: { colors: { primary: "#000000", surface: "#f9f9f9", secondary: "#5e5e5e" }, fontFamily: { headline: ["Space Grotesk"], body: ["Inter"], label: ["Inter"] } } } }
+    </script>
+    <style>
+        input:focus { outline: none !important; box-shadow: none !important; }
+    </style>
+</head>
+<body class="bg-surface text-black font-body antialiased selection:bg-black selection:text-white">
+    <header class="fixed top-0 w-full z-50 bg-stone-100/80 backdrop-blur-xl">
+        <div class="flex justify-between items-center px-8 py-6 w-full max-w-screen-2xl mx-auto">
+            <div class="text-2xl font-black tracking-tighter uppercase font-headline">EAZY VIBES</div>
+            <a class="font-headline tracking-tighter uppercase font-bold hover:opacity-70 transition-opacity" href="index.html">QUAY LẠI CỬA HÀNG</a>
+        </div>
+    </header>
+
+    <main class="min-h-screen flex flex-col md:flex-row pt-[80px]">
+        <section class="hidden md:flex md:w-1/2 bg-black sticky top-0 overflow-hidden items-center justify-center p-12 h-[calc(100vh-80px)]">
+            <img class="absolute inset-0 w-full h-full object-cover grayscale opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5RkTbymHG7okJdKDsXKkbMRxqQdbK6BXQatcaUo0U-VWLq2L8oq7MFyKNamtKJ8YqYDlALSOz6SDNSeLGx7xH59iArHepELM0hV4rO_yZ30UtdIAMxuiRot3BIn0BlN9qiqBJP48ewt2i2b16yLtoHplNEyhMhdpn8mxf05C-97xCboE4euqfS47Z9EMI4BhIixHY-MuLYjWV9PtwMzeoFFeUFuYETpA6SpcZBV8dYqYXtQKcNNcrbyLw9mCNrYdNKWTus3Y5uET-" alt="Eazy Vibes Banner">
+            <div class="relative z-10 text-white max-w-xl">
+                <h1 class="font-headline text-6xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.9] mb-8">PHONG CÁCH<br>ĐỘC BẢN.</h1>
+            </div>
+        </section>
+
+        <section class="w-full md:w-1/2 flex items-center justify-center p-8 md:p-24 pt-32 md:pt-24 bg-surface">
+            <div class="w-full max-w-md">
+                <div class="mb-12">
+                    <h2 class="font-headline text-4xl font-bold tracking-tighter uppercase mb-2">ĐĂNG KÝ TÀI KHOẢN</h2>
+                    <p class="text-secondary text-sm tracking-tight">Tạo tài khoản để bắt đầu sự trải nghiệm</p>
+                </div>
+                
+                <form class="space-y-10">
+                    <div class="relative group">
+                        <label class="block font-label text-[10px] tracking-[0.2em] uppercase text-black mb-2 opacity-60 group-focus-within:opacity-100 transition-all">HỌ VÀ TÊN</label>
+                        <input class="w-full bg-transparent border-0 border-b border-gray-300 focus:border-black px-0 py-2 placeholder:text-gray-300 transition-all" placeholder="NHẬP HỌ VÀ TÊN CỦA BẠN" type="text" required>
+                    </div>
+                    
+                    <div class="relative group">
+                        <label class="block font-label text-[10px] tracking-[0.2em] uppercase text-black mb-2 opacity-60 group-focus-within:opacity-100 transition-all">ĐỊA CHỈ EMAIL</label>
+                        <input class="w-full bg-transparent border-0 border-b border-gray-300 focus:border-black px-0 py-2 placeholder:text-gray-300 transition-all" placeholder="EMAIL@CUABAN.COM" type="email" required>
+                    </div>
+                    
+                    <div class="relative group">
+                        <label class="block font-label text-[10px] tracking-[0.2em] uppercase text-black mb-2 opacity-60 group-focus-within:opacity-100 transition-all">MẬT KHẨU</label>
+                        <input class="w-full bg-transparent border-0 border-b border-gray-300 focus:border-black px-0 py-2 placeholder:text-gray-300 transition-all" placeholder="••••••••••••" type="password" required>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3 pb-4">
+                        <input class="w-4 h-4 text-black border-gray-300 focus:ring-0" id="terms" type="checkbox" required>
+                        <label class="text-[10px] tracking-widest uppercase text-gray-500" for="terms">Tôi đồng ý với các điều khoản và quy định</label>
+                    </div>
+                    
+                    <div class="space-y-6 pt-4">
+                        <button class="w-full py-5 bg-black text-white font-headline font-bold tracking-[0.3em] uppercase hover:bg-gray-800 transition-all active:scale-[0.98]" type="submit">TẠO TÀI KHOẢN</button>
+                        <div class="flex flex-col items-center">
+                            <a class="text-[10px] font-label tracking-[0.2em] uppercase text-gray-500 hover:text-black transition-colors" href="login.html">BẠN ĐÃ CÓ TÀI KHOẢN? ĐĂNG NHẬP</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

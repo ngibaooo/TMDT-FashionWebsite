@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>THE MONOLITH | TRANG CHỦ</title>
+    <title>EAZY VIBES | TRANG CHỦ</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -12,32 +12,25 @@
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: { primary: "#000000", surface: "#f9f9f9" },
+                    colors: { primary: "#000000", surface: "#f9f9f9", secondary: "#5e5e5e" },
                     fontFamily: { headline: ["Space Grotesk"], body: ["Inter"], label: ["Inter"] }
                 }
             }
         }
     </script>
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-        }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Space Grotesk', sans-serif; }
 
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        h1, h2, h3, .headline {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
+        /* Slider Tỉ lệ 16:9 chuẩn Desktop */
         .slider-container {
             position: relative;
-            height: 921px;
             width: 100%;
             overflow: hidden;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
         }
-
         .slide {
             position: absolute;
             inset: 0;
@@ -45,12 +38,7 @@
             transition: opacity 1s ease-in-out;
             z-index: 0;
         }
-
-            .slide.active {
-                opacity: 1;
-                z-index: 10;
-            }
-
+        .slide.active { opacity: 1; z-index: 10; }
         .dot {
             cursor: pointer;
             height: 8px;
@@ -59,75 +47,188 @@
             background-color: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             display: inline-block;
-            transition: background-color 0.6s ease;
+            transition: all 0.4s ease;
         }
-
-            .dot.active {
-                background-color: #ffffff;
-                width: 24px;
-                border-radius: 4px;
-            }
+        .dot.active { background-color: #ffffff; width: 24px; border-radius: 4px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-surface text-black">
+<body class="bg-surface text-black antialiased">
     <div class="bg-black text-white py-2 px-4 text-center">
-        <p class="text-[0.6875rem] font-bold tracking-[0.1em] font-label uppercase">MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG</p>
+        <p class="text-[10px] md:text-[0.6875rem] font-bold tracking-[0.2em] font-label uppercase">MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG</p>
     </div>
 
-    <header class="bg-[#f9f9f9] opacity-80 backdrop-blur-md sticky top-0 z-50 border-b border-black/10">
+    <header class="bg-[#f9f9f9]/90 backdrop-blur-md sticky top-0 z-50 border-b border-black/5">
         <div class="flex justify-between items-center w-full px-8 py-6 max-w-[1920px] mx-auto">
             <div class="flex-1 hidden md:flex"></div>
             <div class="flex-1 flex justify-center">
-                <a class="text-4xl font-black text-black tracking-tighter font-headline" href="/">THE MONOLITH</a>
+                <a class="text-3xl md:text-4xl font-black text-black tracking-tighter font-headline uppercase" href="index.html">EAZY VIBES</a>
             </div>
             <div class="flex-1 flex justify-end gap-6 items-center">
-                <button class="hover:bg-black hover:text-white transition-all duration-200 p-1"><span class="material-symbols-outlined">search</span></button>
-                <button class="hover:bg-black hover:text-white transition-all duration-200 p-1"><span class="material-symbols-outlined">person</span></button>
-                <button class="hover:bg-black hover:text-white transition-all duration-200 p-1"><span class="material-symbols-outlined">shopping_bag</span></button>
+                <button class="hover:opacity-50 transition-all"><span class="material-symbols-outlined">search</span></button>
+                <a href="login.html" class="hover:opacity-50 transition-all"><span class="material-symbols-outlined">person</span></a>
+                <a href="checkout.html" class="hover:opacity-50 transition-all"><span class="material-symbols-outlined">shopping_bag</span></a>
             </div>
         </div>
-        <nav class="overflow-x-auto border-t border-black/10">
+        <nav class="overflow-x-auto no-scrollbar border-t border-black/5 bg-white">
             <ul class="flex justify-center items-center gap-8 py-4 whitespace-nowrap px-8">
-                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-black border-b-2 border-black pb-1" href="#">NEW ARRIVALS</a></li>
-                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-[#5e5e5e] hover:text-black" href="#">TOPS</a></li>
-                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-[#5e5e5e] hover:text-black" href="#">BOTTOMS</a></li>
-                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-[#5e5e5e] hover:text-black" href="#">SALE</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-black border-b-2 border-black pb-1" href="#">SẢN PHẨM MỚI</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-secondary hover:text-black transition-colors" href="product_list.html">VINTAGE</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-secondary hover:text-black transition-colors" href="product_list.html">STREETWEAR</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-secondary hover:text-black transition-colors" href="product_list.html">POLO</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-secondary hover:text-black transition-colors" href="product_list.html">ÁO KHOÁC</a></li>
+                <li><a class="font-headline font-bold text-[0.75rem] tracking-wider uppercase text-red-600 hover:text-red-800 transition-colors" href="sale.html">KHUYẾN MÃI</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="slider-container bg-black" id="hero-slider">
+        <section class="slider-container" id="hero-slider">
             <div class="slide active">
-                <img alt="Hero Collection 1" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida/ADBb0ui_aTSSKacRtd_pIy7q99-T5H3EvK--DA8KSn7XPWLnMyu3s-oG7IY1ahoWsGfZeWJWf6Rt3IIwFlfPVH6TIF3UflIFh6LqR6rJA7V-d0ITzaClYR6QM7IQ_WdHqBeJAlWoo8zBjFTQTIMh1629QppPv817o0ax7D5i5FnIcloPnM11p4pSYurIdfqLREK-JRtI6itaQlLP-CNNUBATVb4MHRaUTVXssGlnPKfh-y0pxNhN0K2ddEZCkgUjqBs-xcJCVMR0IkbmWdI">
+                <img alt="Eazy Vibes Editorial" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida/ADBb0ug_3aWyYyqt9AlsdnNFew52BoTj6tBDextwQvi3HrzPDrxco4IwfNsbBVnaHJT0i1XHbhc1xz2r-yCnHjVspxgtcN8d8uRV3uD_260FfekZWZlCCF-F7CZqoBIr27P-4Lrwtjd0yxg7OYa_eVDBDGg8AAObiijgTv1N0Xgl1ldhyipQhTKj82lTWI4_XLswNnSK0UGaxHEWoOIg1iqmMARLe3Q6dfGZBFc9XGFhh3mkBhLsZUyV6aMZjd1N4DxGV2uj_MgkDmg9T3Q">
             </div>
             <div class="slide">
-                <img alt="Hero Collection 2" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida/ADBb0ugpijSl_a5mzA2qMht64enUWWjx-eCWfs_86oc5iZ4rRs0aYdt_B3NrVeu7qZGY8wETnFj5k3UlTJBV0Ig6j3LDn2lImGP06NDEt1_I-dDPmDqQzkUwSLkgQQ7jbH33c_PJW7kCn5jhHc8z0XUvj3VXwq8z2PXOxrJnan-CJNunzJGx_cMtL2AScVJvBpkAo3ATQVr907ek3k_px_3w1HfwKjLZtVGe2CcmDpqhEdc0aPj95CziIZ5mmIM2xuB6vPcHgmrYxebRZ1A">
+                <img alt="Collection 02" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida/ADBb0ugpijSl_a5mzA2qMht64enUWWjx-eCWfs_86oc5iZ4rRs0aYdt_B3NrVeu7qZGY8wETnFj5k3UlTJBV0Ig6j3LDn2lImGP06NDEt1_I-dDPmDqQzkUwSLkgQQ7jbH33c_PJW7kCn5jhHc8z0XUvj3VXwq8z2PXOxrJnan-CJNunzJGx_cMtL2AScVJvBpkAo3ATQVr907ek3k_px_3w1HfwKjLZtVGe2CcmDpqhEdc0aPj95CziIZ5mmIM2xuB6vPcHgmrYxebRZ1A">
             </div>
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex">
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex">
                 <span class="dot active" onclick="currentSlide(0)"></span>
                 <span class="dot" onclick="currentSlide(1)"></span>
             </div>
         </section>
+
+        <section class="py-24 px-8 max-w-[1920px] mx-auto bg-surface">
+            <div class="mb-16">
+                <h2 class="text-4xl md:text-5xl font-headline font-black tracking-tighter uppercase">STYLES DÀNH CHO BẠN</h2>
+                <div class="mt-4 w-20 h-1.5 bg-black"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-gray-100">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uhYDiFE94Gx96PopLP7DSYMQUTfX1N4mwNM638g7zWitCvovjPhb8kOG44SqIJnNdZ5JIpWhsK38PNJUKnFLWZjK0i8mTZ7-a7UafOL1TmUuOhX48c0B_6etbVMAf22xMyxfzMkdIP3yAhxHMJJFnSURRwijaNxQjxWpP4upYBgXzqjQGX2CVxDlYFlKWe4kfKU_pAe-0VbDkxcyR0m1YMpOSYMTtcSsN1eQeUgA0RBA8ZC0kkSWkKbnTHU5LTyPVhuyOVbH1XsCkA">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm">VINTAGE</p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-gray-100">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0uiIQKps-_9vqyyPzD7KeTjgNCg2s05yLGQiQKbxn_bv3LfEgekcWd2YPSpXHaW-NqwWQZSvQyPlBaYvtDTOSUqYuRkMQqlnRH1Z467fK6fBNYMXKUs-EAJ9Lgo7iC2v7fkMt1rTNsJpXd__7ngJE48hgCUVWRtKvxundbyd6Bp8m1RTqwdetguks3g2Yc0We1Vbuc7HzbtN_qbpQEYXcERMUIJ7LUHwcnvPGWhV1DReM2TTqLWLEx-GRywMSTomPbWuV7zDoucJ5w">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm">STREETWEAR</p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-gray-100">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0ugNmqLmlZ-yOUx5r9u7I1yqBgajdta8cZNpWvb8QQCXT4_ka23E6iKy5Ugj28bDtT3a5m3xEIJ1zahlwL5vcHA79nhinEimf218SEemPBBAV7bUGTh1HsIshcr2qjL1XWPu2zSa5LpZrnXcUM-SwtrTUtE0OGegXCY7PCpSqE0dOs5Axfo-m4lfIuboChHuT8frqVbtKMhJmupopyXgO2lG66nykS3HijOreD4yuHTnkfAKVD8FlvOW3NOQ-cK2L_tfNkb9vG-up7U">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm">POLO</p>
+                </div>
+                <div class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-gray-100">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://i.pinimg.com/1200x/76/70/1e/76701e2ed87a4f1a625e9fb082762fa1.jpg">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm">ÁO KHOÁC</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative w-full h-[400px] md:h-[400px] overflow-hidden bg-gray-100">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0uj0hwl_15hDkvZ2Bsb5pgOTsOrCUKWK99vVa8SCHI-yAStpMzgR2sHAzKhfxrMAa_9yqvTxE_X7Bm6tOmkLP9guFrqSxjGDj-AuxA4_HfzrJyzNheh0-G4MxCU-rdWbSyQ9naUxpIouTCaTii31SSrEPMplCsOG1U-oWxsCT3UoBYUakopln0x6fT2JilrUaKUZh0n4ost1kSdrcfG-nvf2GOnVe_yV3IyUuTZvbgvpz3dbi_0-qXbMb-cHsHeD_cy322end0cg" alt="Eazy Vibes Banner">
+        </section>
+
+        <section class="py-24 px-8 max-w-[1920px] mx-auto border-t border-black/5 mt-12">
+            <div class="flex justify-between items-end mb-16">
+                <h2 class="text-4xl md:text-5xl font-headline font-black tracking-tighter uppercase">SẢN PHẨM NỔI BẬT</h2>
+                <a class="font-bold text-sm border-b-2 border-black pb-1 hover:opacity-50 transition-all" href="product_list.html">XEM TẤT CẢ</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-gray-50 border border-black/5 group-hover:border-black/20 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://product.hstatic.net/1000351433/product/1__1__0f6efbe2daf64534b20ed4d1a8d3baed_master.jpg">
+                        <span class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 uppercase">MỚI</span>
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight">BAD RYOKO TEE</h3>
+                    <p class="text-secondary text-sm font-bold">400.000 VND</p>
+                </div>
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-gray-50 border border-black/5 group-hover:border-black/20 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://cdn.hstatic.net/products/1000306633/hades0075_large_150f7743a8f64f529c9e312c3364bcc9.jpeg">
+                        <span class="absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-2 py-1 uppercase">MỚI</span>
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight">HADES REBEL NATION HOODIE</h3>
+                    <p class="text-secondary text-sm font-bold">400.000 VND</p>
+                </div>
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-gray-50 border border-black/5 group-hover:border-black/20 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://cdn.hstatic.net/products/200001108416/1__15__6f02b4a186d5443a95d865024a55560c_f938f8223f7d44e48846d024377fc353_master.jpg">
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight">SWE DUNE JEANS</h3>
+                    <p class="text-secondary text-sm font-bold">715.000 VND</p>
+                </div>
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-gray-50 border border-black/5 group-hover:border-black/20 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://cdn.hstatic.net/products/200000690725/_o_web_0b362c89cdae4749a3cb3efa6b6eadf6_master.png">
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight">POLO TORANO</h3>
+                    <p class="text-secondary text-sm font-bold">445.000 VND</p>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-black text-white pt-24 pb-12 px-8 text-center text-xs tracking-widest uppercase">
-        <p>© 2026 THE MONOLITH EDITORIAL. ALL RIGHTS RESERVED.</p>
+    <footer class="bg-black text-white pt-24 pb-12 px-8">
+        <div class="max-w-[1920px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/10 pb-16">
+            <div class="col-span-1 md:col-span-1">
+                <h2 class="text-2xl font-black font-headline uppercase tracking-tighter mb-6">EAZY VIBES</h2>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-xs uppercase">Thời trang và phong cách là do bạn lựa chọn.</p>
+            </div>
+            <div>
+                <h4 class="font-headline font-bold text-xs tracking-widest uppercase mb-8">MUA SẮM</h4>
+                <ul class="space-y-4 text-gray-400 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">Sản Phẩm Mới</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Bán Chạy Nhất</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Khuyến Mãi</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-headline font-bold text-xs tracking-widest uppercase mb-8">HỖ TRỢ</h4>
+                <ul class="space-y-4 text-gray-400 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">Giao Hàng</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Đổi Trả</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Liên Hệ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-headline font-bold text-xs tracking-widest uppercase mb-8">KẾT NỐI</h4>
+                <div class="flex gap-6 text-gray-400">
+                    <a href="#" class="hover:text-white text-xs font-bold transition-all">INSTAGRAM</a>
+                    <a href="#" class="hover:text-white text-xs font-bold transition-all">FACEBOOK</a>
+                    <a href="#" class="hover:text-white text-xs font-bold transition-all">TIKTOK</a>
+                </div>
+            </div>
+        </div>
+        <div class="pt-8 text-[10px] text-gray-500 tracking-widest uppercase flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>© 2026 EAZY VIBES STUDIO. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.</p>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-white transition-colors">CHÍNH SÁCH BẢO MẬT</a>
+                <a href="#" class="hover:text-white transition-colors">ĐIỀU KHOẢN DỊCH VỤ</a>
+            </div>
+        </div>
     </footer>
 
     <script>
         let currentSlideIndex = 0;
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.dot');
+        
         function showSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
             slides[index].classList.add('active');
             dots[index].classList.add('active');
             currentSlideIndex = index;
         }
+
         function nextSlide() { showSlide((currentSlideIndex + 1) % slides.length); }
         let slideInterval = setInterval(nextSlide, 5000);
+
         function currentSlide(index) {
             showSlide(index);
             clearInterval(slideInterval);

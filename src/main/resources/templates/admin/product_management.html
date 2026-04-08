@@ -1,53 +1,96 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html class="light" lang="vi">
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>THE MONOLITH | PRODUCTS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>EAZY VIBES | QUẢN LÝ SẢN PHẨM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
-        tailwind.config = { theme: { extend: { colors: { primary: "#000000", surface: "#f9f9f9" }, fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] } } } }
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { primary: "#000000", surface: "#f9f9f9" }, 
+                    fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] } 
+                } 
+            } 
+        }
     </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    </style>
 </head>
-<body class="bg-surface text-black flex">
+<body class="bg-surface text-black flex font-body">
     <aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col py-8 z-50">
         <div class="px-8 mb-12">
-            <h1 class="text-2xl font-black tracking-tighter uppercase font-headline">THE MONOLITH</h1>
-            <p class="text-[10px] tracking-[0.2em] font-headline uppercase text-gray-500 mt-1">EDITORIAL ADMIN</p>
+            <h1 class="text-2xl font-black tracking-tighter uppercase font-headline">EAZY VIBES</h1>
+            <p class="text-[10px] tracking-[0.2em] font-headline uppercase text-gray-500 mt-1">QUẢN TRỊ HỆ THỐNG</p>
         </div>
         <nav class="flex-1 space-y-1">
-            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100" href="AdminDashboard.html"><span class="material-symbols-outlined mr-4">dashboard</span>DASHBOARD</a>
-            <a class="flex items-center px-8 py-3 text-black font-bold border-l-4 border-black font-headline uppercase tracking-tight text-sm bg-gray-100" href="#"><span class="material-symbols-outlined mr-4">inventory_2</span>PRODUCTS</a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="AdminDashboard.html">
+                <span class="material-symbols-outlined mr-4">dashboard</span>BẢNG ĐIỀU KHIỂN
+            </a>
+            <a class="flex items-center px-8 py-3 text-black font-bold border-l-4 border-black font-headline uppercase tracking-tight text-sm bg-gray-100" href="#">
+                <span class="material-symbols-outlined mr-4">inventory_2</span>SẢN PHẨM
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="order_management.html">
+                <span class="material-symbols-outlined mr-4">shopping_cart</span>ĐƠN HÀNG
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="user_management.html">
+                <span class="material-symbols-outlined mr-4">group</span>KHÁCH HÀNG
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="category_management.html">
+                <span class="material-symbols-outlined mr-4">category</span>DANH MỤC
+            </a>
         </nav>
     </aside>
 
     <main class="ml-64 w-full pt-16 px-12 pb-12 min-h-screen">
         <div class="flex justify-between items-end mb-12">
             <div>
-                <h2 class="text-5xl font-black tracking-tighter uppercase font-headline">INVENTORY</h2>
-                <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mt-2">Management & Editorial Curation</p>
+                <h2 class="text-5xl font-black tracking-tighter uppercase font-headline">KHO HÀNG</h2>
+                <p class="text-xs uppercase tracking-[0.3em] text-gray-500 mt-2 font-bold">Quản lý & Biên tập sản phẩm</p>
             </div>
-            <button class="bg-black text-white px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all">Add New Product</button>
+            <button class="bg-black text-white px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all">THÊM SẢN PHẨM MỚI</button>
         </div>
 
-        <div class="w-full bg-white border border-gray-200">
-            <div class="grid grid-cols-[80px_2fr_1fr_1fr_1fr_100px] gap-4 px-8 py-4 bg-gray-100 text-[10px] font-black uppercase tracking-[0.2em]">
-                <div>IMG</div><div>Product Name</div><div>Category</div><div>Price</div><div>Stock</div><div class="text-right">Actions</div>
+        <div class="w-full bg-white border border-gray-200 shadow-sm overflow-hidden">
+            <div class="grid grid-cols-[80px_2fr_1fr_1fr_1fr_100px] gap-4 px-8 py-4 bg-gray-50 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 border-b border-gray-200">
+                <div>ẢNH</div><div>TÊN SẢN PHẨM</div><div>DANH MỤC</div><div>GIÁ BÁN</div><div>KHO</div><div class="text-right">THAO TÁC</div>
             </div>
-            <div class="grid grid-cols-[80px_2fr_1fr_1fr_1fr_100px] items-center gap-4 px-8 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                <div class="w-12 h-16 bg-gray-200"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChnlKymJ9YEkawI3iLQdBguf1Dgl1fflKAAp-YGsvI3eJ82nwCoO9lo41LBgD49u7xCd-ME9cdPJR9CJu4Hkgf6i9zVGyE9t7Oc4gY5dKUrtLhGKuTl_GdWVyDq_PXbn5KiOKYDUT9wnidbB7jxhUMwt_WoZEzM6kUbrRpfvEU2X4oagFQArW8bxpq7K273Xq8sQJjDl8dBvu0J-CezItnpNT5AS3TArnMzshISROw4PXzreYmWIFfMxj6cJT3QLCHF2At13-5iHJw" /></div>
+            
+            <div class="grid grid-cols-[80px_2fr_1fr_1fr_1fr_100px] items-center gap-4 px-8 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors group">
+                <div class="w-12 h-16 bg-gray-200 overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChnlKymJ9YEkawI3iLQdBguf1Dgl1fflKAAp-YGsvI3eJ82nwCoO9lo41LBgD49u7xCd-ME9cdPJR9CJu4Hkgf6i9zVGyE9t7Oc4gY5dKUrtLhGKuTl_GdWVyDq_PXbn5KiOKYDUT9wnidbB7jxhUMwt_WoZEzM6kUbrRpfvEU2X4oagFQArW8bxpq7K273Xq8sQJjDl8dBvu0J-CezItnpNT5AS3TArnMzshISROw4PXzreYmWIFfMxj6cJT3QLCHF2At13-5iHJw"/>
+                </div>
                 <div class="flex flex-col">
                     <span class="text-sm font-bold uppercase tracking-tight font-headline">Oversized "MONO" Hoodie</span>
-                    <span class="text-[9px] text-gray-500 tracking-widest uppercase mt-1">SKU: MONO-H-BLK-01</span>
+                    <span class="text-[9px] text-gray-400 tracking-widest uppercase mt-1">SKU: MONO-H-BLK-01</span>
                 </div>
-                <div class="text-xs uppercase font-body">Outerwear</div>
-                <div class="text-xs font-bold uppercase">$185.00</div>
-                <div class="text-xs uppercase">42 Units</div>
-                <div class="flex justify-end gap-2 text-gray-400">
-                    <button class="hover:text-black"><span class="material-symbols-outlined text-sm">edit</span></button>
-                    <button class="hover:text-red-600"><span class="material-symbols-outlined text-sm">delete</span></button>
+                <div class="text-xs uppercase font-body text-gray-600">Outerwear</div>
+                <div class="text-xs font-bold uppercase">550.000đ</div>
+                <div class="text-xs uppercase text-gray-600">42 Đơn vị</div>
+                <div class="flex justify-end gap-3 text-gray-400">
+                    <button class="hover:text-black transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+                    <button class="hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-sm">delete</span></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-[80px_2fr_1fr_1fr_1fr_100px] items-center gap-4 px-8 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors group">
+                <div class="w-12 h-16 bg-gray-200 overflow-hidden">
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEUQyS97vlHuFwlzb1f2V4Gj8_E98P6Fd5vHiI46827EC3AvOLAvceLx_XujYQcBzUMFIvzh7Zq3cRsKTO2LJCLbliZDMXp3d6Wh7xNS3t4cCoEv2_ayvI0Nq4dEraPeoZVEE-92O9HQET0uu6rPL9Y2N5te7fjnprTmpzkIK7vxl6qqUDqMoxssLUuwwyZPuatjU7QmAKAOGgXguysBRy11EKUqElfMMgFfuvcKhhZ9bVTP5I6ZTc5TN5nJpY0g7Jg6-ar1gnn8xc"/>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold uppercase tracking-tight font-headline">EAZY LOGO TEE</span>
+                    <span class="text-[9px] text-gray-400 tracking-widest uppercase mt-1">SKU: EZY-T-WHT-02</span>
+                </div>
+                <div class="text-xs uppercase font-body text-gray-600">T-Shirts</div>
+                <div class="text-xs font-bold uppercase">350.000đ</div>
+                <div class="text-xs uppercase text-gray-600">120 Đơn vị</div>
+                <div class="flex justify-end gap-3 text-gray-400">
+                    <button class="hover:text-black transition-colors"><span class="material-symbols-outlined text-sm">edit</span></button>
+                    <button class="hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-sm">delete</span></button>
                 </div>
             </div>
         </div>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>EAZY VIBES | DANH MỤC SẢN PHẨM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = { theme: { extend: { colors: { primary: "#000000", surface: "#f9f9f9" }, fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] } } } }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface text-black font-body">
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-gray-200">
+        <div class="text-2xl font-black tracking-tighter uppercase font-headline">EAZY VIBES</div>
+        <div class="hidden md:flex space-x-12">
+            <a class="font-headline font-bold uppercase text-gray-500 hover:text-black transition-colors" href="#">VINTAGE</a>
+            <a class="font-headline font-bold uppercase border-b-2 border-black pb-1" href="#">STREETWEAR</a>
+            <a class="font-headline font-bold uppercase text-gray-500 hover:text-black transition-colors" href="#">POLO</a>
+            <a class="font-headline font-bold uppercase text-gray-500 hover:text-black transition-colors" href="#">OUTERWEAR</a>
+        </div>
+        <div class="flex space-x-6">
+            <span class="material-symbols-outlined cursor-pointer hover:opacity-70 transition-opacity">shopping_bag</span>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-8 max-w-[1920px] mx-auto">
+        <header class="mb-16">
+            <h1 class="text-[4rem] font-black font-headline tracking-tighter uppercase leading-[0.9]">BỘ SƯU TẬP<br/>STREETWEAR.</h1>
+            <p class="text-gray-500 mt-4 text-sm max-w-md">Phong cách đường phố hiện đại. Thiết kế độc đáo.</p>
+        </header>
+
+        <div class="flex flex-col md:flex-row gap-12">
+            <aside class="w-full md:w-64 shrink-0 sticky top-32 space-y-12 h-fit">
+                <section>
+                    <h3 class="font-headline text-sm font-bold uppercase tracking-wider mb-6">KÍCH CỠ</h3>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="h-10 border border-gray-300 hover:bg-black hover:text-white font-bold text-xs transition-all">S</button>
+                        <button class="h-10 bg-black text-white font-bold text-xs transition-all">M</button>
+                        <button class="h-10 border border-gray-300 hover:bg-black hover:text-white font-bold text-xs transition-all">L</button>
+                        <button class="h-10 border border-gray-300 hover:bg-black hover:text-white font-bold text-xs transition-all">XL</button>
+                    </div>
+                </section>
+                <button class="w-full bg-black text-white py-3 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">ÁP DỤNG BỘ LỌC</button>
+            </aside>
+
+            <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group cursor-pointer">
+                    <div class="relative aspect-[3/4] bg-gray-100 overflow-hidden mb-4">
+                        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6T126_OyJ8GhZhd0M-jqw-Hhj3p2pbglfK7uFAn-tTIIEHkQkJ7q4m4am_FOvxyi52DMlkaZakSXQQ2KjdJNHgOTKL5G5QuLcVlPY9WCOBAOCK-X6bXoLG71LPrmA8wXLtyvJ61bkj_NLpuYsQIaIt5F2GvjF-Acz-AMw_uZDZYUf7xMu5_UZthTrY3ex2whND6blSNcSquJAw5A_YZIgBFf3fpzzMbgkm9h__FbQcIUnVgyWQFi9cQtYur3MdOWvGKfCZn6OOwPc" alt="Quần Túi Hộp M1-Strap"/>
+                        <div class="absolute top-4 left-4 bg-black text-white text-[10px] px-3 py-1 font-bold uppercase tracking-tighter">MỚI</div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-tight font-headline">QUẦN TÚI HỘP M1-STRAP</h3>
+                            <p class="text-[10px] text-gray-500 uppercase mt-1 tracking-wider">ĐEN / COTTON KỸ THUẬT</p>
+                        </div>
+                        <span class="text-sm font-bold">550.000đ</span>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </main>
+</body>
+</html>
