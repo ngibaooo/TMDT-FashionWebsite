@@ -1,0 +1,21 @@
+package com.tmdt.fashion_shop.entity;
+
+import com.tmdt.fashion_shop.enums.ProductSize;
+import jakarta.persistence.*;
+
+@Entity
+public class ProductVariant {
+
+    @Id
+    private String id;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Enumerated(EnumType.STRING)
+    private ProductSize size;
+
+    private String color;
+    private int quantity;
+}
