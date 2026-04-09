@@ -2,10 +2,19 @@ package com.tmdt.fashion_shop.entity;
 
 import com.tmdt.fashion_shop.enums.ProductStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
@@ -24,4 +33,6 @@ public class Product {
     private ProductStatus status;
 
     private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "product")
+    private List<ProductVariant> variants;
 }

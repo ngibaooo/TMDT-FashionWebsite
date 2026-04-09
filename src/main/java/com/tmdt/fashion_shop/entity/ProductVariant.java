@@ -2,7 +2,11 @@ package com.tmdt.fashion_shop.entity;
 
 import com.tmdt.fashion_shop.enums.ProductSize;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class ProductVariant {
 
