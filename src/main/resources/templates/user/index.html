@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>EAZY VIBES | TRANG CHỦ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { primary: "#ffffff", surface: "#000000", secondary: "#a1a1aa" },
+                    fontFamily: { headline: ["Space Grotesk"], body: ["Inter"], label: ["Inter"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; background-color: #000000; color: #ffffff; }
+        h1, h2, h3, .headline { font-family: 'Space Grotesk', sans-serif; }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 0;
+        }
+        .slide.active { opacity: 1; z-index: 10; }
+        
+        .dot {
+            cursor: pointer;
+            height: 6px;
+            width: 6px;
+            margin: 0 3px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.4s ease;
+        }
+        .dot.active { background-color: #ffffff; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="dark bg-surface text-primary antialiased">
+    <div class="bg-[#111] text-white py-2 px-4 text-center border-b border-zinc-800">
+        <p class="text-[10px] md:text-[0.6875rem] font-bold tracking-[0.2em] font-label uppercase">MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG</p>
+    </div>
+
+    <header class="bg-black/90 backdrop-blur-md sticky top-0 z-50 border-b border-zinc-800">
+        <div class="flex justify-between items-center w-full px-8 py-4 max-w-[1920px] mx-auto">
+            <div class="flex-1 hidden md:flex"></div>
+            <div class="flex-1 flex justify-center">
+                <a class="text-3xl md:text-5xl font-extrabold text-white tracking-tighter font-headline uppercase" th:href="@{/}">EAZY VIBES</a>
+            </div>
+            <div class="flex-1 flex justify-end gap-6 items-center">
+                <button class="text-white hover:text-secondary transition-all"><span class="material-symbols-outlined">search</span></button>
+                <a th:href="@{/login}" class="text-white hover:text-secondary transition-all"><span class="material-symbols-outlined">person</span></a>
+                <a th:href="@{/cart}" class="text-white hover:text-secondary transition-all"><span class="material-symbols-outlined">shopping_bag</span></a>
+            </div>
+        </div>
+        
+        <nav class="overflow-x-auto no-scrollbar border-t border-zinc-800 bg-black">
+            <ul class="flex justify-center items-center gap-8 py-3 whitespace-nowrap px-8">
+                <li><a th:href="@{/}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'home'} ? 'text-white border-b-2 border-white pb-1' : 'text-zinc-400 hover:text-white'">SẢN PHẨM MỚI</a></li>
+                <li><a th:href="@{/best-selling}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'best-selling'} ? 'text-white border-b-2 border-white pb-1' : 'text-zinc-400 hover:text-white'">BEST SELLING</a></li>
+                <li><a th:href="@{/vintage}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'vintage'} ? 'text-white border-b-2 border-white pb-1' : 'text-zinc-400 hover:text-white'">VINTAGE</a></li>
+                <li><a th:href="@{/streetwear}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'streetwear'} ? 'text-white border-b-2 border-white pb-1' : 'text-zinc-400 hover:text-white'">STREETWEAR</a></li>
+                <li><a th:href="@{/polo}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'polo'} ? 'text-white border-b-2 border-white pb-1' : 'text-zinc-400 hover:text-white'">POLO</a></li>
+                <li><a th:href="@{/outerwear}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'outerwear'} ? 'text-white border-b-2 border-white pb-1' : 'text-zinc-400 hover:text-white'">ÁO KHOÁC</a></li>
+                <li><a th:href="@{/sale}" class="font-headline font-semibold text-[0.7rem] tracking-wider uppercase transition-colors" th:classappend="${activePage == 'sale'} ? 'text-red-500 border-b-2 border-red-500 pb-1' : 'text-red-400 hover:text-red-500'">KHUYẾN MÃI</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="slider-container" id="hero-slider">
+            <div class="slide active">
+                <img alt="Slide 1" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1551489186-cf8726f514f8?q=80&w=2070&auto=format&fit=crop">
+            </div>
+            <div class="slide">
+                <img alt="Slide 2" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=2072&auto=format&fit=crop">
+            </div>
+            <div class="absolute bottom-10 right-10 z-30 flex">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+            </div>
+        </section>
+
+        <section class="py-24 px-8 max-w-[1920px] mx-auto bg-black">
+            <div class="mb-16">
+                <h2 class="text-4xl md:text-5xl font-headline font-black tracking-tighter uppercase text-white">STYLES DÀNH CHO BẠN</h2>
+                <div class="mt-4 w-20 h-1 bg-white"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <a th:href="@{/vintage}" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2012&auto=format&fit=crop">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm text-zinc-100">VINTAGE</p>
+                </a>
+                <a th:href="@{/streetwear}" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1521577352947-9bb58764b69a?q=80&w=1972&auto=format&fit=crop">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm text-zinc-100">STREETWEAR</p>
+                </a>
+                <a th:href="@{/polo}" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1610416952899-232a926a8553?q=80&w=2012&auto=format&fit=crop">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm text-zinc-100">POLO</p>
+                </a>
+                <a th:href="@{/outerwear}" class="group cursor-pointer">
+                    <div class="aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=2072&auto=format&fit=crop">
+                    </div>
+                    <p class="font-headline font-black text-center uppercase tracking-widest text-sm text-zinc-100">ÁO KHOÁC</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="py-24 px-8 max-w-[1920px] mx-auto bg-surface mt-12">
+            <div class="flex justify-between items-end mb-16">
+                <h2 class="text-4xl md:text-5xl font-headline font-black tracking-tighter uppercase text-white">SẢN PHẨM NỔI BẬT</h2>
+                <a class="font-bold text-sm border-b-2 border-white pb-1 text-white hover:opacity-50 transition-all" th:href="@{/best-selling}">XEM TẤT CẢ</a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800 group-hover:border-zinc-700 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://product.hstatic.net/1000351433/product/1__1__0f6efbe2daf64534b20ed4d1a8d3baed_master.jpg">
+                        <span class="absolute top-4 left-4 bg-white text-black text-[10px] font-bold px-2 py-1 uppercase">MỚI</span>
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-white">BAD RYOKO TEE</h3>
+                    <p class="text-zinc-400 text-sm font-bold">400.000 VND</p>
+                </div>
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800 group-hover:border-zinc-700 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://cdn.hstatic.net/products/1000306633/hades0075_large_150f7743a8f64f529c9e312c3364bcc9.jpeg">
+                        <span class="absolute top-4 left-4 bg-white text-black text-[10px] font-bold px-2 py-1 uppercase">MỚI</span>
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-white">HADES REBEL NATION HOODIE</h3>
+                    <p class="text-zinc-400 text-sm font-bold">400.000 VND</p>
+                </div>
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800 group-hover:border-zinc-700 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://cdn.hstatic.net/products/200001108416/1__15__6f02b4a186d5443a95d865024a55560c_f938f8223f7d44e48846d024377fc353_master.jpg">
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-white">SWE DUNE JEANS</h3>
+                    <p class="text-zinc-400 text-sm font-bold">715.000 VND</p>
+                </div>
+                <div class="group">
+                    <div class="relative aspect-[3/4] overflow-hidden mb-6 bg-zinc-900 border border-zinc-800 group-hover:border-zinc-700 transition-all">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" src="https://cdn.hstatic.net/products/200000690725/_o_web_0b362c89cdae4749a3cb3efa6b6eadf6_master.png">
+                    </div>
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-tight text-white">POLO TORANO</h3>
+                    <p class="text-zinc-400 text-sm font-bold">445.000 VND</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-black text-white pt-24 pb-12 px-8 border-t border-zinc-800">
+        <div class="max-w-[1920px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-zinc-800 pb-16">
+            <div class="col-span-1 md:col-span-1">
+                <h2 class="text-3xl font-extrabold font-headline uppercase tracking-tighter mb-6">EAZY VIBES</h2>
+                <p class="text-zinc-500 text-sm leading-relaxed max-w-xs uppercase">Thời trang và phong cách là do bạn lựa chọn.</p>
+            </div>
+            <div>
+                <h4 class="font-headline font-bold text-xs tracking-widest uppercase mb-8">MUA SẮM</h4>
+                <ul class="space-y-4 text-zinc-400 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">Sản Phẩm Mới</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Bán Chạy Nhất</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Khuyến Mãi</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-headline font-bold text-xs tracking-widest uppercase mb-8">HỖ TRỢ</h4>
+                <ul class="space-y-4 text-zinc-400 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">Giao Hàng</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Đổi Trả</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Liên Hệ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-headline font-bold text-xs tracking-widest uppercase mb-8">KẾT NỐI</h4>
+                <div class="flex gap-6 text-zinc-400">
+                    <a href="#" class="hover:text-white text-xs font-bold transition-all">INSTAGRAM</a>
+                    <a href="#" class="hover:text-white text-xs font-bold transition-all">FACEBOOK</a>
+                    <a href="#" class="hover:text-white text-xs font-bold transition-all">TIKTOK</a>
+                </div>
+            </div>
+        </div>
+        <div class="pt-8 text-[10px] text-zinc-600 tracking-widest uppercase text-center">
+            <p>© 2026 EAZY VIBES STUDIO. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        function showSlide(index) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlideIndex = index;
+        }
+        function nextSlide() { showSlide((currentSlideIndex + 1) % slides.length); }
+        let slideInterval = setInterval(nextSlide, 7000);
+        function currentSlide(index) {
+            showSlide(index);
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 7000);
+        }
+    </script>
+</body>
+</html>

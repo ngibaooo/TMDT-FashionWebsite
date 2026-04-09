@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="light" lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>EAZY VIBES | BẢNG ĐIỀU KHIỂN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = { theme: { extend: { colors: { primary: "#000000", surface: "#f9f9f9" }, fontFamily: { headline: ["Space Grotesk"], body: ["Inter"] } } } }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface text-black flex font-body">
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col py-8 z-50">
+        <div class="px-8 mb-12">
+            <h1 class="text-2xl font-black tracking-tighter uppercase font-headline">EAZY VIBES</h1>
+            <p class="text-[10px] tracking-[0.2em] font-headline uppercase text-gray-500 mt-1">QUẢN TRỊ NỘI DUNG</p>
+        </div>
+        <nav class="flex-1 space-y-1">
+            <a class="flex items-center px-8 py-3 text-black font-bold border-l-4 border-black font-headline uppercase tracking-tight text-sm bg-gray-100" href="#">
+                <span class="material-symbols-outlined mr-4">dashboard</span>BẢNG ĐIỀU KHIỂN
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="product_management.html">
+                <span class="material-symbols-outlined mr-4">inventory_2</span>SẢN PHẨM
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="order_management.html">
+                <span class="material-symbols-outlined mr-4">shopping_cart</span>ĐƠN HÀNG
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="user_management.html">
+                <span class="material-symbols-outlined mr-4">group</span>KHÁCH HÀNG
+            </a>
+            <a class="flex items-center px-8 py-3 text-gray-500 font-headline uppercase tracking-tight text-sm hover:bg-gray-100 transition-colors" href="category_management.html">
+                <span class="material-symbols-outlined mr-4">category</span>DANH MỤC
+            </a>
+        </nav>
+    </aside>
+
+    <main class="ml-64 w-full pt-16 px-12 pb-12 min-h-screen">
+        <header class="mb-12 border-b border-black/5 pb-8">
+            <h3 class="text-4xl font-black uppercase tracking-tighter mb-2 font-headline">TỔNG QUAN HỆ THỐNG</h3>
+            <p class="text-gray-500 font-body text-sm tracking-wide">TỔNG HỢP CHỈ SỐ // CẬP NHẬT: THỜI GIAN THỰC</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">DOANH THU THUẦN</p>
+                    <span class="text-[10px] font-bold text-green-600">+12.4%</span>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">142.805.000đ</h4></div>
+            </div>
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">TỔNG ĐƠN HÀNG</p>
+                    <span class="text-[10px] font-bold text-black">+4.1%</span>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">1.204</h4></div>
+            </div>
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">SẢN PHẨM (SKU)</p>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">84</h4></div>
+            </div>
+            <div class="bg-white p-8 border border-gray-200 h-48 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <p class="font-headline text-xs font-bold uppercase tracking-widest text-gray-500">KHÁCH HÀNG</p>
+                    <span class="text-[10px] font-bold text-green-600">+22.8%</span>
+                </div>
+                <div><h4 class="text-3xl font-black tracking-tighter font-headline">8.942</h4></div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
