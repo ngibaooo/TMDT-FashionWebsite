@@ -1,0 +1,24 @@
+package com.tmdt.fashion_shop.repository;
+
+import com.tmdt.fashion_shop.entity.Order;
+import com.tmdt.fashion_shop.enums.OrderStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
+public interface OrderRepository extends JpaRepository<Order, String> {
+
+    List<Order> findByUser_Id(String userId);
+
+    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
+
+    @Query("""
+        SELECT SUM(o.totalPrice)
+        FROM Order o
+        WHERE o.status = 'COMPLETED'
+    """)
+    Double getTotalRevenue();
+}
