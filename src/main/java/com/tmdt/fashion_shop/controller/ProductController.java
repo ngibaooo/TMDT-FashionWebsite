@@ -1,5 +1,6 @@
 package com.tmdt.fashion_shop.controller;
 
+import com.tmdt.fashion_shop.dto.BestSellingProductDTO;
 import com.tmdt.fashion_shop.dto.ProductDTO;
 import com.tmdt.fashion_shop.dto.ProductDetailDTO;
 import com.tmdt.fashion_shop.enums.ProductSize;
@@ -56,5 +57,18 @@ public class ProductController {
             Pageable pageable
     ) {
         return productService.filter(minPrice, maxPrice, size, color, pageable);
+    }
+    @GetMapping("/new")
+    public Page<ProductDTO> getNewProducts(Pageable pageable) {
+        return productService.getNewProducts(pageable);
+    }
+    @GetMapping("/admin/best-selling")
+    public Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable) {
+        return productService.getBestSellingProducts(pageable);
+    }
+    // USER
+    @GetMapping("/best-selling")
+    public Page<ProductDTO> bestSelling(Pageable pageable) {
+        return productService.getBestSellingProductsForUser(pageable);
     }
 }

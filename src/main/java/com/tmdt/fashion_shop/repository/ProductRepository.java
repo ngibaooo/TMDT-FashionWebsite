@@ -13,8 +13,8 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, String>, JpaSpecificationExecutor<Product> {
 
     Page<Product> findByStatus(ProductStatus status, Pageable pageable);
-
     Page<Product> findByCategory_Id(String categoryId, Pageable pageable);
+    Page<Product> findByStatusOrderByCreatedAtDesc(ProductStatus status, Pageable pageable);
 
     @Query("""
         SELECT p FROM Product p
