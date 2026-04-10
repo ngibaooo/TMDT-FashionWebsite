@@ -1,5 +1,5 @@
 package com.tmdt.fashion_shop.service;
-
+import com.tmdt.fashion_shop.dto.BestSellingProductDTO;
 import com.tmdt.fashion_shop.dto.ProductDTO;
 import com.tmdt.fashion_shop.dto.ProductDetailDTO;
 import com.tmdt.fashion_shop.enums.ProductSize;
@@ -23,4 +23,8 @@ public interface ProductService {
             Pageable pageable
     );
     Page<ProductDTO> getNewProducts(Pageable pageable);
+    //admin
+    Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable);
+    //user
+    Page<ProductDTO> getBestSellingProductsForUser(Pageable pageable);
 }
