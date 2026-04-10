@@ -107,4 +107,10 @@ public class ProductServiceImpl implements ProductService {
                 pageable
         ).map(this::toDetailDTO);
     }
+    @Override
+    public Page<ProductDTO> getNewProducts(Pageable pageable) {
+        return productRepository
+                .findByStatusOrderByCreatedAtDesc(ProductStatus.ACTIVE, pageable)
+                .map(this::toDTO);
+    }
 }

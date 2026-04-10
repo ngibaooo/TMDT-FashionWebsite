@@ -22,4 +22,5 @@ public interface ProductService {
             String color,
             Pageable pageable
     );
+    Page<ProductDTO> getNewProducts(Pageable pageable);
 }

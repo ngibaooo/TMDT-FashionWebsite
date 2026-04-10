@@ -57,4 +57,8 @@ public class ProductController {
     ) {
         return productService.filter(minPrice, maxPrice, size, color, pageable);
     }
+    @GetMapping("/new")
+    public Page<ProductDTO> getNewProducts(Pageable pageable) {
+        return productService.getNewProducts(pageable);
+    }
 }
