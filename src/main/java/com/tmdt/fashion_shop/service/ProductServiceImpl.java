@@ -88,33 +88,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailDTO getById(String id) {
+
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // lấy variant
-        List<ProductVariantDTO> variants = productVariantRepository
-                .findByProduct_Id(id)
-                .stream()
-                .map(v -> new ProductVariantDTO(
-                        v.getId(),
-                        v.getSize(),
-                        v.getColor(),
-                        v.getQuantity()
-                ))
-                .toList();
-
-        return new ProductDetailDTO(
-                p.getId(),
-                p.getName(),
-                p.getDescription(),
-                p.getPrice(),
-                p.getOldPrice(),
-                p.getCategory() != null ? p.getCategory().getId() : null,
-                p.getCategory() != null ? p.getCategory().getName() : null,
-                p.getStatus(),
-                p.getCreatedAt(),
-                variants
-        );
+        return toDetailDTO(p);
     }
 
     @Override
