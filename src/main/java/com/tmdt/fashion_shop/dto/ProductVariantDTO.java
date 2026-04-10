@@ -15,4 +15,6 @@ public class ProductVariantDTO {
     private ProductSize size;
     private String color;
     private int quantity;
+
+    public ProductVariantDTO() {}
 }

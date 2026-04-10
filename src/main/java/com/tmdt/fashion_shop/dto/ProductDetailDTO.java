@@ -26,4 +26,6 @@ public class ProductDetailDTO {
     private LocalDateTime createdAt;
 
     private List<ProductVariantDTO> variants;
+
+    public ProductDetailDTO(){}
 }
