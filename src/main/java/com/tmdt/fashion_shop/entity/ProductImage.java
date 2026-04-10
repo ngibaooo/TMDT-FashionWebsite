@@ -19,5 +19,9 @@ public class ProductImage {
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     private String imageUrl;
 }

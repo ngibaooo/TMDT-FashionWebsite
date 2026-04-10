@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,5 +35,8 @@ public class Product {
 
     private LocalDateTime createdAt;
     @OneToMany(mappedBy = "product")
-    private List<ProductVariant> variants;
+    private List<ProductVariant> variants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> images = new ArrayList<>();
 }

@@ -1,25 +1,28 @@
 package com.tmdt.fashion_shop.service;
 
-import com.tmdt.fashion_shop.dto.BestSellingProductDTO;
-import com.tmdt.fashion_shop.dto.ProductDTO;
-import com.tmdt.fashion_shop.dto.ProductDetailDTO;
-import com.tmdt.fashion_shop.dto.ProductVariantDTO;
+import com.tmdt.fashion_shop.dto.*;
+import com.tmdt.fashion_shop.entity.Category;
 import com.tmdt.fashion_shop.entity.Product;
+import com.tmdt.fashion_shop.entity.ProductImage;
+import com.tmdt.fashion_shop.entity.ProductVariant;
 import com.tmdt.fashion_shop.enums.ProductSize;
 import com.tmdt.fashion_shop.enums.ProductStatus;
 import com.tmdt.fashion_shop.filter.ProductSpecification;
-import com.tmdt.fashion_shop.repository.OrderItemRepository;
-import com.tmdt.fashion_shop.repository.ProductRepository;
-import com.tmdt.fashion_shop.repository.ProductVariantRepository;
+import com.tmdt.fashion_shop.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -32,7 +35,26 @@ public class ProductServiceImpl implements ProductService {
     private ProductVariantRepository productVariantRepository;
     @Autowired
     private OrderItemRepository orderItemRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
+
+    private String saveFile(MultipartFile file) {
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        Path path = Paths.get("uploads/" + fileName);
+
+        try {
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Upload failed");
+        }
+
+        return "/uploads/" + fileName;
+    }
     // mapping function
 
     private ProductDetailDTO toDetailDTO(Product product) {
@@ -48,14 +70,26 @@ public class ProductServiceImpl implements ProductService {
         if (product.getCategory() != null) {
             dto.setCategoryName(product.getCategory().getName());
         }
-
+        dto.setImages(
+                product.getImages().stream()
+                        .map(img -> img.getImageUrl())
+                        .toList()
+        );
         dto.setVariants(
                 product.getVariants().stream().map(v -> {
+
                     ProductVariantDTO vd = new ProductVariantDTO();
                     vd.setId(v.getId());
-                    vd.setSize(ProductSize.valueOf(v.getSize().name()));
+                    vd.setSize(v.getSize());
                     vd.setColor(v.getColor());
                     vd.setQuantity(v.getQuantity());
+
+                    vd.setImages(
+                            v.getImages().stream()
+                                    .map(img -> img.getImageUrl())
+                                    .toList()
+                    );
+
                     return vd;
                 }).toList()
         );
@@ -63,6 +97,14 @@ public class ProductServiceImpl implements ProductService {
         return dto;
     }
     private ProductDTO toDTO(Product p) {
+        List<String> imageUrls = null;
+
+        if (p.getImages() != null) {
+            imageUrls = p.getImages()
+                    .stream()
+                    .map(img -> img.getImageUrl())
+                    .toList();
+        }
         return new ProductDTO(
                 p.getId(),
                 p.getName(),
@@ -72,7 +114,8 @@ public class ProductServiceImpl implements ProductService {
                 p.getCategory() != null ? p.getCategory().getId() : null,
                 p.getCategory() != null ? p.getCategory().getName() : null,
                 p.getStatus(),
-                p.getCreatedAt()
+                p.getCreatedAt(),
+                imageUrls
         );
     }
 
@@ -155,5 +198,124 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
 
         return new PageImpl<>(dtoList, pageable, result.getTotalElements());
+    }
+//    @Override
+//    public ProductDTO create(ProductCreateRequestDTO request) {
+//
+//        // 1. tạo product
+//        Product product = new Product();
+//        product.setId(UUID.randomUUID().toString());
+//        product.setName(request.getName());
+//        product.setDescription(request.getDescription());
+//        product.setPrice(request.getPrice());
+//        product.setOldPrice(request.getOldPrice());
+//        product.setCreatedAt(LocalDateTime.now());
+//        product.setStatus(ProductStatus.ACTIVE);
+//
+//        // set category
+//        Category category = categoryRepository.findById(request.getCategoryId())
+//                .orElseThrow(() -> new RuntimeException("Category not found"));
+//        product.setCategory(category);
+//
+//        productRepository.save(product);
+//
+//        // 2. upload ảnh
+//        List<ProductImage> images = new ArrayList<>();
+//
+//        if (request.getImages() != null) {
+//            for (MultipartFile file : request.getImages()) {
+//
+//                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+//
+//                Path path = Paths.get("uploads/" + fileName);
+//
+//                try {
+//                    Files.createDirectories(path.getParent());
+//                    Files.write(path, file.getBytes());
+//                } catch (IOException e) {
+//                    throw new RuntimeException("Upload failed");
+//                }
+//
+//                ProductImage img = new ProductImage();
+//                img.setId(UUID.randomUUID().toString());
+//                img.setProduct(product);
+//                img.setImageUrl("/uploads/" + fileName);
+//
+//                images.add(img);
+//            }
+//
+//            productImageRepository.saveAll(images);
+//        }
+//
+//        // 3. return detail
+//        return toDTO(product);
+//    }
+    @Transactional
+    @Override
+    public ProductDTO create(ProductCreateRequestDTO request) {
+
+        // 1. CREATE PRODUCT
+        Product product = new Product();
+        product.setId(UUID.randomUUID().toString());
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setOldPrice(request.getOldPrice());
+        product.setCreatedAt(LocalDateTime.now());
+        product.setStatus(ProductStatus.ACTIVE);
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        product.setCategory(category);
+        productRepository.save(product);
+
+        // 2. SAVE PRODUCT IMAGES
+        if (request.getImages() != null) {
+            for (MultipartFile file : request.getImages()) {
+                String url = saveFile(file);
+
+                ProductImage img = new ProductImage();
+                img.setId(UUID.randomUUID().toString());
+                img.setProduct(product);
+                img.setImageUrl(url);
+
+                productImageRepository.save(img);
+            }
+        }
+
+        // 3. CREATE VARIANTS
+        if (request.getVariants() != null) {
+            for (VariantRequestDTO vReq : request.getVariants()) {
+
+                ProductVariant variant = new ProductVariant();
+                variant.setId(UUID.randomUUID().toString());
+                variant.setProduct(product);
+                variant.setSize(vReq.getSize());
+                variant.setColor(vReq.getColor());
+                variant.setQuantity(vReq.getQuantity());
+
+                productVariantRepository.save(variant);
+
+                // 4. SAVE VARIANT IMAGES
+                if (vReq.getImages() != null) {
+                    for (MultipartFile file : vReq.getImages()) {
+
+                        String url = saveFile(file);
+
+                        ProductImage img = new ProductImage();
+                        img.setId(UUID.randomUUID().toString());
+                        img.setProductVariant(variant);
+                        img.setImageUrl(url);
+
+                        productImageRepository.save(img);
+                    }
+                }
+            }
+        }
+
+        // 5. RETURN DETAIL
+        Product saved = productRepository.findById(product.getId()).get();
+        return toDTO(saved);
     }
 }
