@@ -48,7 +48,7 @@ public class ProductController {
 
     //filter
     @GetMapping("/filter")
-    public Page<ProductDTO> filter(
+    public Page<ProductDetailDTO> filter(
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) ProductSize size,

@@ -15,7 +15,7 @@ public interface ProductService {
     Page<ProductDTO> getByCategory(String categoryId, Pageable pageable);
 
     ProductDetailDTO getById(String id);
-    Page<ProductDTO> filter(
+    Page<ProductDetailDTO> filter(
             Double minPrice,
             Double maxPrice,
             ProductSize size,

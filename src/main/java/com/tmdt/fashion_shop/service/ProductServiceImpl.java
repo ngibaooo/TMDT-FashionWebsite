@@ -26,6 +26,34 @@ public class ProductServiceImpl implements ProductService {
     private ProductVariantRepository productVariantRepository;
 
     // mapping function
+
+    private ProductDetailDTO toDetailDTO(Product product) {
+
+        ProductDetailDTO dto = new ProductDetailDTO();
+
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setOldPrice(product.getOldPrice());
+
+        if (product.getCategory() != null) {
+            dto.setCategoryName(product.getCategory().getName());
+        }
+
+        dto.setVariants(
+                product.getVariants().stream().map(v -> {
+                    ProductVariantDTO vd = new ProductVariantDTO();
+                    vd.setId(v.getId());
+                    vd.setSize(ProductSize.valueOf(v.getSize().name()));
+                    vd.setColor(v.getColor());
+                    vd.setQuantity(v.getQuantity());
+                    return vd;
+                }).toList()
+        );
+
+        return dto;
+    }
     private ProductDTO toDTO(Product p) {
         return new ProductDTO(
                 p.getId(),
@@ -90,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> filter(Double minPrice,
+    public Page<ProductDetailDTO> filter(Double minPrice,
                                    Double maxPrice,
                                    ProductSize size,
                                    String color,
@@ -99,6 +127,6 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(
                 ProductSpecification.filter(minPrice, maxPrice, size, color),
                 pageable
-        ).map(this::toDTO);
+        ).map(this::toDetailDTO);
     }
 }
