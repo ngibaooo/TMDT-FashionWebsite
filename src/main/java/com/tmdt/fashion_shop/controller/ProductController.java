@@ -8,6 +8,9 @@ import com.tmdt.fashion_shop.enums.ProductSize;
 import com.tmdt.fashion_shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -20,8 +23,25 @@ public class ProductController {
 
     // lấy danh sách
     @GetMapping
-    public Page<ProductDTO> getAll(Pageable pageable) {
-        return productService.getAll(pageable);
+    public ResponseEntity<?> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sort
+    ) {
+
+        Sort sortObj = Sort.unsorted();
+
+        if ("price_asc".equals(sort)) {
+            sortObj = Sort.by("price").ascending();
+        } else if ("price_desc".equals(sort)) {
+            sortObj = Sort.by("price").descending();
+        } else if ("newest".equals(sort)) {
+            sortObj = Sort.by("createdAt").descending();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sortObj);
+
+        return ResponseEntity.ok(productService.getAll(pageable));
     }
 
     // tìm kiếm

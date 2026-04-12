@@ -199,57 +199,6 @@ public class ProductServiceImpl implements ProductService {
 
         return new PageImpl<>(dtoList, pageable, result.getTotalElements());
     }
-//    @Override
-//    public ProductDTO create(ProductCreateRequestDTO request) {
-//
-//        // 1. tạo product
-//        Product product = new Product();
-//        product.setId(UUID.randomUUID().toString());
-//        product.setName(request.getName());
-//        product.setDescription(request.getDescription());
-//        product.setPrice(request.getPrice());
-//        product.setOldPrice(request.getOldPrice());
-//        product.setCreatedAt(LocalDateTime.now());
-//        product.setStatus(ProductStatus.ACTIVE);
-//
-//        // set category
-//        Category category = categoryRepository.findById(request.getCategoryId())
-//                .orElseThrow(() -> new RuntimeException("Category not found"));
-//        product.setCategory(category);
-//
-//        productRepository.save(product);
-//
-//        // 2. upload ảnh
-//        List<ProductImage> images = new ArrayList<>();
-//
-//        if (request.getImages() != null) {
-//            for (MultipartFile file : request.getImages()) {
-//
-//                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-//
-//                Path path = Paths.get("uploads/" + fileName);
-//
-//                try {
-//                    Files.createDirectories(path.getParent());
-//                    Files.write(path, file.getBytes());
-//                } catch (IOException e) {
-//                    throw new RuntimeException("Upload failed");
-//                }
-//
-//                ProductImage img = new ProductImage();
-//                img.setId(UUID.randomUUID().toString());
-//                img.setProduct(product);
-//                img.setImageUrl("/uploads/" + fileName);
-//
-//                images.add(img);
-//            }
-//
-//            productImageRepository.saveAll(images);
-//        }
-//
-//        // 3. return detail
-//        return toDTO(product);
-//    }
     @Transactional
     @Override
     public ProductDTO create(ProductCreateRequestDTO request) {
