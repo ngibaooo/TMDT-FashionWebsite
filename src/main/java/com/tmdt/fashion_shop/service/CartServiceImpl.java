@@ -1,12 +1,16 @@
 package com.tmdt.fashion_shop.service;
 
 import com.tmdt.fashion_shop.dto.AddToCartRequestDTO;
+import com.tmdt.fashion_shop.dto.CartDTO;
+import com.tmdt.fashion_shop.dto.CartItemDTO;
+import com.tmdt.fashion_shop.dto.CartUpdateRequestDTO;
 import com.tmdt.fashion_shop.entity.*;
 import com.tmdt.fashion_shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,6 +23,51 @@ public class CartServiceImpl implements CartService {
     private final ProductVariantRepository productVariantRepository;
     private final UserRepository userRepository;
 
+    @Override
+    public CartDTO getCart(String userId) {
+
+        Cart cart = cartRepository.findByUser_Id(userId)
+                .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
+
+        List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
+
+        List<CartItemDTO> itemDTOs = items.stream().map(item -> {
+
+            var variant = item.getProductVariant();
+            var product = variant.getProduct();
+
+            String image = null;
+
+            if (variant.getImages() != null && !variant.getImages().isEmpty()) {
+                image = variant.getImages().get(0).getImageUrl();
+            }
+            // fallback ảnh product
+            else if (product.getImages() != null && !product.getImages().isEmpty()) {
+                image = product.getImages().get(0).getImageUrl();
+            }
+
+            double price = product.getPrice();
+            int quantity = item.getQuantity();
+
+            return new CartItemDTO(
+                    item.getId(),
+                    product.getName(),
+                    image,
+                    price,
+                    quantity,
+                    variant.getSize().name(),
+                    variant.getColor(),
+                    price * quantity
+            );
+
+        }).toList();
+
+        double totalPrice = itemDTOs.stream()
+                .mapToDouble(CartItemDTO::getTotal)
+                .sum();
+
+        return new CartDTO(itemDTOs, totalPrice);
+    }
     @Override
     public void addToCart(String userId, AddToCartRequestDTO request) {
 
@@ -73,5 +122,69 @@ public class CartServiceImpl implements CartService {
 
             cartItemRepository.save(item);
         }
+    }
+
+    @Override
+    public void updateQuantity(CartUpdateRequestDTO request, String userId) {
+
+        Cart cart = cartRepository.findByUser_Id(userId)
+                .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
+
+        CartItem item = cartItemRepository.findById(request.getCartItemId())
+                .orElseThrow(() -> new RuntimeException("Item không tồn tại"));
+
+        // check item thuộc cart của user
+        if (!item.getCart().getId().equals(cart.getId())) {
+            throw new RuntimeException("Không hợp lệ");
+        }
+
+        int currentQty = item.getQuantity();
+
+        // xử lý action
+        if ("INCREASE".equalsIgnoreCase(request.getAction())) {
+
+            // check tồn kho
+            int stock = item.getProductVariant().getQuantity();
+
+            if (currentQty + 1 > stock) {
+                throw new RuntimeException("Đã đạt số lượng tối đa");
+            }
+
+            item.setQuantity(currentQty + 1);
+
+        } else if ("DECREASE".equalsIgnoreCase(request.getAction())) {
+
+            if (currentQty - 1 <= 0) {
+                // nếu giảm về 0 -> xóa luôn
+                cartItemRepository.delete(item);
+                return;
+            }
+
+            item.setQuantity(currentQty - 1);
+
+        } else {
+            throw new RuntimeException("Action không hợp lệ");
+        }
+
+        cartItemRepository.save(item);
+    }
+    @Override
+    public void removeItem(String cartItemId, String userId) {
+
+        // lấy cart của user
+        Cart cart = cartRepository.findByUser_Id(userId)
+                .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
+
+        // lấy item
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Item không tồn tại"));
+
+        // check item có thuộc cart của user không
+        if (!item.getCart().getId().equals(cart.getId())) {
+            throw new RuntimeException("Không có quyền xóa item này");
+        }
+
+        // xóa
+        cartItemRepository.delete(item);
     }
 }
