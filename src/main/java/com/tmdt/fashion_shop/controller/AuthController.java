@@ -1,5 +1,6 @@
 package com.tmdt.fashion_shop.controller;
 
+import com.tmdt.fashion_shop.dto.LoginRequestDTO;
 import com.tmdt.fashion_shop.dto.RegisterRequestDTO;
 import com.tmdt.fashion_shop.service.AuthService;
 import jakarta.validation.Valid;
@@ -20,5 +21,9 @@ public class AuthController {
         authService.register(request);
 
         return ResponseEntity.ok("Đăng ký thành công");
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }
