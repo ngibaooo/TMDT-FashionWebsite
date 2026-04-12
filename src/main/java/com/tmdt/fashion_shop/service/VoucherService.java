@@ -1,4 +1,7 @@
 package com.tmdt.fashion_shop.service;
 
-public class VoucherService {
+import com.tmdt.fashion_shop.dto.ApplyVoucherResponseDTO;
+
+public interface VoucherService {
+    ApplyVoucherResponseDTO applyVoucher(String userId, String code);
 }
