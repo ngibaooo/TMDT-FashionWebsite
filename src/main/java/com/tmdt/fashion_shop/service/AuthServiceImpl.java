@@ -54,33 +54,6 @@ public class AuthServiceImpl implements AuthService {
 
         return userRepository.save(user);
     }
-//    @Override
-//    public LoginResponseDTO login(LoginRequestDTO request) {
-//
-//        String username = request.getUsername().trim();
-//
-//        User user;
-//
-//        if (username.contains("@")) {
-//            user = userRepository.findByEmail(username)
-//                    .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
-//        } else {
-//            user = userRepository.findByPhone(username)
-//                    .orElseThrow(() -> new RuntimeException("Số điện thoại không tồn tại"));
-//        }
-//
-//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            throw new RuntimeException("Sai mật khẩu");
-//        }
-//
-//        return new LoginResponseDTO(
-//                "Đăng nhập thành công",
-//                user.getEmail(),
-//                user.getPhone(),
-//                user.getRole().name(),
-//                user.getAvatar()
-//        );
-//    }
     @Override
     public LoginResponseDTO login(LoginRequestDTO request) {
 
@@ -88,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user;
 
-        // 🔍 tìm theo email hoặc phone
+        // tìm theo email hoặc phone
         if (username.contains("@")) {
             user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
@@ -97,16 +70,13 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow(() -> new RuntimeException("SĐT không tồn tại"));
         }
 
-        // 🔐 check password
+        // check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Sai mật khẩu");
         }
 
-        // 🔥 tạo JWT
-        String token = jwtService.generateToken(
-                user.getEmail(),
-                user.getRole().name()
-        );
+        // tạo JWT
+        String token = jwtService.generateToken(user.getId(), user.getRole().name());
 
         return new LoginResponseDTO(
                 token,

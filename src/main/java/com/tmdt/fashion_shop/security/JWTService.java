@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class JWTService {
     private static final String SECRET_KEY = "my-secret-key-123456";
-    // 🔐 tạo token
-    public String generateToken(String username, String role) {
+    // tạo token
+    public String generateToken(String userId, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 ngày
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
-    // 📥 lấy username từ token
+    // lấy username từ token
     public String extractUsername(String token) {
         return getClaims(token).getSubject();
     }
