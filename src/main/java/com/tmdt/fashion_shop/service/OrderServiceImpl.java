@@ -1,7 +1,6 @@
 package com.tmdt.fashion_shop.service;
 
-import com.tmdt.fashion_shop.dto.OrderRequestDTO;
-import com.tmdt.fashion_shop.dto.OrderResponseDTO;
+import com.tmdt.fashion_shop.dto.*;
 import com.tmdt.fashion_shop.entity.*;
 import com.tmdt.fashion_shop.enums.OrderStatus;
 import com.tmdt.fashion_shop.enums.PaymentMethod;
@@ -27,6 +26,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductVariantRepository productVariantRepository;
     private final OrderVoucherRepository orderVoucherRepository;
+    private final UserRepository userRepository;
     @Override
     @Transactional
     public OrderResponseDTO createOrder(String userId, OrderRequestDTO request) {
@@ -149,6 +149,86 @@ public class OrderServiceImpl implements OrderService {
                 order.getId(),
                 finalPrice,
                 order.getStatus().name()
+        );
+    }
+//    User
+    @Override
+    public List<OrderDTO> getMyOrders(String userId) {
+
+        List<Order> orders = orderRepository.findByUserId(userId);
+
+        return orders.stream().map(order -> new OrderDTO(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getStatus() != null ? order.getStatus().name() : null,
+                order.getPhone(),
+                order.getDeliveryAddress(),
+                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
+                order.getCreatedAt()
+        )).toList();
+    }
+//    Admin
+    @Override
+    public List<OrderDTO> getAllOrders() {
+
+        List<Order> orders = orderRepository.findAll();
+
+        return orders.stream().map(order -> new OrderDTO(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getStatus() != null ? order.getStatus().name() : null,
+                order.getPhone(),
+                order.getDeliveryAddress(),
+                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
+                order.getCreatedAt()
+        )).toList();
+    }
+    @Override
+    public OrderDetailDTO getOrderDetail(String userId, String orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order không tồn tại"));
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        boolean isAdmin = currentUser.getRole().name().equals("ADMIN");
+
+        // check quyền
+        if (!isAdmin && !order.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Không có quyền xem đơn này");
+        }
+
+        List<OrderItem> items = orderItemRepository.findByOrder_Id(orderId);
+
+        List<OrderItemDTO> itemDTOs = items.stream().map(item -> {
+
+            ProductVariant pv = item.getProductVariant();
+            String image = null;
+
+            if (pv.getProduct().getImages() != null && !pv.getProduct().getImages().isEmpty()) {
+                image = pv.getProduct().getImages().get(0).getImageUrl();
+            }
+
+            return new OrderItemDTO(
+                    pv.getProduct().getName(),
+                    image,// tên sản phẩm
+                    pv.getSize().toString(),       // size
+                    pv.getColor().toString(),      // màu
+                    item.getQuantity(),
+                    item.getPrice()
+            );
+
+        }).toList();
+
+        return new OrderDetailDTO(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getStatus() != null ? order.getStatus().name() : null,
+                order.getPhone(),
+                order.getDeliveryAddress(),
+                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
+                order.getCreatedAt(),
+                itemDTOs
         );
     }
 }

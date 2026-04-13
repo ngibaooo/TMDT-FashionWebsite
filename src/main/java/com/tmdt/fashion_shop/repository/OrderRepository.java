@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, String> {
 
-    List<Order> findByUser_Id(String userId);
+    List<Order> findByUserId(String userId);
 
     Page<Order> findByStatus(OrderStatus status, Pageable pageable);
 
@@ -21,4 +21,5 @@ public interface OrderRepository extends JpaRepository<Order, String> {
         WHERE o.status = 'COMPLETED'
     """)
     Double getTotalRevenue();
+
 }
