@@ -21,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final FileService fileService;
+    private final PasswordValidatorService passwordValidator;
 
     @Override
     public User register(RegisterRequestDTO request) {
@@ -32,6 +33,8 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByPhone(request.getPhone())) {
             throw new RuntimeException("SĐT đã tồn tại");
         }
+
+        passwordValidator.validate(request.getPassword());
 
         // upload avatar
         String avatarFileName = fileService.uploadFile(request.getAvatar());

@@ -1,5 +1,6 @@
 package com.tmdt.fashion_shop.controller;
 
+import com.tmdt.fashion_shop.dto.ChangePasswordRequestDTO;
 import com.tmdt.fashion_shop.dto.UpdateUserRequestDTO;
 import com.tmdt.fashion_shop.dto.UserProfileDTO;
 import com.tmdt.fashion_shop.security.JWTService;
@@ -35,5 +36,17 @@ public class UserController {
         String userId = jwtService.extractUsername(token);
 
         return userService.updateProfile(userId, request);
+    }
+    @PutMapping("/change-password")
+    public String changePassword(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody ChangePasswordRequestDTO request
+    ) {
+        String token = authHeader.replace("Bearer ", "");
+        String userId = jwtService.extractUsername(token);
+
+        userService.changePassword(userId, request);
+
+        return "Đổi mật khẩu thành công";
     }
 }

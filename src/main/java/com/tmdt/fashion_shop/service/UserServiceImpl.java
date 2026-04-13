@@ -1,10 +1,12 @@
 package com.tmdt.fashion_shop.service;
 
+import com.tmdt.fashion_shop.dto.ChangePasswordRequestDTO;
 import com.tmdt.fashion_shop.dto.UpdateUserRequestDTO;
 import com.tmdt.fashion_shop.dto.UserProfileDTO;
 import com.tmdt.fashion_shop.entity.User;
 import com.tmdt.fashion_shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final PasswordEncoder passwordEncoder;
+    private final PasswordValidatorService passwordValidator;
 
     @Override
     public UserProfileDTO getProfile(String userId) {
@@ -73,5 +77,34 @@ public class UserServiceImpl implements UserService {
                 user.getAvatar(),
                 user.getRole().name()
         );
+    }
+    @Override
+    public void changePassword(String userId, ChangePasswordRequestDTO request) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        // check mật khẩu cũ
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu cũ không đúng");
+        }
+        if (request.getNewPassword() == null || request.getNewPassword().isBlank()) {
+            throw new RuntimeException("Mật khẩu mới không được để trống");
+        }
+        passwordValidator.validate(request.getNewPassword());
+        // check confirm password
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Mật khẩu xác nhận không khớp");
+        }
+        // không cho đặt lại giống mật khẩu cũ
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new RuntimeException("Mật khẩu mới không được trùng mật khẩu cũ");
+        }
+
+        // encode password mới
+        String encodedPassword = passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
     }
 }
