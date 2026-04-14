@@ -30,7 +30,8 @@ public class UserServiceImpl implements UserService {
                 user.getPhone(),
                 user.getAddress(),
                 user.getAvatar(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getCreatedAt()
         );
     }
     @Override
@@ -75,7 +76,8 @@ public class UserServiceImpl implements UserService {
                 user.getPhone(),
                 user.getAddress(),
                 user.getAvatar(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getCreatedAt()
         );
     }
     @Override

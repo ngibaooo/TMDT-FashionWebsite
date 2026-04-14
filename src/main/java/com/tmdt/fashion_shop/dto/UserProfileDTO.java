@@ -3,6 +3,8 @@ package com.tmdt.fashion_shop.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 public class UserProfileDTO {
@@ -13,4 +15,5 @@ public class UserProfileDTO {
     private String address;
     private String avatar;
     private String role;
+    private LocalDateTime createdAt;
 }
