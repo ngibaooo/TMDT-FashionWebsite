@@ -18,21 +18,46 @@
 
     <!-- RIGHT -->
     <div class="right">
-
         <h2>ĐĂNG KÝ</h2>
 
-        <input type="text" id="name" placeholder="Họ tên">
-        <input type="text" id="email" placeholder="Email">
-        <input type="text" id="phone" placeholder="SĐT">
-        <input type="text" id="address" placeholder="Địa chỉ">
-        <input type="password" id="password" placeholder="Mật khẩu">
-        <input type="password" id="confirmPassword" placeholder="Nhập lại mật khẩu">
+        <form onsubmit="handleRegister(event)">
+            <div class="form-grid">
 
-        <button onclick="register()">TẠO TÀI KHOẢN</button>
+                <input id="name" type="text" placeholder="Họ và tên">
+                <input id="phone" type="text" placeholder="SĐT">
+
+                <input id="email" type="email" placeholder="Email">
+                <input id="address" type="text" placeholder="Địa chỉ">
+
+                <!-- PASSWORD -->
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input id="password" type="password" placeholder="Mật khẩu">
+                        <span class="toggle-password" onclick="togglePassword('password', this)">👁</span>
+                    </div>
+
+                    <small id="passwordHint" class="hint">
+                        Ít nhất 8 ký tự bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt
+                    </small>
+                </div>
+
+                <!-- CONFIRM -->
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input id="confirmPassword" type="password" placeholder="Nhập lại mật khẩu">
+                        <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁</span>
+                    </div>
+
+                    <small id="confirmHint" class="hint"></small>
+                </div>
+
+            </div>
+
+            <button type="submit">TẠO TÀI KHOẢN</button>
+        </form>
 
         <p>Đã có tài khoản?</p>
         <a href="/login">Đăng nhập</a>
-
     </div>
 
 </div>

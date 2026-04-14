@@ -1,26 +1,336 @@
 body {
-    font-family: Arial;
-    background: #f5f5f5;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #fff;
+    color: #111;
 }
 
-.container {
-    width: 80%;
-    margin: auto;
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 50px;
+    border-bottom: 1px solid #eee;
 }
 
-.profile-box {
-    background: white;
+.logo {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 180px;
     padding: 20px;
+    border-right: 1px solid #eee;
+    height: 100%;
+}
+
+.sidebar a {
+    display: block;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.sidebar a.active {
+    background: #000;
+    color: #fff;
+}
+
+/* MAIN */
+.main {
+    margin-left: 200px;
+    padding: 10px 40px 40px; /* giảm top để kéo lên gần navbar */
+}
+
+/* TITLE */
+.title {
+    font-size: 48px;
+    font-weight: 900;
     margin-bottom: 30px;
 }
 
-table {
+/* CONTAINER FULL WIDTH */
+.container {
     width: 100%;
-    background: white;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* 👈 3 cột */
+    gap: 30px;
+    width: 100%;
+}
+
+.summary {
+    min-width: 250px;
+}
+
+/* CARD */
+.card {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* USER TOP */
+.user-top {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* AVATAR */
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* TEXT */
+.card p {
+    margin: 6px 0;
+    font-size: 14px;
+}
+
+.card span {
+    font-size: 12px;
+    color: #777;
+    display: block;
+}
+
+/* DIVIDER */
+.divider {
+    height: 1px;
+    background: #ddd;
+    margin: 10px 0;
+}
+
+/* BUTTON */
+.btn {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* ORDERS */
+.orders {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.orders table {
+    width: 100%;
     border-collapse: collapse;
 }
 
-th, td {
-    padding: 10px;
+.orders th {
+    font-size: 12px;
     border-bottom: 1px solid #ddd;
+    text-align: left;
+    padding-bottom: 10px;
 }
+
+.orders td {
+    padding: 10px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+/* STATUS */
+.status {
+    display: inline-flex;        /* 👈 quan trọng */
+    align-items: center;         /* 👈 căn giữa dọc */
+    justify-content: center;     /* 👈 căn giữa ngang */
+
+    letter-spacing: 0.3px;
+    text-align: center;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    white-space: nowrap;
+
+    min-width: 110px;            /* 👈 giữ badge đều nhau */
+}
+.orders td:nth-child(3) {
+     width: 140px;
+    padding-right: 20px;
+    text-align: left;
+}
+
+/* TOGGLE */
+.section {
+    display: none;
+}
+
+.active-section {
+    display: block;
+}
+
+/* ===== KHI Ở TAB ORDERS ===== */
+.grid.orders-mode {
+    grid-template-columns: 1fr; /* full width */
+}
+
+/* Ẩn profile + summary khi ở Orders */
+.grid.orders-mode #accountSection,
+.grid.orders-mode .summary {
+    display: none;
+}
+
+/* Orders full rộng */
+.grid.orders-mode #ordersSection {
+    display: block;
+}
+
+.grid.orders-mode .orders {
+    max-width: 100%;
+}
+.btn-view {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #000;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 20px; /* 👈 bo tròn */
+    transition: all 0.2s ease;
+}
+/* hover effect */
+.btn-view:hover {
+    background: #000;
+    color: #fff;
+    transform: translateY(-1px); /* 👈 nhẹ lên */
+}
+
+/* click effect */
+.btn-view:active {
+    transform: scale(0.95);
+}
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* select đẹp hơn */
+.filter-bar select {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-bar select:hover {
+    border-color: #000;
+}
+
+/* focus */
+.filter-bar select:focus {
+    outline: none;
+    border-color: #000;
+    background: #fff;
+}
+
+/* BUTTON LỌC */
+.btn-filter {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background: #000;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* hover */
+.btn-filter:hover {
+    background: #333;
+    transform: translateY(-1px);
+}
+
+/* click */
+.btn-filter:active {
+    transform: scale(0.95);
+}
+
+/* ICON BUTTON */
+.icon-btn {
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 15px;
+}
+
+/* ACCOUNT WRAPPER */
+.account-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* DROPDOWN */
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    width: 180px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 100;
+}
+
+/* SHOW DROPDOWN */
+.dropdown.show {
+    display: flex;
+}
+
+/* ITEM */
+.dropdown-item {
+    padding: 10px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* hover */
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+/* logout màu khác */
+.dropdown-item.logout {
+    color: red;
+}
+.status.PENDING { background: #fff3cd; }
+.status.PAID { background: #d4edda; }
+.status.FAILED { background: #f8d7da; }
+.status.SHIPPING { background: #cce5ff; }
+.status.COMPLETED { background: #e2e3e5; }
+.status.CANCELLED { background: #f5c6cb; }

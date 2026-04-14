@@ -1,67 +1,430 @@
-const API_BASE = "http://localhost:8080/api";
+//const API_USER = "http://localhost:8080/api/users/me";
+//const API_ORDERS = "http://localhost:8080/api/orders/my-orders";
+//
+//// ===== TAB SWITCH =====
+//const btnAccount = document.getElementById("btnAccount");
+//const btnOrders = document.getElementById("btnOrders");
+//
+//const accountSection = document.getElementById("accountSection");
+//const ordersSection = document.getElementById("ordersSection");
+//
+//const grid = document.querySelector(".grid");
+//
+//btnAccount.onclick = () => {
+//    accountSection.classList.add("active-section");
+//    ordersSection.classList.remove("active-section");
+//
+//    btnAccount.classList.add("active");
+//    btnOrders.classList.remove("active");
+//
+//    grid.classList.remove("orders-mode");
+//
+//    // 👇 LƯU STATE
+//    localStorage.setItem("activeTab", "account");
+//};
+//
+//btnOrders.onclick = () => {
+//    ordersSection.classList.add("active-section");
+//    accountSection.classList.remove("active-section");
+//
+//    btnOrders.classList.add("active");
+//    btnAccount.classList.remove("active");
+//
+//    grid.classList.add("orders-mode");
+//
+//    // 👇 LƯU STATE
+//    localStorage.setItem("activeTab", "orders");
+//};
+//function restoreTab() {
+//    const activeTab = localStorage.getItem("activeTab");
+//
+//    if (activeTab === "orders") {
+//        btnOrders.click(); // trigger lại UI
+//    } else {
+//        btnAccount.click(); // default
+//    }
+//}
+//// ===== LOAD PROFILE =====
+//async function loadProfile() {
+//    const token = localStorage.getItem("token");
+//
+//    if (!token) {
+//        alert("Chưa đăng nhập");
+//        window.location.href = "/login";
+//        return;
+//    }
+//
+//    try {
+//        const res = await fetch(API_USER, {
+//            headers: {
+//                Authorization: "Bearer " + token
+//            }
+//        });
+//
+//        const user = await res.json();
+//        // avatar
+//        document.getElementById("avatar").src ="http://localhost:8080/uploads/" + user.avatar;
+//        document.getElementById("userId").innerText = user.id;
+//        document.getElementById("name").innerText = user.name;
+//        document.getElementById("phone").innerText = user.phone;
+//        document.getElementById("address").innerText = user.address || "Chưa cập nhật";
+//
+//      const createdDate = new Date(user.createdAt);
+//
+//      document.getElementById("memberSince").innerText =
+//          !isNaN(createdDate.getTime())
+//              ? createdDate.getFullYear()
+//              : "N/A";
+//
+//
+//    } catch (err) {
+//        logout();
+//    }
+//}
+//async function loadOrders() {
+//    const token = localStorage.getItem("token");
+//
+//    const status = document.getElementById("filterStatus").value;
+//    const sort = document.getElementById("sortOrder").value;
+//
+//    // build URL
+//    let url = API_ORDERS;
+//
+//    const params = [];
+//
+//    if (status) params.push(`status=${status}`);
+//    if (sort) params.push(`sort=${sort}`);
+//
+//    if (params.length > 0) {
+//        url += "?" + params.join("&");
+//    }
+//
+//    try {
+//        const res = await fetch(url, {
+//            headers: {
+//                Authorization: "Bearer " + token
+//            }
+//        });
+//
+//        const orders = await res.json();
+//        const table = document.getElementById("orderTable");
+//
+//        table.innerHTML = "";
+//
+//        if (!Array.isArray(orders) || orders.length === 0) {
+//            table.innerHTML = `<tr><td colspan="5">Không có đơn hàng</td></tr>`;
+//            return;
+//        }
+//
+//        orders.forEach(order => {
+//            const row = `
+//                <tr>
+//                    <td>#${order.id.slice(0, 8)}</td>
+//                    <td>${formatDate(order.createdAt)}</td>
+//                    <td>
+//                        <span class="status ${order.status}">
+//                            ${formatStatus(order.status)}
+//                        </span>
+//                    </td>
+//                    <td>${formatMoney(order.totalPrice)}</td>
+//                    <td>
+//                        <button class="btn-view" onclick="viewOrder('${order.id}')">
+//                            Xem
+//                        </button>
+//                    </td>
+//                </tr>
+//            `;
+//            table.innerHTML += row;
+//        });
+//        const totalOrders = orders.length;
+//
+//        const totalSpent = orders.reduce((sum, o) => {
+//            return sum + (Number(o.totalPrice) || 0);
+//        }, 0);
+//
+//        document.getElementById("totalOrders").innerText = totalOrders;
+//        document.getElementById("totalSpent").innerText = formatMoney(totalSpent);
+//    } catch (err) {
+//        console.error(err);
+//    }
+//    document.getElementById("filterStatus").onchange = loadOrders;
+//    document.getElementById("sortOrder").onchange = loadOrders;
+//}
+//
+//function formatStatus(status) {
+//    switch (status) {
+//        case "PENDING": return "Chờ xác nhận";
+//        case "PAID": return "Đã thanh toán";
+//        case "FAILED": return "Thanh toán thất bại";
+//        case "SHIPPING": return "Đang giao";
+//        case "COMPLETED": return "Đã hoàn thành";
+//        case "CANCELLED": return "Đã hủy";
+//        default: return "Không xác định";
+//    }
+//}
+//// ===== UTIL =====
+//function formatDate(dateStr) {
+//    return new Date(dateStr).toLocaleDateString("vi-VN");
+//}
+//function formatMoney(amount) {
+//    if (!amount) return "0 ₫";
+//
+//    const number = Number(amount);
+//
+//    if (isNaN(number)) return "0 ₫";
+//
+//    return new Intl.NumberFormat("vi-VN", {
+//        style: "currency",
+//        currency: "VND"
+//    }).format(number);
+//}
+//function logout() {
+//    localStorage.removeItem("token");
+//    window.location.href = "/login";
+//}
+//function viewOrder(id) {
+//    // sau này bạn có thể chuyển sang trang detail
+//    window.location.href = `/order-detail?id=${id}`;
+//}
+//// INIT
+//restoreTab();
+//loadProfile();
+//loadOrders();
+//// ===== NAVBAR ACTION =====
+//
+//// CART → chuyển trang
+//document.getElementById("cartIcon").onclick = () => {
+//    window.location.href = "/cart.html";
+//};
+//
+//// DROPDOWN toggle
+//const accountIcon = document.getElementById("accountIcon");
+//const dropdown = document.getElementById("accountDropdown");
+//
+//accountIcon.onclick = () => {
+//    dropdown.classList.toggle("show");
+//};
+//
+//// CLICK OUTSIDE → đóng dropdown
+//document.addEventListener("click", (e) => {
+//    if (!e.target.closest(".account-wrapper")) {
+//        dropdown.classList.remove("show");
+//    }
+//});
+//
+//// PROFILE
+//document.getElementById("btnProfile").onclick = () => {
+//    window.location.href = "http://localhost:8080/user/profile";
+//};
+//
+//// LOGOUT
+//document.getElementById("btnLogout").onclick = () => {
+//    logout();
+//};
+//
+const API_USER = "http://localhost:8080/api/users/me";
+const API_ORDERS = "http://localhost:8080/api/orders/my-orders";
 
-// lấy token
-const token = localStorage.getItem("token");
+// ===== ELEMENTS =====
+const btnAccount = document.getElementById("btnAccount");
+const btnOrders = document.getElementById("btnOrders");
 
-// ================= USER PROFILE =================
-async function loadProfile() {
-    const res = await fetch(`${API_BASE}/users/me`, {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    });
+const accountSection = document.getElementById("accountSection");
+const ordersSection = document.getElementById("ordersSection");
 
-    const data = await res.json();
+const grid = document.querySelector(".grid");
 
-    document.getElementById("name").innerText = data.name;
-    document.getElementById("email").innerText = data.email;
-    document.getElementById("phone").innerText = data.phone;
-    document.getElementById("address").innerText = data.address;
+const filterStatus = document.getElementById("filterStatus");
+const sortOrder = document.getElementById("sortOrder");
 
-    document.getElementById("avatar").src =
-        "http://localhost:8080/uploads/" + data.avatar;
+// ===== TAB SWITCH =====
+function switchTab(tab) {
+    const isOrders = tab === "orders";
+
+    accountSection.classList.toggle("active-section", !isOrders);
+    ordersSection.classList.toggle("active-section", isOrders);
+
+    btnAccount.classList.toggle("active", !isOrders);
+    btnOrders.classList.toggle("active", isOrders);
+
+    grid.classList.toggle("orders-mode", isOrders);
+
+    localStorage.setItem("activeTab", tab);
 }
 
-// ================= ORDER LIST =================
+btnAccount.onclick = () => switchTab("account");
+btnOrders.onclick = () => switchTab("orders");
+
+function restoreTab() {
+    switchTab(localStorage.getItem("activeTab") || "account");
+}
+
+// ===== PROFILE =====
+async function loadProfile() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        alert("Chưa đăng nhập");
+        return window.location.href = "/login";
+    }
+
+    try {
+        const res = await fetch(API_USER, {
+            headers: { Authorization: "Bearer " + token }
+        });
+
+        const user = await res.json();
+
+        document.getElementById("avatar").src =
+            "http://localhost:8080/uploads/" + user.avatar;
+
+        document.getElementById("userId").innerText = user.id;
+        document.getElementById("name").innerText = user.name;
+        document.getElementById("phone").innerText = user.phone;
+        document.getElementById("address").innerText =
+            user.address || "Chưa cập nhật";
+
+        const createdDate = new Date(user.createdAt);
+        document.getElementById("memberSince").innerText =
+            !isNaN(createdDate) ? createdDate.getFullYear() : "N/A";
+
+    } catch {
+        logout();
+    }
+}
+
+// ===== ORDERS =====
 async function loadOrders() {
-    const res = await fetch(`${API_BASE}/orders/my-orders`, {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    });
+    const token = localStorage.getItem("token");
 
-    const orders = await res.json();
+    let url = API_ORDERS;
+    const params = [];
 
+    if (filterStatus.value) params.push(`status=${filterStatus.value}`);
+    if (sortOrder.value) params.push(`sort=${sortOrder.value}`);
+
+    if (params.length) url += "?" + params.join("&");
+
+    try {
+        const res = await fetch(url, {
+            headers: { Authorization: "Bearer " + token }
+        });
+
+        const orders = await res.json();
+        renderOrders(orders);
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function renderOrders(orders) {
     const table = document.getElementById("orderTable");
     table.innerHTML = "";
 
-    orders.forEach(o => {
-        const row = `
-            <tr onclick="goToDetail('${o.id}')">
-                <td>${o.id}</td>
-                <td>${formatDate(o.createdAt)}</td>
-                <td>${o.status}</td>
-                <td>${formatPrice(o.totalPrice)}</td>
+    if (!Array.isArray(orders) || orders.length === 0) {
+        table.innerHTML = `<tr><td colspan="5">Không có đơn hàng</td></tr>`;
+        updateSummary(0, 0);
+        return;
+    }
+
+    let totalSpent = 0;
+
+    orders.forEach(order => {
+        totalSpent += Number(order.totalPrice) || 0;
+
+        table.innerHTML += `
+            <tr>
+                <td>#${order.id.slice(0, 8)}</td>
+                <td>${formatDate(order.createdAt)}</td>
+                <td>
+                    <span class="status ${order.status}">
+                        ${formatStatus(order.status)}
+                    </span>
+                </td>
+                <td>${formatMoney(order.totalPrice)}</td>
+                <td>
+                    <button class="btn-view" onclick="viewOrder('${order.id}')">
+                        Xem
+                    </button>
+                </td>
             </tr>
         `;
-        table.innerHTML += row;
     });
+
+    updateSummary(orders.length, totalSpent);
 }
 
-// ================= FORMAT =================
-function formatPrice(price) {
-    return price.toLocaleString() + "đ";
+function updateSummary(totalOrders, totalSpent) {
+    document.getElementById("totalOrders").innerText = totalOrders;
+    document.getElementById("totalSpent").innerText = formatMoney(totalSpent);
 }
 
-function formatDate(date) {
-    return new Date(date).toLocaleDateString("vi-VN");
+// ===== EVENTS =====
+filterStatus.onchange = loadOrders;
+sortOrder.onchange = loadOrders;
+
+// ===== NAVBAR =====
+document.getElementById("cartIcon").onclick = () => {
+    window.location.href = "/cart.html";
+};
+
+const accountIcon = document.getElementById("accountIcon");
+const dropdown = document.getElementById("accountDropdown");
+
+accountIcon.onclick = () => {
+    dropdown.classList.toggle("show");
+};
+
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".account-wrapper")) {
+        dropdown.classList.remove("show");
+    }
+});
+
+document.getElementById("btnProfile").onclick = () => {
+    window.location.href = "http://localhost:8080/user/profile";
+};
+
+document.getElementById("btnLogout").onclick = logout;
+
+// ===== UTIL =====
+function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString("vi-VN");
 }
 
-// ================= REDIRECT =================
-function goToDetail(orderId) {
-    window.location.href = `order-detail.html?id=${orderId}`;
+function formatMoney(amount) {
+    const number = Number(amount);
+    if (isNaN(number)) return "0 ₫";
+
+    return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND"
+    }).format(number);
 }
 
-// ================= INIT =================
+function formatStatus(status) {
+    const map = {
+        PENDING: "Chờ xác nhận",
+        PAID: "Đã thanh toán",
+        FAILED: "Thanh toán thất bại",
+        SHIPPING: "Đang giao",
+        COMPLETED: "Đã hoàn thành",
+        CANCELLED: "Đã hủy"
+    };
+    return map[status] || "Không xác định";
+}
+
+function viewOrder(id) {
+    window.location.href = `/order-detail?id=${id}`;
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+}
+
+// ===== INIT =====
+restoreTab();
 loadProfile();
 loadOrders();

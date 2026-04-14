@@ -2,44 +2,144 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Profile</title>
+    <title>User Profile</title>
 
-    <link rel="stylesheet" href="/css/profile/profile.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<!-- PROFILE -->
-<div class="container">
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo">EAZY VIBES</div>
+    <div class="icons">
 
-    <h1>HỒ SƠ CÁ NHÂN</h1>
+        <!-- CART -->
+        <span id="cartIcon" class="icon-btn">🛒</span>
 
-    <div class="profile-box">
-        <p><b>Họ tên:</b> <span id="name"></span></p>
-        <p><b>Email:</b> <span id="email"></span></p>
-        <p><b>SĐT:</b> <span id="phone"></span></p>
-        <p><b>Địa chỉ:</b> <span id="address"></span></p>
-        <img id="avatar" width="120"/>
+        <!-- ACCOUNT -->
+        <div class="account-wrapper">
+            <span id="accountIcon" class="icon-btn">👤</span>
+
+            <!-- DROPDOWN -->
+            <div id="accountDropdown" class="dropdown">
+                <div class="dropdown-item" id="btnProfile">
+                    Thông tin cá nhân
+                </div>
+                <div class="dropdown-item logout" id="btnLogout">
+                    Đăng xuất
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a id="btnAccount" class="active">
+        👤 ACCOUNT
+    </a>
+
+    <a id="btnOrders">
+        📦 ORDERS
+    </a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- TITLE (góc trái) -->
+    <h1 class="title">USER PROFILE & ORDERS</h1>
+
+    <div class="container">
+
+
+        <div class="grid">
+
+            <!-- PROFILE -->
+            <section id="accountSection" class="section active-section">
+                <div class="card">
+
+                    <div class="user-top">
+                        <img id="avatar" class="avatar" src="" alt="avatar">
+                        <div>
+                            <p><span>Name</span> <b id="name"></b></p>
+                            <p><span>Member</span> <b id="memberSince"></b></p>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <p><span>ID</span> <b id="userId"></b></p>
+                    <p><span>Phone</span> <b id="phone"></b></p>
+
+                    <div class="divider"></div>
+
+                    <p><span>Address</span></p>
+                    <p id="address"></p>
+
+                    <button class="btn">EDIT PROFILE</button>
+                </div>
+            </section>
+
+            <!-- ORDERS -->
+
+            <section id="ordersSection" class="section">
+                <div class="filter-bar">
+                    <select id="filterStatus">
+                        <option value="">Tất cả</option>
+                        <option value="PENDING">Chờ xác nhận</option>
+                        <option value="SHIPPING">Đang giao hàng</option>
+                        <option value="PAID">Đã thanh toán</option>
+                        <option value="COMPLETED">Hoàn thành</option>
+                        <option value="CANCELLED">Đã hủy</option>
+                    </select>
+
+                    <select id="sortOrder">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                        <option value="price_desc">Giá cao</option>
+                        <option value="price_asc">Giá thấp</option>
+                    </select>
+                </div>
+                <div class="card orders">
+                    <h2>ORDER HISTORY</h2>
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DATE</th>
+                            <th>STATUS</th>
+                            <th>TOTAL</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="orderTable"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SUMMARY (NEW) -->
+            <section class="section active-section">
+                <div class="card summary">
+                    <h2>SUMMARY</h2>
+
+                    <p><span>Total Orders</span> <b id="totalOrders">0</b></p>
+                    <p><span>Total Spent</span> <b id="totalSpent">0 ₫</b></p>
+
+                    <div class="divider"></div>
+
+                </div>
+            </section>
+
+        </div>
+
     </div>
 
-    <h2>LỊCH SỬ ĐƠN HÀNG</h2>
+</main>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Mã đơn</th>
-            <th>Ngày</th>
-            <th>Trạng thái</th>
-            <th>Tổng tiền</th>
-        </tr>
-        </thead>
-
-        <tbody id="orderTable"></tbody>
-    </table>
-
-</div>
-
-<script src="/js/profile/profile.js"></script>
+<script src="/js/profile.js"></script>
 </body>
 </html>

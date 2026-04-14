@@ -25,7 +25,7 @@ async function login() {
         if (data.role === "ADMIN") {
             window.location.href = "/admin";
         } else {
-            window.location.href = "/profile";
+            window.location.href = "/user/profile";
         }
 
     } else {
