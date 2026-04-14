@@ -4,6 +4,7 @@ import com.tmdt.fashion_shop.dto.OrderDTO;
 import com.tmdt.fashion_shop.dto.OrderDetailDTO;
 import com.tmdt.fashion_shop.dto.OrderRequestDTO;
 import com.tmdt.fashion_shop.dto.OrderResponseDTO;
+import com.tmdt.fashion_shop.enums.OrderStatus;
 import com.tmdt.fashion_shop.security.JWTService;
 import com.tmdt.fashion_shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +37,14 @@ public class OrderController {
     // User
     @GetMapping("/my-orders")
     public List<OrderDTO> getMyOrders(
-            @RequestHeader("Authorization") String authHeader
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false, defaultValue = "newest") String sort
     ) {
         String token = authHeader.replace("Bearer ", "");
         String userId = jwtService.extractUsername(token);
 
-        return orderService.getMyOrders(userId);
+        return orderService.getOrders(userId, status, sort);
     }
 
     // Admin

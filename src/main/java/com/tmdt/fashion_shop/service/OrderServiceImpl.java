@@ -9,11 +9,16 @@ import com.tmdt.fashion_shop.enums.VoucherStatus;
 import com.tmdt.fashion_shop.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final ProductVariantRepository productVariantRepository;
     private final OrderVoucherRepository orderVoucherRepository;
     private final UserRepository userRepository;
+
     @Override
     @Transactional
     public OrderResponseDTO createOrder(String userId, OrderRequestDTO request) {
@@ -151,7 +157,8 @@ public class OrderServiceImpl implements OrderService {
                 order.getStatus().name()
         );
     }
-//    User
+
+    //    User
     @Override
     public List<OrderDTO> getMyOrders(String userId) {
 
@@ -167,7 +174,8 @@ public class OrderServiceImpl implements OrderService {
                 order.getCreatedAt()
         )).toList();
     }
-//    Admin
+
+    //    Admin
     @Override
     public List<OrderDTO> getAllOrders() {
 
@@ -183,6 +191,7 @@ public class OrderServiceImpl implements OrderService {
                 order.getCreatedAt()
         )).toList();
     }
+
     @Override
     public OrderDetailDTO getOrderDetail(String userId, String orderId) {
 
@@ -230,5 +239,46 @@ public class OrderServiceImpl implements OrderService {
                 order.getCreatedAt(),
                 itemDTOs
         );
+    }
+    @Override
+    public List<OrderDTO> getOrders(String userId, String status, String sort) {
+
+        List<Order> orders;
+
+        // ===== FILTER =====
+        if (status != null && !status.isBlank()) {
+            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
+            orders = orderRepository.findByUserIdAndStatus(userId, orderStatus);
+        } else {
+            orders = orderRepository.findByUserId(userId);
+        }
+
+        // ===== SORT =====
+        if (sort != null) {
+            switch (sort) {
+                case "price_asc":
+                    orders.sort(Comparator.comparing(Order::getTotalPrice));
+                    break;
+                case "price_desc":
+                    orders.sort(Comparator.comparing(Order::getTotalPrice).reversed());
+                    break;
+                case "oldest":
+                    orders.sort(Comparator.comparing(Order::getCreatedAt));
+                    break;
+                default: // newest
+                    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
+            }
+        }
+
+        // ===== MAP DTO =====
+        return orders.stream().map(order -> new OrderDTO(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getStatus() != null ? order.getStatus().name() : null,
+                order.getPhone(),
+                order.getDeliveryAddress(),
+                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
+                order.getCreatedAt()
+        )).toList();
     }
 }

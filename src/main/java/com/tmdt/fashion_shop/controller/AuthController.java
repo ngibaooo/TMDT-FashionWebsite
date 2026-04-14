@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -20,7 +22,9 @@ public class AuthController {
 
         authService.register(request);
 
-        return ResponseEntity.ok("Đăng ký thành công");
+        return ResponseEntity.ok(Map.of(
+                "message", "Đăng ký thành công"
+        ));
     }
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {

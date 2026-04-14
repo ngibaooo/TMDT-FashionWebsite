@@ -1,169 +1,45 @@
 <!DOCTYPE html>
-<html class="light" lang="vi">
+<html lang="vi">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>EAZY VIBES | THÔNG TIN TÀI KHOẢN</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script id="tailwind-config">
-        tailwind.config = { 
-            theme: { 
-                extend: { 
-                    colors: { primary: "#000000", surface: "#f9f9f9", secondary: "#5e5e5e", "outline-variant": "#cfc4c5" }, 
-                    fontFamily: { headline: ["Space Grotesk"], body: ["Inter"], label: ["Inter"] } 
-                } 
-            } 
-        }
-    </script>
-    <style>
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
-        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; }
-        h1, h2, h3, .font-headline { font-family: 'Space Grotesk', sans-serif; }
-    </style>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="/css/profile/profile.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-surface text-on-surface">
-    <nav class="fixed top-0 w-full z-50 bg-[#f9f9f9]/80 dark:bg-black/80 backdrop-blur-xl flex justify-between items-center px-6 py-4">
-        <div class="text-2xl font-black tracking-tighter uppercase text-black dark:text-white font-headline">EAZY VIBES</div>
-        <div class="hidden md:flex gap-8 items-center">
-            <a class="font-headline tracking-tighter uppercase font-bold text-gray-500 hover:text-black transition-colors duration-200" href="#">BỘ SƯU TẬP</a>
-            <a class="font-headline tracking-tighter uppercase font-bold text-gray-500 hover:text-black transition-colors duration-200" href="#">LƯU TRỮ</a>
-            <a class="font-headline tracking-tighter uppercase font-bold text-gray-500 hover:text-black transition-colors duration-200" href="#">TIN TỨC</a>
-        </div>
-        <div class="flex gap-6 items-center">
-            <span class="material-symbols-outlined cursor-pointer text-black dark:text-white">shopping_bag</span>
-            <span class="material-symbols-outlined cursor-pointer text-black dark:text-white">person</span>
-        </div>
-    </nav>
 
-    <aside class="hidden lg:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-gray-200 z-40 pt-24 bg-surface">
-        <div class="px-6 mb-12">
-            <h2 class="text-lg font-bold font-headline uppercase text-black">EAZY VIBES</h2>
-            <p class="font-body text-[0.6875rem] uppercase tracking-widest text-secondary mt-1">THÀNH VIÊN TỪ 2024</p>
-        </div>
-        <nav class="flex flex-col gap-1">
-            <a class="flex items-center gap-4 bg-black text-white p-4 font-body text-[0.6875rem] uppercase tracking-widest transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">person</span> TÀI KHOẢN
-            </a>
-            <a class="flex items-center gap-4 text-black p-4 hover:bg-gray-200 font-body text-[0.6875rem] uppercase tracking-widest transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">package_2</span> ĐƠN HÀNG
-            </a>
-            <a class="flex items-center gap-4 text-black p-4 hover:bg-gray-200 font-body text-[0.6875rem] uppercase tracking-widest transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">favorite</span> YÊU THÍCH
-            </a>
-            <a class="flex items-center gap-4 text-black p-4 hover:bg-gray-200 font-body text-[0.6875rem] uppercase tracking-widest transition-all duration-200" href="#">
-                <span class="material-symbols-outlined">settings</span> CÀI ĐẶT
-            </a>
-        </nav>
-    </aside>
+<body>
 
-    <main class="lg:ml-64 pt-24 pb-12 px-6 md:px-12">
-        <div class="max-w-6xl mx-auto">
-            <header class="mb-16">
-                <h1 class="text-5xl md:text-8xl font-black tracking-tighter uppercase leading-none text-black font-headline">HỒ SƠ CÁ NHÂN<br/>& ĐƠN HÀNG</h1>
-                <div class="mt-4 w-24 h-2 bg-black"></div>
-            </header>
+<!-- PROFILE -->
+<div class="container">
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <section class="lg:col-span-5 space-y-12">
-                    <div class="bg-white p-8 border border-gray-200 relative overflow-hidden group shadow-sm">
-                        <div class="relative z-10">
-                            <h2 class="font-headline text-2xl font-bold uppercase tracking-tighter mb-8">THÔNG TIN CÁ NHÂN</h2>
-                            <div class="space-y-6">
-                                <div>
-                                    <label class="font-label text-[0.6875rem] uppercase tracking-widest text-secondary block mb-1">HỌ VÀ TÊN</label>
-                                    <p class="text-xl font-medium">Hoàng An</p>
-                                </div>
-                                <div>
-                                    <label class="font-label text-[0.6875rem] uppercase tracking-widest text-secondary block mb-1">ĐỊA CHỈ EMAIL</label>
-                                    <p class="text-xl font-medium">an.hoang@example.com</p>
-                                </div>
-                                <div>
-                                    <label class="font-label text-[0.6875rem] uppercase tracking-widest text-secondary block mb-1">THÀNH VIÊN TỪ</label>
-                                    <p class="text-xl font-medium">2024</p>
-                                </div>
-                                <div class="pt-6 border-t border-gray-200">
-                                    <label class="font-label text-[0.6875rem] uppercase tracking-widest text-secondary block mb-2">ĐỊA CHỈ GIAO HÀNG</label>
-                                    <p class="text-sm leading-relaxed text-black uppercase">
-                                        123 ĐƯỜNG NGUYỄN TRÃI, QUẬN 1<br/>
-                                        THÀNH PHỐ HỒ CHÍ MINH<br/>
-                                        VIỆT NAM, 700000
-                                    </p>
-                                </div>
-                            </div>
-                            <button class="mt-10 w-full bg-black text-white py-4 font-headline font-bold uppercase tracking-widest text-sm hover:bg-gray-800 transition-colors duration-200">
-                                CHỈNH SỬA HỒ SƠ
-                            </button>
-                        </div>
-                        <div class="absolute top-0 right-0 w-32 h-full bg-gray-100 translate-x-16 -skew-x-12"></div>
-                    </div>
-                    
-                    <div class="h-64 bg-gray-200 overflow-hidden">
-                        <img alt="Streetwear model" class="w-full h-full object-cover grayscale contrast-125 brightness-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj_bIBve68iaxAI6JphvfaO_TuCOoER8dGUgr32_ty68UUTKBc_gUDk9Ym--WUCfwC3EAy3VP2kCEzo_XVL4TcdWcqGvSi-uE2UDP4pdwvNfMLViGT7FUKh7AJO5RsbPlm8TJOrmrRwWgVDhKpu2zcXp1IpnhPN75gSoK0LaUfWjfM2pAHcJGvo5WWiw8v4Vk40BYDChnWMxguO7arMVe7q8KAVQlANuLhHiXkiOaqshvcOdO0C2IaGSwKGvMDALeZ_pzooNrTV7Fy"/>
-                    </div>
-                </section>
+    <h1>HỒ SƠ CÁ NHÂN</h1>
 
-                <section class="lg:col-span-7">
-                    <div class="bg-white p-8 border border-gray-200 min-h-full shadow-sm">
-                        <div class="flex justify-between items-end mb-8">
-                            <h2 class="font-headline text-2xl font-bold uppercase tracking-tighter">LỊCH SỬ ĐƠN HÀNG</h2>
-                            <span class="font-label text-[0.6875rem] uppercase tracking-widest text-secondary">TỔNG 3 ĐƠN HÀNG</span>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="border-b-2 border-black">
-                                        <th class="py-4 font-label text-[0.6875rem] uppercase tracking-widest text-secondary">MÃ ĐƠN</th>
-                                        <th class="py-4 font-label text-[0.6875rem] uppercase tracking-widest text-secondary">NGÀY ĐẶT</th>
-                                        <th class="py-4 font-label text-[0.6875rem] uppercase tracking-widest text-secondary">TRẠNG THÁI</th>
-                                        <th class="py-4 font-label text-[0.6875rem] uppercase tracking-widest text-secondary text-right">TỔNG TIỀN</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr class="group hover:bg-gray-50 transition-colors cursor-pointer">
-                                        <td class="py-6 font-headline font-bold">#EZY-2024-001</td>
-                                        <td class="py-6 text-sm">12 THÁNG 10, 2024</td>
-                                        <td class="py-6"><span class="inline-block px-3 py-1 bg-black text-white text-[10px] font-bold uppercase tracking-widest">ĐÃ GIAO</span></td>
-                                        <td class="py-6 text-right font-headline font-bold">1.240.000đ</td>
-                                    </tr>
-                                    <tr class="group hover:bg-gray-50 transition-colors cursor-pointer">
-                                        <td class="py-6 font-headline font-bold">#EZY-2024-002</td>
-                                        <td class="py-6 text-sm">28 THÁNG 9, 2024</td>
-                                        <td class="py-6"><span class="inline-block px-3 py-1 bg-gray-200 text-black text-[10px] font-bold uppercase tracking-widest">HOÀN TẤT</span></td>
-                                        <td class="py-6 text-right font-headline font-bold">890.000đ</td>
-                                    </tr>
-                                    <tr class="group hover:bg-gray-50 transition-colors cursor-pointer">
-                                        <td class="py-6 font-headline font-bold">#EZY-2023-098</td>
-                                        <td class="py-6 text-sm">15 THÁNG 12, 2023</td>
-                                        <td class="py-6"><span class="inline-block px-3 py-1 bg-gray-200 text-black text-[10px] font-bold uppercase tracking-widest">HOÀN TẤT</span></td>
-                                        <td class="py-6 text-right font-headline font-bold">2.100.000đ</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-12 flex justify-center">
-                            <button class="bg-transparent text-black py-3 px-8 font-label text-[0.6875rem] uppercase tracking-[0.2em] border border-gray-300 hover:border-black transition-all">
-                                XEM TOÀN BỘ LỊCH SỬ
-                            </button>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </main>
+    <div class="profile-box">
+        <p><b>Họ tên:</b> <span id="name"></span></p>
+        <p><b>Email:</b> <span id="email"></span></p>
+        <p><b>SĐT:</b> <span id="phone"></span></p>
+        <p><b>Địa chỉ:</b> <span id="address"></span></p>
+        <img id="avatar" width="120"/>
+    </div>
 
-    <footer class="w-full bg-black text-white py-12 px-6 flex flex-col items-center justify-center gap-8 border-t-0">
-        <div class="text-white font-black text-2xl tracking-tighter uppercase font-headline">EAZY VIBES</div>
-        <div class="flex flex-wrap justify-center gap-8">
-            <a class="font-body text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors" href="#">CHÍNH SÁCH BẢO MẬT</a>
-            <a class="font-body text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors" href="#">ĐIỀU KHOẢN</a>
-            <a class="font-body text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors" href="#">GIAO HÀNG</a>
-            <a class="font-body text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors" href="#">CỬA HÀNG</a>
-        </div>
-        <div class="font-body text-[10px] tracking-[0.2em] uppercase text-gray-500">
-            © 2026 EAZY VIBES EDITORIAL. BẢN QUYỀN THUỘC VỀ CHÚNG TÔI.
-        </div>
-    </footer>
+    <h2>LỊCH SỬ ĐƠN HÀNG</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Ngày</th>
+            <th>Trạng thái</th>
+            <th>Tổng tiền</th>
+        </tr>
+        </thead>
+
+        <tbody id="orderTable"></tbody>
+    </table>
+
+</div>
+
+<script src="/js/profile/profile.js"></script>
 </body>
 </html>

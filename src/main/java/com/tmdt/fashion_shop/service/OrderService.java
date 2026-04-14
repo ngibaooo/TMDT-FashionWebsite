@@ -4,6 +4,7 @@ import com.tmdt.fashion_shop.dto.OrderDTO;
 import com.tmdt.fashion_shop.dto.OrderDetailDTO;
 import com.tmdt.fashion_shop.dto.OrderRequestDTO;
 import com.tmdt.fashion_shop.dto.OrderResponseDTO;
+import com.tmdt.fashion_shop.enums.OrderStatus;
 
 import java.util.List;
 
@@ -13,4 +14,5 @@ public interface OrderService {
     List<OrderDTO> getMyOrders(String userId);
     List<OrderDTO> getAllOrders();
     public OrderDetailDTO getOrderDetail(String userId, String orderId);
+    List<OrderDTO> getOrders(String userId, String status, String sort);
 }
