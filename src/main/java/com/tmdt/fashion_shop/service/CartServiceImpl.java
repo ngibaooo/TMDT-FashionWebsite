@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
 
         List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
 
-        List<CartItemDTO> itemDTOs = items.stream().map(item -> {
+        List<CartItemDTO> itemDTOs = items.stream().filter(item -> item.getProductVariant() != null).map(item -> {
 
             var variant = item.getProductVariant();
             var product = variant.getProduct();

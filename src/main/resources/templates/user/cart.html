@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+
+    <link rel="stylesheet" href="/css/cart.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">EAZY VIBES</div>
+
+    <div class="icons">
+        <span class="icon-btn" onclick="goProfile()">👤</span>
+    </div>
+</header>
+
+<main class="main">
+
+    <h1 class="title">YOUR CART</h1>
+
+    <div class="cart-container">
+
+        <!-- CART ITEMS -->
+        <div class="cart-items" id="cartItems"></div>
+
+        <!-- SUMMARY -->
+        <div class="summary">
+            <h2>SUMMARY</h2>
+
+            <p><span>Total Items</span> <b id="totalItems">0</b></p>
+            <p><span>Total Price</span> <b id="totalPrice">0 ₫</b></p>
+
+            <button class="btn-checkout">CHECKOUT</button>
+        </div>
+
+    </div>
+
+</main>
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <p>Bạn có chắc muốn xóa sản phẩm này?</p>
+        <div class="modal-actions">
+            <button id="confirmYes">Xóa</button>
+            <button id="confirmNo">Hủy</button>
+        </div>
+    </div>
+</div>
+<script src="/js/cart.js"></script>
+</body>
+</html>
