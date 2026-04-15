@@ -10,6 +10,14 @@ public class PageController {
     public String profilePage() {
         return "user/profile";
     }
+    @GetMapping("/user/cart")
+    public String cartPage() {
+        return "user/cart";
+    }
+    @GetMapping("/user/update-profile")
+        public String updateProfilePage() {
+        return "user/update-profile"; // nếu dùng Thymeleaf
+    }
     @GetMapping("/login")
     public String loginPage() {
         return "auth/login";

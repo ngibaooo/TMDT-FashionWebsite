@@ -135,6 +135,9 @@ function updateSummary(totalOrders, totalSpent) {
     document.getElementById("totalOrders").innerText = totalOrders;
     document.getElementById("totalSpent").innerText = formatMoney(totalSpent);
 }
+function goUpdate() {
+    window.location.href = "/user/update-profile";
+}
 
 // ===== EVENTS =====
 filterStatus.onchange = loadOrders;
@@ -142,7 +145,7 @@ sortOrder.onchange = loadOrders;
 
 // ===== NAVBAR =====
 document.getElementById("cartIcon").onclick = () => {
-    window.location.href = "/cart.html";
+    window.location.href = "/user/cart";
 };
 
 const accountIcon = document.getElementById("accountIcon");
