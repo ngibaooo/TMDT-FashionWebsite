@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OUTERWEAR | EAZY VIBES</title>
+    
+    <link rel="stylesheet" href="/css/outerwear.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-center">
+                <a th:href="@{/}" class="logo">EAZY VIBES</a>
+            </div>
+            <div class="header-right">
+                <span class="material-symbols-outlined">search</span>
+                <a th:href="@{/login}"><span class="material-symbols-outlined">person</span></a>
+                <a th:href="@{/user/cart}"><span class="material-symbols-outlined">shopping_bag</span></a>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a th:href="@{/}">SẢN PHẨM MỚI</a></li>
+                <li><a th:href="@{/best-selling}">BEST SELLING</a></li>
+                <li><a th:href="@{/tops}">ÁO</a></li>
+                <li><a th:href="@{/bottoms}">QUẦN</a></li>
+                <li><a th:href="@{/outerwear}" class="active">ÁO KHOÁC</a></li>
+                <li><a th:href="@{/sale}" class="sale-link">KHUYẾN MÃI</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="outerwear-container">
+        <div class="page-top-bar">
+            <h1 class="category-title">OUTERWEAR</h1>
+            <div class="sort-box">
+                <select id="sort-select" onchange="fetchOuterwear()">
+                    <option value="newest">MỚI NHẤT</option>
+                    <option value="price_asc">GIÁ: TĂNG DẦN</option>
+                    <option value="price_desc">GIÁ: GIẢM DẦN</option>
+                    <option value="best_selling">BÁN CHẠY NHẤT</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="horizontal-filter">
+            <div class="filter-item label">
+                <span class="material-symbols-outlined">filter_list</span>
+                <span>BỘ LỌC</span>
+            </div>
+            
+            <div class="filter-item">
+                <select id="filter-price" onchange="fetchOuterwear()">
+                    <option value="">GIÁ SẢN PHẨM</option>
+                    <option value="0-500000">Dưới 500,000đ</option>
+                    <option value="500000-1500000">500,000đ - 1,500,000đ</option>
+                    <option value="1500000-5000000">Trên 1,500,000đ</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <select id="filter-size" onchange="fetchOuterwear()">
+                    <option value="">KÍCH THƯỚC</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="outerwear-grid" class="product-grid">
+            </div>
+
+        <div id="pagination" class="pagination"></div>
+    </main>
+
+    <footer class="main-footer">
+        <h2>EAZY VIBES</h2>
+        <p>© 2026 EAZY VIBES STUDIO. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script src="/js/outerwear.js"></script>
+</body>
+</html>
