@@ -1,0 +1,220 @@
+/* --- 1. GLOBAL & THEME --- */
+body { 
+    background-color: #000; 
+    color: #fff; 
+    margin: 0; 
+    font-family: 'Inter', sans-serif;
+}
+
+.product-detail-wrapper { 
+    padding: 0 5% 80px 5%; 
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* --- 2. BREADCRUMB (Đường dẫn trang) --- */
+.breadcrumb-container {
+    padding: 30px 0;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.breadcrumb-container a { 
+    color: #888; 
+    text-decoration: none; 
+    transition: 0.3s;
+}
+.breadcrumb-container a:hover { color: #fff; }
+.breadcrumb-container span { color: #444; margin: 0 10px; }
+
+/* --- 3. LAYOUT GRID (Chia 2 cột chính) --- */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 60px;
+}
+
+/* --- 4. PRODUCT GALLERY (Slider ảnh chuyên nghiệp) --- */
+.gallery-side {
+    display: flex;
+    gap: 20px;
+}
+
+/* Danh sách ảnh nhỏ nằm dọc bên trái */
+.thumb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 90px;
+}
+
+.thumb-list img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    cursor: pointer;
+    opacity: 0.4;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.thumb-list img.active, 
+.thumb-list img:hover {
+    opacity: 1;
+    border-color: #fff;
+}
+
+/* Khung ảnh to bên phải */
+.main-img-wrap {
+    flex: 1;
+    background: #111;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    position: relative;
+}
+
+.main-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- 5. PRODUCT INFO (Thông tin bên phải) --- */
+#product-name { 
+    font-family: 'Space Grotesk', sans-serif; 
+    font-size: 40px; 
+    margin-bottom: 10px; 
+    text-transform: uppercase;
+}
+
+.price-tag { 
+    font-size: 24px; 
+    color: #888; 
+    margin-bottom: 40px; 
+    font-weight: 600;
+}
+
+.select-box { margin-bottom: 30px; }
+
+.label { 
+    font-size: 11px; 
+    font-weight: 900; 
+    color: #555; 
+    margin-bottom: 15px; 
+    letter-spacing: 2px; 
+}
+
+/* Chips chọn Size/Color */
+.chips { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.option-chip { 
+    padding: 12px 25px; 
+    border: 1px solid #333; 
+    cursor: pointer; 
+    font-size: 13px; 
+    font-weight: 700; 
+    transition: 0.3s; 
+    text-transform: uppercase;
+}
+
+.option-chip.active, 
+.option-chip:hover { 
+    background: #fff; 
+    color: #000; 
+    border-color: #fff;
+}
+
+/* --- 6. QUANTITY CONTROL (Bộ chọn số lượng) --- */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #333;
+    width: fit-content;
+    margin-top: 10px;
+}
+
+.quantity-control button {
+    background: none;
+    border: none;
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.quantity-control button:hover { background: #222; }
+
+.quantity-control input {
+    background: none;
+    border: none;
+    color: #fff;
+    width: 60px;
+    text-align: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    /* Loại bỏ mũi tên mặc định và fix lỗi Warning dòng 95 */
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+.quantity-control input::-webkit-outer-spin-button,
+.quantity-control input::-webkit-inner-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+/* --- 7. BUTTONS --- */
+.add-cart-btn {
+    width: 100%; 
+    padding: 22px; 
+    background: #fff; 
+    color: #000;
+    border: none; 
+    font-weight: 900; 
+    cursor: pointer; 
+    transition: 0.3s;
+    letter-spacing: 2px;
+    margin-top: 20px;
+}
+
+.add-cart-btn:hover { background: #ddd; }
+
+/* --- 8. CART BADGE & ANIMATION --- */
+.cart-badge {
+    position: absolute; 
+    top: -5px; 
+    right: -8px; 
+    background: #ff4d4d;
+    color: #fff; 
+    font-size: 10px; 
+    width: 18px; 
+    height: 18px;
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-weight: 900;
+}
+
+/* Hiệu ứng vật thể bay */
+.fly-item {
+    position: fixed; 
+    z-index: 9999; 
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.42, 0, 0.58, 1);
+    object-fit: cover; 
+    border-radius: 5px;
+}
+
+/* --- 9. RESPONSIVE --- */
+@media (max-width: 1024px) {
+    .detail-grid { grid-template-columns: 1fr; gap: 40px; }
+    .gallery-side { flex-direction: column-reverse; }
+    .thumb-list { flex-direction: row; width: 100%; overflow-x: auto; }
+    .thumb-list img { width: 80px; }
+}

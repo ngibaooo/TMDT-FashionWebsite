@@ -1,73 +1,53 @@
-/**
- * TRANG CHỦ EAZY VIBES - PHIÊN BẢN HOÀN THIỆN
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Kiểm tra trạng thái đăng nhập để hiển thị Avatar
     updateHeaderAvatar();
+    // Luôn chạy hàm này khi load trang để khớp số lượng giỏ hàng
+    syncGlobalCartBadge();
 
-    // 2. Tải danh sách sản phẩm nổi bật (8 sản phẩm)
-    fetchFeaturedProducts();
+    const productGrid = document.getElementById('index-products-grid');
+    if (productGrid) fetchFeaturedProducts();
 });
 
-/**
- * LOGIC 1: HIỂN THỊ AVATAR NGƯỜI DÙNG
- * Đọc tên từ localStorage và thay thế icon person trên Header
- */
+// Hàm này là "Sợi dây liên kết" toàn dự án
+function syncGlobalCartBadge() {
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        const count = localStorage.getItem("cartCount") || "0";
+        badge.innerText = count;
+        badge.style.display = (parseInt(count) > 0) ? "flex" : "none";
+    }
+}
 function updateHeaderAvatar() {
     const userName = localStorage.getItem("userName");
-    
-    // Tìm thẻ <a> dẫn đến trang login trong cụm header-right
-    const loginLink = document.querySelector('.header-right a[href*="login"]');
-
+    const loginLink = document.querySelector('.header-right a[href*="login"]') 
+                   || document.getElementById('user-avatar-link');
     if (userName && loginLink) {
-        // Lấy chữ cái đầu tiên của tên (Ví dụ: "Hải" -> "H")
         const firstLetter = userName.charAt(0).toUpperCase();
-        
-        // Thay thế icon bằng thẻ div Avatar hình tròn
-        // Style được giữ đồng bộ với file index.css đã gửi
-        loginLink.innerHTML = `<div class="user-avatar" title="Xin chào, ${userName}">${firstLetter}</div>`;
-        
-        // Thay đổi đường dẫn: Thay vì vào Login thì vào trang cá nhân
+        loginLink.innerHTML = `<div class="user-avatar" title="${userName}">${firstLetter}</div>`;
         loginLink.href = "/user/profile";
     }
 }
 
 /**
- * LOGIC 2: ĐIỀU KHIỂN SEARCH OVERLAY
- */
-function toggleSearch() {
-    const overlay = document.getElementById('search-overlay');
-    if (overlay) {
-        overlay.classList.toggle('active');
-        // Ngăn cuộn trang khi đang mở search
-        document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
-    }
-}
-
-/**
- * LOGIC 3: LẤY DANH SÁCH SẢN PHẨM NỔI BẬT
- * Fetch 8 sản phẩm mới nhất từ API
+ * LOGIC 3: LẤY DANH SÁCH 8 SẢN PHẨM MỚI NHẤT
+ * Gọi API từ Backend và render ra Grid trang chủ
  */
 async function fetchFeaturedProducts() {
     const grid = document.getElementById('index-products-grid');
-    if (!grid) return;
-
+    
     try {
-        // Gọi API lấy 8 sản phẩm (2 hàng x 4 cột)
         const response = await fetch('/api/products/new?size=8');
-        
-        if (!response.ok) throw new Error("API Connection Error");
+        if (!response.ok) throw new Error("Không thể kết nối API");
 
         const data = await response.json();
         const products = data.content || [];
 
         if (products.length > 0) {
             grid.innerHTML = products.map(p => {
-                // Xử lý ảnh: Nếu không có ảnh thì dùng Placeholder
-                const displayImg = (p.images && p.images.length > 0) 
-                                   ? p.images[0] 
-                                   : 'https://via.placeholder.com/400x533?text=EAZY+VIBES+STUDIO';
+                // Xử lý lấy URL ảnh đầu tiên từ danh sách images (Object ProductImage)
+                let displayImg = 'https://via.placeholder.com/400x533?text=EAZY+VIBES';
+                if (p.images && p.images.length > 0) {
+                    displayImg = p.images[0].url;
+                }
 
                 const formattedPrice = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
 
@@ -76,7 +56,7 @@ async function fetchFeaturedProducts() {
                         <div class="img-box">
                             <img src="${displayImg}" 
                                  alt="${p.name}" 
-                                 onerror="this.src='https://via.placeholder.com/400x533?text=EAZY+VIBES+STUDIO'">
+                                 onerror="this.src='https://via.placeholder.com/400x533?text=EAZY+VIBES'">
                         </div>
                         <div class="product-info">
                             <h3>${p.name}</h3>
@@ -86,21 +66,33 @@ async function fetchFeaturedProducts() {
                 `;
             }).join('');
         } else {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444; padding: 50px;">HIỆN CHƯA CÓ SẢN PHẨM MỚI.</p>';
+            grid.innerHTML = '<p class="empty-msg">HIỆN CHƯA CÓ SẢN PHẨM MỚI.</p>';
         }
 
     } catch (error) {
-        console.error("Fetch Error:", error);
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ff4d4d; padding: 50px;">KHÔNG THỂ TẢI DỮ LIỆU SẢN PHẨM.</p>';
+        console.error("Lỗi Fetch:", error);
+        grid.innerHTML = '<p class="error-msg">LỖI TẢI DỮ LIỆU SẢN PHẨM.</p>';
     }
 }
 
 /**
- * LOGIC 4: HÀM ĐĂNG XUẤT (TÙY CHỌN)
- * Bạn có thể gọi hàm này khi khách nhấn vào nút Logout
+ * LOGIC 4: ĐIỀU KHIỂN SEARCH OVERLAY
+ */
+function toggleSearch() {
+    const overlay = document.getElementById('search-overlay');
+    if (overlay) {
+        overlay.classList.toggle('active');
+        document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
+    }
+}
+
+/**
+ * LOGIC 5: HÀM ĐĂNG XUẤT (LOGOUT)
  */
 function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
+    // Giữ lại cartCount nếu bạn muốn khách vẫn thấy giỏ hàng khi đăng xuất
+    // localStorage.removeItem("cartCount"); 
     window.location.href = "/";
 }

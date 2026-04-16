@@ -23,78 +23,124 @@ async function loadCart() {
 }
 
 // RENDER
+// function renderCart(items, totalPriceFromAPI) {
+//     const container = document.getElementById("cartItems");
+//     container.innerHTML = "";
+
+//     if (!Array.isArray(items) || items.length === 0) {
+//         container.innerHTML = "<p>Giỏ hàng trống</p>";
+//         updateSummary(0, 0);
+//         return;
+//     }
+
+//     let totalItems = 0;
+
+//     items.forEach(item => {
+//         const price = Number(item.price || 0);
+//         const quantity = Number(item.quantity || 0);
+
+//         totalItems += quantity;
+// //        container.innerHTML += `
+// //            <div class="cart-item">
+// //                <div class="left">
+// //                    <img src="http://localhost:8080${item.image}" />
+// //
+// //                    <div class="cart-info">
+// //                        <h3>${item.productName}</h3>
+// //                        <p>${formatMoney(price)}</p>
+// //                        <p>Size: ${item.size} | Color: ${item.color}</p>
+// //
+// //                        <p class="remove" onclick="removeItem('${item.cartItemId}')">
+// //                            Xóa
+// //                        </p>
+// //                    </div>
+// //                </div>
+// //
+// //                <div class="right">
+// //                    <div class="quantity">
+// //                        <button onclick="changeQty('${item.cartItemId}', -1)">−</button>
+// //                        <span>${quantity}</span>
+// //                        <button onclick="changeQty('${item.cartItemId}', 1)">+</button>
+// //                    </div>
+// //                </div>
+// //            </div>
+// //        `;
+//         container.innerHTML += `
+//             <div class="cart-item">
+//                 <div class="left">
+//                     <img src="http://localhost:8080${item.image}" />
+
+//                     <div class="cart-info">
+//                         <h3>${item.productName}</h3>
+//                         <p>${formatMoney(price)}</p>
+//                         <p>Size: ${item.size} | Color: ${item.color}</p>
+//                     </div>
+//                 </div>
+
+//                 <div class="right">
+//                     <div class="quantity">
+//                         <button  onclick="changeQty('${item.cartItemId}', 'DECREASE')"
+//                                     ${quantity <= 1 ? "disabled" : ""}>−</button>
+//                         <span>${quantity}</span>
+//                         <button onclick="changeQty('${item.cartItemId}', 'INCREASE')">+</button>
+//                     </div>
+
+//                     <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">
+//                         Xóa
+//                     </button>
+//                 </div>
+//             </div>
+//         `;
+//     });
+// ... (Các API_URL giữ nguyên)
+
 function renderCart(items, totalPriceFromAPI) {
     const container = document.getElementById("cartItems");
     container.innerHTML = "";
 
     if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = "<p>Giỏ hàng trống</p>";
+        localStorage.setItem("cartCount", "0"); // DÒNG 1: Reset về 0 nếu trống
+        if (window.syncGlobalCartBadge) window.syncGlobalCartBadge(); // DÒNG 2: Cập nhật Badge
         updateSummary(0, 0);
         return;
     }
 
     let totalItems = 0;
-
     items.forEach(item => {
-        const price = Number(item.price || 0);
-        const quantity = Number(item.quantity || 0);
-
-        totalItems += quantity;
-//        container.innerHTML += `
-//            <div class="cart-item">
-//                <div class="left">
-//                    <img src="http://localhost:8080${item.image}" />
-//
-//                    <div class="cart-info">
-//                        <h3>${item.productName}</h3>
-//                        <p>${formatMoney(price)}</p>
-//                        <p>Size: ${item.size} | Color: ${item.color}</p>
-//
-//                        <p class="remove" onclick="removeItem('${item.cartItemId}')">
-//                            Xóa
-//                        </p>
-//                    </div>
-//                </div>
-//
-//                <div class="right">
-//                    <div class="quantity">
-//                        <button onclick="changeQty('${item.cartItemId}', -1)">−</button>
-//                        <span>${quantity}</span>
-//                        <button onclick="changeQty('${item.cartItemId}', 1)">+</button>
-//                    </div>
-//                </div>
-//            </div>
-//        `;
+        totalItems += Number(item.quantity || 0);
+        // ... (Đoạn container.innerHTML giữ nguyên của bạn)
         container.innerHTML += `
             <div class="cart-item">
                 <div class="left">
                     <img src="http://localhost:8080${item.image}" />
-
                     <div class="cart-info">
                         <h3>${item.productName}</h3>
-                        <p>${formatMoney(price)}</p>
+                        <p>${formatMoney(item.price)}</p>
                         <p>Size: ${item.size} | Color: ${item.color}</p>
                     </div>
                 </div>
-
                 <div class="right">
                     <div class="quantity">
-                        <button  onclick="changeQty('${item.cartItemId}', 'DECREASE')"
-                                    ${quantity <= 1 ? "disabled" : ""}>−</button>
-                        <span>${quantity}</span>
+                        <button onclick="changeQty('${item.cartItemId}', 'DECREASE')" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
+                        <span>${item.quantity}</span>
                         <button onclick="changeQty('${item.cartItemId}', 'INCREASE')">+</button>
                     </div>
-
-                    <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">
-                        Xóa
-                    </button>
+                    <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">Xóa</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     });
+
+    // CẬP NHẬT SỐ LƯỢNG THẬT VÀO LOCALSTORAGE
+    localStorage.setItem("cartCount", totalItems); 
+    if (window.syncGlobalCartBadge) window.syncGlobalCartBadge();
 
     updateSummary(totalItems, totalPriceFromAPI);
 }
+// ... (Các hàm changeQty, removeItem giữ nguyên của bạn)
+
+
+
 
 // UPDATE QUANTITY
 async function changeQty(cartItemId, action) {

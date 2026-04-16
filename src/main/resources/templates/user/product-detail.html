@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHI TIẾT | EAZY VIBES</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/product-detail.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body class="dark-theme">
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="header-center">
+                <a th:href="@{/}" class="logo">EAZY VIBES</a>
+            </div>
+            <div class="header-right">
+                <span class="material-symbols-outlined">search</span>
+                <a th:href="@{/login}"><div id="user-avatar-placeholder"></div></a>
+                <a th:href="@{/user/cart}" id="cart-icon-target">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    <span id="cart-count" class="cart-badge">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="breadcrumb-container">
+        <div class="breadcrumb-inner">
+            <a th:href="@{/}">Trang chủ</a> <span>/</span> <span id="breadcrumb-cat">Streetwear</span>
+        </div>
+    </nav>
+
+    <main class="product-detail-wrapper">
+        <div class="detail-grid">
+            <div class="gallery-side">
+                <div class="main-img-wrap" id="img-fly-origin">
+                    <img id="main-product-img" src="" alt="Main">
+                </div>
+                <div class="thumb-list" id="thumbnail-list"></div>
+            </div>
+
+            <div class="info-side">
+                <h1 id="product-name">ĐANG TẢI...</h1>
+                <div id="product-price" class="price-tag">0đ</div>
+
+                <div class="select-box">
+                    <p class="label">MÀU SẮC</p>
+                    <div class="chips" id="color-options"></div>
+                </div>
+
+                <div class="select-box">
+                    <p class="label">KÍCH THƯỚC</p>
+                    <div class="chips" id="size-options"></div>
+                </div>
+
+                <div class="selection-group">
+    <label>SỐ LƯỢNG</label>
+    <div class="quantity-control">
+        <button type="button" onclick="changeQty(-1)">-</button>
+        <input type="number" id="buy-quantity" value="1" min="1" readonly>
+        <button type="button" onclick="changeQty(1)">+</button>
+    </div>
+</div>
+
+<button class="add-to-cart-btn" id="add-btn" onclick="handleAddToCart()">
+    THÊM VÀO GIỎ HÀNG
+</button>
+
+                <div class="description-box">
+                    <p class="label">MÔ TẢ SẢN PHẨM</p>
+                    <p id="product-desc">Đang tải thông tin...</p>
+                </div>
+
+                <button class="add-cart-btn" onclick="handleAddToCart()">THÊM VÀO GIỎ HÀNG</button>
+            </div>
+        </div>
+    </main>
+
+    <script th:src="@{/js/index.js}"></script>
+    <script th:src="@{/js/product-detail.js}"></script>
+</body>
+</html>
