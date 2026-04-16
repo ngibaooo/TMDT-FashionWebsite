@@ -11,6 +11,7 @@ import java.util.List;
 public class OrderDetailDTO {
     private String id;
     private double totalPrice;
+
     private String status;
     private String phone;
     private String deliveryAddress;

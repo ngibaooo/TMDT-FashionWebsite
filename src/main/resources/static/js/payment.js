@@ -161,15 +161,6 @@ async function placeOrder() {
             return;
         }
 
-//        if (body.paymentMethod === "VNPAY") {
-//            alert("Redirect sang VNPAY (giả lập)");
-//            window.location.href = "/payment-success?orderId=" + data.orderId;
-//        }
-//        if (body.paymentMethod === "VNPAY") {
-//            // chuyển sang trang giả lập VNPAY
-////            window.location.href = `/vnpay.html?orderId=${data.orderId}&amount=${finalPrice}`;
-//            window.location.href = "/vnpay?orderId=${data.orderId}&amount=${finalPrice}";
-//        }
         if (body.paymentMethod === "VNPAY") {
             window.location.href = `/vnpay?orderId=${data.orderId}&amount=${finalPrice}`;
         }

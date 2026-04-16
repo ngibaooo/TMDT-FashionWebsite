@@ -16,6 +16,10 @@ public class PageController {
     public String profilePage() {
         return "user/profile";
     }
+    @GetMapping("/user/order-detail")
+    public String orderDetailPage() {
+        return "/user/order-detail";
+    }
 
     @GetMapping("/user/cart")
     public String cartPage() {
@@ -56,21 +60,21 @@ public class PageController {
         return "auth/register"; 
     }
     @GetMapping("/tops") // Thay đổi từ /shop?category=tops thành /tops
-public String topsPage() {
-    return "user/tops"; 
-}  @GetMapping("/bottoms")
-public String bottomsPage() {
-    return "user/bottoms"; 
-}@GetMapping("/outerwear")
-public String outerwearPage() {
-    return "user/outerwear"; 
-}@GetMapping("/best-selling")
-public String bestSellingPage() {
-    return "user/best-selling";
-}
+    public String topsPage() {
+        return "user/tops";
+    }  @GetMapping("/bottoms")
+    public String bottomsPage() {
+        return "user/bottoms";
+    }@GetMapping("/outerwear")
+    public String outerwearPage() {
+        return "user/outerwear";
+    }@GetMapping("/best-selling")
+    public String bestSellingPage() {
+        return "user/best-selling";
+    }
 
-@GetMapping("/sale")
-public String salePage() {
-    return "user/sale";
-}} 
+    @GetMapping("/sale")
+    public String salePage() {
+        return "user/sale";
+    }}
 

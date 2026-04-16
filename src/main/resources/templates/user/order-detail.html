@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết đơn hàng</title>
+    <link rel="stylesheet" href="/css/order-detail.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>CHI TIẾT ĐƠN HÀNG</h1>
+
+    <div class="order-info">
+        <p><b>Mã đơn:</b> <span id="orderId"></span></p>
+        <p><b>Trạng thái:</b> <span id="status"></span></p>
+        <p><b>Số điện thoại:</b> <span id="phone"></span></p>
+        <p><b>Địa chỉ:</b> <span id="address"></span></p>
+        <p><b>Phương thức:</b> <span id="payment"></span></p>
+        <p><b>Ngày tạo:</b> <span id="createdAt"></span></p>
+    </div>
+
+    <h2>Sản phẩm</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Size</th>
+            <th>Màu</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+        </tr>
+        </thead>
+        <tbody id="orderItems"></tbody>
+    </table>
+
+    <div class="total">
+        Tổng tiền: <b id="totalPrice"></b>
+    </div>
+
+    <button onclick="goBack()">Quay lại</button>
+
+</div>
+
+<script src="/js/order-detail.js"></script>
+
+</body>
+</html>

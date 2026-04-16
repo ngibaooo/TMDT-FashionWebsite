@@ -94,6 +94,10 @@ async function loadOrders() {
     }
 }
 
+function viewOrder(id) {
+    window.location.href = `/user/order-detail?id=${id}`;
+}
+
 function renderOrders(orders) {
     const table = document.getElementById("orderTable");
     table.innerHTML = "";
@@ -194,9 +198,6 @@ function formatStatus(status) {
     return map[status] || "Không xác định";
 }
 
-function viewOrder(id) {
-    window.location.href = `/order-detail?id=${id}`;
-}
 
 function logout() {
     localStorage.removeItem("token");
