@@ -1,16 +1,14 @@
 package com.tmdt.fashion_shop.controller;
 
-import com.tmdt.fashion_shop.dto.BestSellingProductDTO;
-import com.tmdt.fashion_shop.dto.ProductCreateRequestDTO;
-import com.tmdt.fashion_shop.dto.ProductDTO;
-import com.tmdt.fashion_shop.dto.ProductDetailDTO;
+import com.tmdt.fashion_shop.dto.product.*;
 import com.tmdt.fashion_shop.enums.ProductSize;
-import com.tmdt.fashion_shop.service.ProductService;
+import com.tmdt.fashion_shop.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -42,6 +40,21 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size, sortObj);
 
         return ResponseEntity.ok(productService.getAll(pageable));
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(
+            @PathVariable String id,
+            @ModelAttribute ProductUpdateRequestDTO request
+    ) {
+        return ResponseEntity.ok(productService.update(id, request));
+    }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteProduct(@PathVariable String id) {
+
+        productService.deleteProduct(id);
+
+        return ResponseEntity.ok("Xóa sản phẩm thành công");
     }
 
     // tìm kiếm

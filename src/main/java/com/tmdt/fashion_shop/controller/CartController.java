@@ -1,8 +1,8 @@
 package com.tmdt.fashion_shop.controller;
 
-import com.tmdt.fashion_shop.dto.AddToCartRequestDTO;
-import com.tmdt.fashion_shop.dto.CartUpdateRequestDTO;
-import com.tmdt.fashion_shop.service.CartService;
+import com.tmdt.fashion_shop.dto.cart.AddToCartRequestDTO;
+import com.tmdt.fashion_shop.dto.cart.CartUpdateRequestDTO;
+import com.tmdt.fashion_shop.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

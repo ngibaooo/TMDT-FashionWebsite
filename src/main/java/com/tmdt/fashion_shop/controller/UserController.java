@@ -1,10 +1,10 @@
 package com.tmdt.fashion_shop.controller;
 
-import com.tmdt.fashion_shop.dto.ChangePasswordRequestDTO;
-import com.tmdt.fashion_shop.dto.UpdateUserRequestDTO;
-import com.tmdt.fashion_shop.dto.UserProfileDTO;
+import com.tmdt.fashion_shop.dto.auth.ChangePasswordRequestDTO;
+import com.tmdt.fashion_shop.dto.user.UpdateUserRequestDTO;
+import com.tmdt.fashion_shop.dto.user.UserProfileDTO;
 import com.tmdt.fashion_shop.security.JWTService;
-import com.tmdt.fashion_shop.service.UserService;
+import com.tmdt.fashion_shop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

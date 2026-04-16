@@ -1,7 +1,7 @@
 const API_USER = "http://localhost:8080/api/users/me";
 const API_ORDERS = "http://localhost:8080/api/orders/my-orders";
-
-// ===== ELEMENTS =====
+let allOrders = [];
+// ELEMENTS
 const btnAccount = document.getElementById("btnAccount");
 const btnOrders = document.getElementById("btnOrders");
 
@@ -13,7 +13,7 @@ const grid = document.querySelector(".grid");
 const filterStatus = document.getElementById("filterStatus");
 const sortOrder = document.getElementById("sortOrder");
 
-// ===== TAB SWITCH =====
+//  TAB SWITCH
 function switchTab(tab) {
     const isOrders = tab === "orders";
 
@@ -35,7 +35,7 @@ function restoreTab() {
     switchTab(localStorage.getItem("activeTab") || "account");
 }
 
-// ===== PROFILE =====
+//PROFILE
 async function loadProfile() {
     const token = localStorage.getItem("token");
 
@@ -69,10 +69,21 @@ async function loadProfile() {
     }
 }
 
-// ===== ORDERS =====
+// ORDERS
 async function loadOrders() {
     const token = localStorage.getItem("token");
 
+    // Get ALL ORDERS
+    const resAll = await fetch(API_ORDERS, {
+        headers: { Authorization: "Bearer " + token }
+    });
+
+    allOrders = await resAll.json();
+
+    // TÍNH SUMMARY từ ALL
+    calculateSummary(allOrders);
+
+    // LẤY ORDERS FILTER
     let url = API_ORDERS;
     const params = [];
 
@@ -81,21 +92,29 @@ async function loadOrders() {
 
     if (params.length) url += "?" + params.join("&");
 
-    try {
-        const res = await fetch(url, {
-            headers: { Authorization: "Bearer " + token }
-        });
+    const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+    });
 
-        const orders = await res.json();
-        renderOrders(orders);
-
-    } catch (err) {
-        console.error(err);
-    }
+    const orders = await res.json();
+    renderOrders(orders);
 }
 
 function viewOrder(id) {
     window.location.href = `/user/order-detail?id=${id}`;
+}
+function calculateSummary(orders) {
+    let totalSpent = 0;
+    let totalOrders = 0;
+
+    orders.forEach(order => {
+        if (order.status === "COMPLETED") {
+            totalSpent += Number(order.totalPrice) || 0;
+            totalOrders++;
+        }
+    });
+
+    updateSummary(totalOrders, totalSpent);
 }
 
 function renderOrders(orders) {
@@ -109,9 +128,14 @@ function renderOrders(orders) {
     }
 
     let totalSpent = 0;
+    let totalOrders = 0;
 
     orders.forEach(order => {
-        totalSpent += Number(order.totalPrice) || 0;
+
+        if (order.status === "COMPLETED") {
+            totalSpent += Number(order.totalPrice) || 0;
+            totalOrders++;
+        }
 
         table.innerHTML += `
             <tr>
@@ -132,7 +156,6 @@ function renderOrders(orders) {
         `;
     });
 
-    updateSummary(orders.length, totalSpent);
 }
 
 function updateSummary(totalOrders, totalSpent) {
@@ -171,7 +194,7 @@ document.getElementById("btnProfile").onclick = () => {
 
 document.getElementById("btnLogout").onclick = logout;
 
-// ===== UTIL =====
+// UTIL
 function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString("vi-VN");
 }
@@ -204,7 +227,7 @@ function logout() {
     window.location.href = "/login";
 }
 
-// ===== INIT =====
+// INIT
 restoreTab();
 loadProfile();
 loadOrders();

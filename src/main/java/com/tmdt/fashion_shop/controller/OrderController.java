@@ -1,9 +1,8 @@
 package com.tmdt.fashion_shop.controller;
 
-import com.tmdt.fashion_shop.dto.*;
-import com.tmdt.fashion_shop.enums.OrderStatus;
+import com.tmdt.fashion_shop.dto.orders.*;
 import com.tmdt.fashion_shop.security.JWTService;
-import com.tmdt.fashion_shop.service.OrderService;
+import com.tmdt.fashion_shop.service.orders.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

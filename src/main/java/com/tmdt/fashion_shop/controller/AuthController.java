@@ -1,8 +1,8 @@
 package com.tmdt.fashion_shop.controller;
 
-import com.tmdt.fashion_shop.dto.LoginRequestDTO;
-import com.tmdt.fashion_shop.dto.RegisterRequestDTO;
-import com.tmdt.fashion_shop.service.AuthService;
+import com.tmdt.fashion_shop.dto.auth.LoginRequestDTO;
+import com.tmdt.fashion_shop.dto.auth.RegisterRequestDTO;
+import com.tmdt.fashion_shop.service.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
