@@ -25,6 +25,9 @@ public class Voucher {
     private VoucherDiscountType discountType;
 
     private double discountValue;
+    private Double minOrderValue; //điều kiện giá trị tối thiểu của đơn hàng để dùng voucher
+    private Double maxDiscount; //giới hạn giảm giá (giảm cao nhất là bao nhiêu) chủ yếu cho voucher %
+                                // - khong cần cho voucher giảm cố định như 50k 100k
 
     @Enumerated(EnumType.STRING)
     private VoucherStatus status;

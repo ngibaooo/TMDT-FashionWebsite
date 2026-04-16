@@ -166,6 +166,9 @@ function formatMoney(amount) {
 function goProfile() {
     window.location.href = "/user/profile";
 }
+function goCheckout() {
+    window.location.href = "/user/payment";
+}
 
 // INIT
 loadCart();

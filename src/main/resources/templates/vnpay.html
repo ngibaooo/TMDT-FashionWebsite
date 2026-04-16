@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>VNPAY Payment</title>
+    <link rel="stylesheet" href="/css/vnpay.css">
+</head>
+<body>
+
+<div class="vnpay-container">
+
+    <div class="vnpay-header">
+        <h1>VNPAY</h1>
+        <p>Cổng thanh toán điện tử</p>
+    </div>
+
+    <div class="vnpay-box">
+        <h2>Thanh toán đơn hàng</h2>
+
+        <p><b>Mã đơn:</b> <span id="orderId"></span></p>
+        <p><b>Số tiền:</b> <span id="amount"></span></p>
+
+        <div class="qr-box">
+            <div class="qr">QR</div>
+            <p>Quét mã để thanh toán</p>
+        </div>
+
+        <button class="btn-success" onclick="paySuccess()">Thanh toán thành công</button>
+        <button class="btn-fail" onclick="payFail()">Hủy thanh toán</button>
+    </div>
+
+</div>
+
+<script src="/js/vnpay.js"></script>
+
+</body>
+</html>

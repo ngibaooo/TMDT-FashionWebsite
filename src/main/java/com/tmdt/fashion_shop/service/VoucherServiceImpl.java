@@ -26,9 +26,16 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public ApplyVoucherResponseDTO applyVoucher(String userId, String code) {
 
-        // tìm voucher
-        Voucher voucher = voucherRepository.findByCode(code)
+        // sanitize input
+        if (code == null || code.trim().isEmpty()) {
+            throw new RuntimeException("Vui lòng nhập mã voucher");
+        }
+
+        String normalizedCode = code.trim();
+
+        Voucher voucher = voucherRepository.findByCodeCaseSensitive(normalizedCode)
                 .orElseThrow(() -> new RuntimeException("Voucher không tồn tại"));
+
 
         // check trạng thái
         if (voucher.getStatus() != VoucherStatus.ACTIVE) {
@@ -37,7 +44,6 @@ public class VoucherServiceImpl implements VoucherService {
 
         // check thời gian
         LocalDateTime now = LocalDateTime.now();
-
         if (now.isBefore(voucher.getStartDate()) || now.isAfter(voucher.getEndDate())) {
             throw new RuntimeException("Voucher đã hết hạn");
         }
@@ -53,6 +59,9 @@ public class VoucherServiceImpl implements VoucherService {
 
         List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
 
+        if (items.isEmpty()) {
+            throw new RuntimeException("Giỏ hàng trống");
+        }
         // tính tổng tiền
         double total = items.stream()
                 .mapToDouble(i ->
@@ -61,18 +70,21 @@ public class VoucherServiceImpl implements VoucherService {
                 .sum();
 
         // tính discount
-        double discount = 0;
-
+        double discount;
 
         if (voucher.getDiscountType() == VoucherDiscountType.PERCENT) {
             discount = total * voucher.getDiscountValue() / 100;
         } else {
             discount = voucher.getDiscountValue();
         }
-        // tránh giảm quá số tiền
-        if (discount > total) {
-            discount = total;
+        if (voucher.getMinOrderValue() != null && total < voucher.getMinOrderValue()) {
+            throw new RuntimeException("Đơn hàng chưa đạt giá trị tối thiểu");
         }
+        if (voucher.getMaxDiscount() != null) {
+            discount = Math.min(discount, voucher.getMaxDiscount());
+        }
+        // tránh âm / vượt quá
+        discount = Math.min(discount, total);
 
         double finalPrice = total - discount;
 

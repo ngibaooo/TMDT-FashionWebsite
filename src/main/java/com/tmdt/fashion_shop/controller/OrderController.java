@@ -1,9 +1,6 @@
 package com.tmdt.fashion_shop.controller;
 
-import com.tmdt.fashion_shop.dto.OrderDTO;
-import com.tmdt.fashion_shop.dto.OrderDetailDTO;
-import com.tmdt.fashion_shop.dto.OrderRequestDTO;
-import com.tmdt.fashion_shop.dto.OrderResponseDTO;
+import com.tmdt.fashion_shop.dto.*;
 import com.tmdt.fashion_shop.enums.OrderStatus;
 import com.tmdt.fashion_shop.security.JWTService;
 import com.tmdt.fashion_shop.service.OrderService;
@@ -61,5 +58,13 @@ public class OrderController {
         String userId = jwtService.extractUsername(token);
 
         return orderService.getOrderDetail(userId, orderId);
+    }
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<?> updateOrderStatus(
+            @PathVariable String orderId,
+            @RequestBody UpdateOrderStatusRequestDTO request
+    ) {
+        orderService.updateOrderStatus(orderId, request.getStatus());
+        return ResponseEntity.ok("Cập nhật trạng thái thành công");
     }
 }

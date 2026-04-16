@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDTO createOrder(String userId, OrderRequestDTO request) {
 
-        // lấy cart
+        // Lấy cart
         Cart cart = cartRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
 
@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Giỏ hàng trống");
         }
 
-        // tính tổng tiền
+        // Tính tổng tiền
         double total = items.stream()
                 .mapToDouble(i ->
                         i.getProductVariant().getProduct().getPrice() * i.getQuantity()
@@ -57,10 +57,12 @@ public class OrderServiceImpl implements OrderService {
         double discount = 0;
         Voucher voucher = null;
 
-        // xử lý voucher
+        // Xử lý voucher
         if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
 
-            voucher = voucherRepository.findByCode(request.getVoucherCode())
+            String code = request.getVoucherCode().trim().toUpperCase();
+
+            voucher = voucherRepository.findByCodeCaseSensitive(code)
                     .orElseThrow(() -> new RuntimeException("Voucher không tồn tại"));
 
             if (voucher.getStatus() != VoucherStatus.ACTIVE) {
@@ -84,16 +86,17 @@ public class OrderServiceImpl implements OrderService {
                 discount = voucher.getDiscountValue();
             }
 
-            if (discount > total) discount = total;
+            // không cho vượt quá tổng tiền
+            discount = Math.min(discount, total);
 
-            // trừ lượt
+            // trừ lượt voucher
             voucher.setQuantity(voucher.getQuantity() - 1);
             voucherRepository.save(voucher);
         }
 
         double finalPrice = total - discount;
 
-        // tạo Order
+        // 4. Tạo Order
         Order order = new Order();
         order.setId(UUID.randomUUID().toString());
         order.setUser(cart.getUser());
@@ -108,13 +111,14 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Phương thức thanh toán không hợp lệ");
         }
 
-        order.setTotalPrice(finalPrice);
+        // LUÔN PENDING (COD & VNPAY)
         order.setStatus(OrderStatus.PENDING);
+        order.setTotalPrice(finalPrice);
         order.setCreatedAt(LocalDateTime.now());
 
         orderRepository.save(order);
 
-        // LƯU ORDER_VOUCHER
+        // Lưu OrderVoucher
         if (voucher != null) {
             OrderVoucher ov = new OrderVoucher();
             ov.setId(UUID.randomUUID().toString());
@@ -124,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
             orderVoucherRepository.save(ov);
         }
 
-        // tạo OrderItem + trừ kho
+        // Tạo OrderItem + TRỪ KHO NGAY
         for (CartItem item : items) {
 
             ProductVariant variant = item.getProductVariant();
@@ -133,11 +137,10 @@ public class OrderServiceImpl implements OrderService {
                 throw new RuntimeException("Sản phẩm không đủ hàng");
             }
 
-            // trừ kho
+            // trừ kho ngay
             variant.setQuantity(variant.getQuantity() - item.getQuantity());
             productVariantRepository.save(variant);
 
-            // tạo order item
             OrderItem oi = new OrderItem();
             oi.setId(UUID.randomUUID().toString());
             oi.setOrder(order);
@@ -148,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemRepository.save(oi);
         }
 
-        // xóa cart
+        // XÓA CART
         cartItemRepository.deleteAll(items);
 
         return new OrderResponseDTO(
@@ -240,6 +243,7 @@ public class OrderServiceImpl implements OrderService {
                 itemDTOs
         );
     }
+
     @Override
     public List<OrderDTO> getOrders(String userId, String status, String sort) {
 
@@ -280,5 +284,72 @@ public class OrderServiceImpl implements OrderService {
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
                 order.getCreatedAt()
         )).toList();
+    }
+    @Override
+    @Transactional
+    public void updateOrderStatus(String orderId, String status) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order không tồn tại"));
+
+        OrderStatus newStatus;
+        try {
+            newStatus = OrderStatus.valueOf(status.toUpperCase());
+        } catch (Exception e) {
+            throw new RuntimeException("Status không hợp lệ");
+        }
+
+        OrderStatus currentStatus = order.getStatus();
+
+        // ===== VALIDATE FLOW =====
+        PaymentMethod paymentMethod = order.getPaymentMethod();
+
+        boolean isValid = switch (currentStatus) {
+
+            case PENDING -> {
+                if (paymentMethod == PaymentMethod.COD) {
+                    yield (newStatus == OrderStatus.SHIPPING ||
+                            newStatus == OrderStatus.CANCELLED);
+                } else { // VNPAY
+                    yield (newStatus == OrderStatus.PAID ||
+                            newStatus == OrderStatus.FAILED ||
+                            newStatus == OrderStatus.CANCELLED);
+                }
+            }
+
+            case PAID -> (newStatus == OrderStatus.SHIPPING ||
+                    newStatus == OrderStatus.CANCELLED);
+
+            case SHIPPING -> (newStatus == OrderStatus.COMPLETED);
+
+            default -> false;
+        };
+        // không cho update lại nếu đã COMPLETED
+        if (currentStatus == OrderStatus.COMPLETED) {
+            throw new RuntimeException("Đơn đã hoàn thành, không thể cập nhật");
+        }
+
+        if (!isValid) {
+            throw new RuntimeException(
+                    "Không thể chuyển từ " + currentStatus + " sang " + newStatus
+            );
+        }
+
+        // ===== HOÀN KHO =====
+        if (newStatus == OrderStatus.FAILED || newStatus == OrderStatus.CANCELLED) {
+
+            List<OrderItem> items = orderItemRepository.findByOrder_Id(orderId);
+
+            for (OrderItem item : items) {
+                ProductVariant variant = item.getProductVariant();
+
+                variant.setQuantity(variant.getQuantity() + item.getQuantity());
+                productVariantRepository.save(variant);
+            }
+        }
+
+        // ===== UPDATE STATUS =====
+        order.setStatus(newStatus);
+        orderRepository.save(order);
     }
 }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+
+    <link rel="stylesheet" href="/css/payment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">EAZY VIBES</div>
+</header>
+
+<main class="main">
+
+    <h1 class="title">CHECKOUT</h1>
+
+    <div class="checkout-container">
+
+        <!-- LEFT -->
+        <div class="checkout-form">
+            <h2>Thông tin giao hàng</h2>
+
+            <input id="address" placeholder="Địa chỉ">
+            <input id="phone" placeholder="Số điện thoại">
+
+            <select id="payment">
+                <option value="COD">Thanh toán khi nhận hàng (COD)</option>
+                <option value="VNPAY">Thanh toán VNPAY</option>
+            </select>
+
+            <!-- VOUCHER -->
+            <div class="voucher-box">
+                <input id="voucher" placeholder="Nhập mã giảm giá">
+                <button onclick="applyVoucher()">Áp dụng</button>
+            </div>
+
+            <p id="discountText"></p>
+
+            <button class="btn-order" onclick="placeOrder()">
+                ĐẶT HÀNG
+            </button>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="summary">
+            <h2>ĐƠN HÀNG</h2>
+
+            <div id="orderItems"></div>
+
+            <hr>
+
+            <p><span>Tạm tính</span> <b id="originalPrice">0 ₫</b></p>
+            <p><span>Giảm giá</span> <b id="discount">0 ₫</b></p>
+            <p><span>Tổng tiền</span> <b id="totalPrice">0 ₫</b></p>
+        </div>
+
+    </div>
+
+</main>
+
+<script src="/js/payment.js"></script>
+
+</body>
+</html>

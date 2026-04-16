@@ -21,6 +21,18 @@ public class PageController {
     public String cartPage() {
         return "user/cart";
     }
+    @GetMapping("/user/payment")
+    public String checkoutPage() {
+        return "user/payment";
+    }
+    @GetMapping("/vnpay")
+    public String vnpayPage() {
+        return "vnpay";
+    }
+    @GetMapping("/payment-success")
+    public String paymentSuccessPage() {
+        return "payment-success";
+    }
 
     @GetMapping("/user/update-profile")
     public String updateProfilePage() {

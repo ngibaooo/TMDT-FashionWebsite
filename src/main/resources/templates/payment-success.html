@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Success</title>
+</head>
+<body style="text-align:center; padding:50px">
+
+<h1>Thanh toán thành công 🎉</h1>
+<p id="orderId"></p>
+
+<a href="/">Về trang chủ</a>
+
+<script>
+    const id = new URLSearchParams(window.location.search).get("orderId");
+    document.getElementById("orderId").innerText = "Mã đơn: " + id;
+</script>
+
+</body>
+</html>
