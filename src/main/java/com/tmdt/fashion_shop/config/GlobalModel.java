@@ -15,6 +15,9 @@ public class GlobalModel {
 
         if (uri.equals("/")) {
             model.addAttribute("activePage", "home");
+        }
+        else if (uri.contains("all-products")) {
+            model.addAttribute("activePage", "all");
         } else if (uri.contains("best-selling")) {
             model.addAttribute("activePage", "best");
         } else if (uri.contains("tops")) {

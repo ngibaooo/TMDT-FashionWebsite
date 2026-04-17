@@ -55,7 +55,13 @@
                 <li>
                     <a th:href="@{/}"
                        th:classappend="${activePage == 'home'} ? 'active'">
-                        SẢN PHẨM MỚI
+                        TRANG CHỦ
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/all-products}"
+                       th:classappend="${activePage == 'all'} ? 'active'">
+                        TẤT CẢ SẢN PHẨM
                     </a>
                 </li>
 

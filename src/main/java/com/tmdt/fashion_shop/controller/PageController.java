@@ -75,27 +75,29 @@ public class PageController {
         return "auth/login";
     }
 
-    // 2. Trang Shop - Phải trỏ vào thư mục user/
-    @GetMapping("/shop")
-    public String shopPage() {
-        return "user/shop"; 
-    }
-
     // 5. Trang Register
     @GetMapping("/register")
     public String registerPage() {
-        return "auth/register"; 
+        return "auth/register";
     }
-    @GetMapping("/tops") // Thay đổi từ /shop?category=tops thành /tops
+    @GetMapping("/all-products")
+    public String allProductsPage() {
+        return "user/all-products";
+    }
+
+    @GetMapping("/tops")
     public String topsPage() {
         return "user/tops";
-    }  @GetMapping("/bottoms")
+    }
+    @GetMapping("/bottoms")
     public String bottomsPage() {
         return "user/bottoms";
-    }@GetMapping("/outerwear")
+    }
+    @GetMapping("/outerwear")
     public String outerwearPage() {
         return "user/outerwear";
-    }@GetMapping("/best-selling")
+    }
+    @GetMapping("/best-selling")
     public String bestSellingPage() {
         return "user/best-selling";
     }
@@ -103,5 +105,6 @@ public class PageController {
     @GetMapping("/sale")
     public String salePage() {
         return "user/sale";
-    }}
+    }
+}
 

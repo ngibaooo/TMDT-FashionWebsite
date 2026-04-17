@@ -32,7 +32,6 @@ body {
     font-size: 28px;
     font-weight: 900;
 }
-
 /* FILTER */
 select {
     background-color: var(--black);

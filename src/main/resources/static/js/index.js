@@ -16,62 +16,43 @@ function syncGlobalCartBadge() {
         badge.style.display = (parseInt(count) > 0) ? "flex" : "none";
     }
 }
-//function updateHeaderAvatar() {
-//    const userName = localStorage.getItem("userName");
-//    const loginLink = document.querySelector('.header-right a[href*="login"]')
-//                   || document.getElementById('user-avatar-link');
-//    if (userName && loginLink) {
-//        const firstLetter = userName.charAt(0).toUpperCase();
-//        loginLink.innerHTML = `<div class="user-avatar" title="${userName}">${firstLetter}</div>`;
-//        loginLink.href = "/user/profile";
-//    }
-//}
-
-/**
- * LOGIC 3: LẤY DANH SÁCH 8 SẢN PHẨM MỚI NHẤT
- * Gọi API từ Backend và render ra Grid trang chủ
- */
 async function fetchFeaturedProducts() {
     const grid = document.getElementById('index-products-grid');
     
     try {
-        const response = await fetch('/api/products/new?size=8');
+        const response = await fetch('/api/products/best-selling?size=4');
         if (!response.ok) throw new Error("Không thể kết nối API");
 
         const data = await response.json();
-        const products = data.content || [];
+        const products = (data.content || []).slice(0, 4);
 
-        if (products.length > 0) {
-            grid.innerHTML = products.map(p => {
-                // Xử lý lấy URL ảnh đầu tiên từ danh sách images (Object ProductImage)
-                let displayImg = 'https://via.placeholder.com/400x533?text=EAZY+VIBES';
-                if (p.images && p.images.length > 0) {
-                    displayImg = p.images[0].url;
-                }
+        grid.innerHTML = products.map(p => {
+            let displayImg = '/images/default-product.png';
 
-                const formattedPrice = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
+            if (p.images && p.images.length > 0) {
+                displayImg = "http://localhost:8080" + p.images[0];
+            }
 
-                return `
-                    <a href="/products/${p.id}" class="product-card">
-                        <div class="img-box">
-                            <img src="${displayImg}" 
-                                 alt="${p.name}" 
-                                 onerror="this.src='https://via.placeholder.com/400x533?text=EAZY+VIBES'">
-                        </div>
-                        <div class="product-info">
-                            <h3>${p.name}</h3>
-                            <div class="price">${formattedPrice}</div>
-                        </div>
-                    </a>
-                `;
-            }).join('');
-        } else {
-            grid.innerHTML = '<p class="empty-msg">HIỆN CHƯA CÓ SẢN PHẨM MỚI.</p>';
-        }
+            const price =
+                new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
+
+            return `
+                <a href="/product/${p.id}" class="product-card">
+                    <div class="img-box">
+                        <img src="${displayImg}"
+                             onerror="this.src='/images/default-product.png'">
+                    </div>
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        <div class="price">${price}</div>
+                    </div>
+                </a>
+            `;
+        }).join('');
 
     } catch (error) {
         console.error("Lỗi Fetch:", error);
-        grid.innerHTML = '<p class="error-msg">LỖI TẢI DỮ LIỆU SẢN PHẨM.</p>';
+        grid.innerHTML = '<p>Lỗi tải sản phẩm</p>';
     }
 }
 
