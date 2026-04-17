@@ -56,6 +56,12 @@ public class ProductController {
 
         return ResponseEntity.ok("Xóa sản phẩm thành công");
     }
+    @PutMapping("/{id}/restore")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> restoreProduct(@PathVariable("id") String id) {
+        productService.restoreProduct(id);
+        return ResponseEntity.ok("Khôi phục sản phẩm thành công");
+    }
 
     // tìm kiếm
     @GetMapping("/search")

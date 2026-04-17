@@ -42,7 +42,6 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     private String saveFile(MultipartFile file) {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
@@ -349,6 +348,26 @@ public class ProductServiceImpl implements ProductService {
 
         // soft delete
         product.setStatus(ProductStatus.INACTIVE);
+
+        productRepository.save(product);
+    }
+    @Override
+    @Transactional
+    public void restoreProduct(String productId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product không tồn tại"));
+
+        // nếu đang active rồi thì không cần mở
+        if (product.getStatus() == ProductStatus.ACTIVE) {
+            throw new RuntimeException("Sản phẩm đang hoạt động");
+        }
+        // nếu không phải INACTIVE thì không cho restore
+        if (product.getStatus() != ProductStatus.INACTIVE) {
+            throw new RuntimeException("Chỉ có thể khôi phục sản phẩm INACTIVE");
+        }
+        // mở lại
+        product.setStatus(ProductStatus.ACTIVE);
 
         productRepository.save(product);
     }

@@ -28,4 +28,5 @@ public interface ProductService {
     ProductDTO create(ProductCreateRequestDTO request);
     public ProductDTO update(String id, ProductUpdateRequestDTO request);
     public void deleteProduct(String productId);
+    public void restoreProduct(String productId);
 }

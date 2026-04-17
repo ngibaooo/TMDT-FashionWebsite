@@ -21,5 +21,11 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
         WHERE o.status = 'COMPLETED'
     """)
     Double getTotalRevenue();
-
+    @Query("""
+    SELECT COUNT(o) > 0
+    FROM Order o
+    WHERE o.user.id = :userId
+      AND o.status NOT IN ('COMPLETED', 'CANCELLED', 'FAILED')
+    """)
+    boolean existsActiveOrdersByUserId(String userId);
 }

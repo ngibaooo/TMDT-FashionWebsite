@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class UserProfileDTO {
+public class UserProfileForAdminDTO {
     private String id;
     private String name;
     private String email;

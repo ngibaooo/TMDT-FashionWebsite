@@ -6,6 +6,7 @@ import com.tmdt.fashion_shop.dto.cart.CartItemDTO;
 import com.tmdt.fashion_shop.dto.cart.CartUpdateRequestDTO;
 import com.tmdt.fashion_shop.entity.*;
 import com.tmdt.fashion_shop.enums.ProductStatus;
+import com.tmdt.fashion_shop.enums.UserStatus;
 import com.tmdt.fashion_shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDTO getCart(String userId) {
-
         Cart cart = cartRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
+        // lấy user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        if (user.getStatus() == UserStatus.LOCKED) {
+            throw new RuntimeException("Tài khoản đã bị khóa");
+        }
 
         List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
 
@@ -80,7 +86,10 @@ public class CartServiceImpl implements CartService {
         // lấy user
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
-
+        // CHẶN USER LOCKED
+        if (user.getStatus() == UserStatus.LOCKED) {
+            throw new RuntimeException("Tài khoản đã bị khóa! Không thể thêm sản phẩm vào giỏ hàng");
+        }
         // lấy hoặc tạo cart
         Cart cart = cartRepository.findByUser_Id(userId)
                 .orElseGet(() -> {
@@ -138,7 +147,12 @@ public class CartServiceImpl implements CartService {
 
         CartItem item = cartItemRepository.findById(request.getCartItemId())
                 .orElseThrow(() -> new RuntimeException("Item không tồn tại"));
-
+        // lấy user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        if (user.getStatus() == UserStatus.LOCKED) {
+            throw new RuntimeException("Tài khoản đã bị khóa");
+        }
         // check item thuộc cart của user
         if (!item.getCart().getId().equals(cart.getId())) {
             throw new RuntimeException("Không hợp lệ");

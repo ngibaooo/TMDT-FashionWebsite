@@ -35,11 +35,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderResponseDTO createOrder(String userId, OrderRequestDTO request) {
-
+        // lấy user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         // Lấy cart
         Cart cart = cartRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
-
+        if (user.getStatus() == UserStatus.LOCKED) {
+            throw new RuntimeException("Tài khoản đã bị khóa");
+        }
         List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
 
         if (items.isEmpty()) {
