@@ -17,8 +17,16 @@ async function loadOrderDetail() {
         });
 
         const data = await res.json();
+const statusEl = document.getElementById("status");
 
-        // ===== INFO =====
+statusEl.innerText = formatStatus(data.status);
+
+// reset class cũ
+statusEl.className = "";
+
+// add class mới
+statusEl.classList.add(data.status);
+        // INFO
         document.getElementById("orderId").innerText = data.id;
         document.getElementById("status").innerText = formatStatus(data.status);
         document.getElementById("phone").innerText = data.phone;
@@ -29,8 +37,28 @@ async function loadOrderDetail() {
 
         document.getElementById("totalPrice").innerText =
             formatMoney(data.totalPrice);
+        // NEW: USER
+        document.getElementById("userName").innerText =
+            data.userName || "N/A";
 
-        // ===== ITEMS =====
+        // NEW: VOUCHER
+        if (data.voucher) {
+            const v = data.voucher;
+
+            let discountText = "";
+
+            if (v.discountType === "PERCENT") {
+                discountText = `-${v.discountValue}% (${v.code})`;
+            } else {
+                discountText = `-${formatMoney(v.discountValue)} (${v.code})`;
+            }
+
+            document.getElementById("voucher").innerText = discountText;
+
+        } else {
+            document.getElementById("voucher").innerText = "Không áp dụng";
+        }
+        // ITEMS
         const table = document.getElementById("orderItems");
         table.innerHTML = "";
 
@@ -46,13 +74,51 @@ async function loadOrderDetail() {
                 </tr>
             `;
         });
+        // SHOW CANCEL BUTTON
+        const cancelBtn = document.getElementById("cancelBtn");
+
+        if (data.status === "PENDING" || data.status === "PAID") {
+            cancelBtn.style.display = "inline-block";
+        } else {
+            cancelBtn.style.display = "none";
+        }
 
     } catch (err) {
         console.error(err);
         alert("Không tải được chi tiết đơn");
     }
 }
+async function cancelOrder() {
+    const token = localStorage.getItem("token");
 
+    if (!confirm("Bạn có chắc muốn hủy đơn này?")) return;
+
+    try {
+        const res = await fetch(`${API_ORDER_DETAIL}/${orderId}/status`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token
+            },
+            body: JSON.stringify({
+                status: "CANCELLED"
+            })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.message || "Hủy đơn thất bại");
+            return;
+        }
+
+        alert("Hủy đơn thành công!");
+        loadOrderDetail(); // reload lại UI
+
+    } catch (err) {
+        console.error(err);
+        alert("Lỗi khi hủy đơn");
+    }
+}
 function formatMoney(amount) {
     return new Intl.NumberFormat("vi-VN", {
         style: "currency",

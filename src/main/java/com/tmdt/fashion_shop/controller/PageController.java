@@ -5,6 +5,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+    @GetMapping("/terms")
+    public String terms() {
+        return "policy/terms";
+    }
+
+    @GetMapping("/privacy")
+    public String privacy() {
+        return "policy/privacy";
+    }
+
+    @GetMapping("/return-policy")
+    public String returnPolicy() {
+        return "policy/return";
+    }
+
+    @GetMapping("/shipping")
+    public String shipping() {
+        return "policy/shipping";
+    }
+    @GetMapping("/company-info")
+    public String companyInfo() {
+        return "legal/company-info";
+    }
+    @GetMapping("/license")
+    public String license() {
+        return "legal/business-license";
+    }
 
     // 1. Trang chủ - Phải trỏ vào thư mục user/
     @GetMapping("/")

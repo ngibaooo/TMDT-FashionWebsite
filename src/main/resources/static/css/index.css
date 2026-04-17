@@ -26,113 +26,6 @@ body {
     overflow-x: hidden; 
 }
 
-/* 2. HEADER & NAVIGATION (Đồng bộ với các trang danh mục) */
-.top-banner { 
-    background: #000; 
-    color: #fff; 
-    text-align: center; 
-    padding: 10px; 
-    font-size: 11px; 
-    letter-spacing: 2px; 
-    border-bottom: 1px solid var(--gray-border); 
-}
-
-.main-header { 
-    background: var(--black); 
-    border-bottom: 1px solid var(--gray-border); 
-    position: sticky; 
-    top: 0; 
-    z-index: 1000; 
-}
-
-.header-content { 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px 5%; 
-    position: relative; 
-}
-
-.header-center { 
-    position: absolute; 
-    left: 50%; 
-    transform: translateX(-50%); 
-}
-
-.logo { 
-    font-family: 'Space Grotesk', sans-serif; 
-    font-size: 32px; 
-    font-weight: 900; 
-    color: #fff; 
-    text-decoration: none; 
-    letter-spacing: -2px; 
-}
-
-.header-right { 
-    position: absolute; 
-    right: 5%; 
-    display: flex; 
-    gap: 20px; 
-    align-items: center;
-}
-
-.header-right a, .header-right span, .header-right button { 
-    background: none;
-    border: none;
-    color: #fff; 
-    text-decoration: none; 
-    cursor: pointer; 
-}
-
-/* Nav Menu */
-.main-nav ul { 
-    display: flex; 
-    justify-content: center; 
-    list-style: none; 
-    padding: 10px 0 20px 0; 
-    gap: 30px; 
-}
-
-.main-nav a { 
-    color: var(--text-dim); 
-    text-decoration: none; 
-    font-size: 13px; 
-    font-weight: 700; 
-    transition: 0.3s; 
-}
-
-.main-nav a.active, .main-nav a:hover { 
-    color: #fff; 
-    border-bottom: 2px solid #fff; 
-    padding-bottom: 5px; 
-}
-
-.sale-link { 
-    color: var(--red-sale) !important; 
-}
-
-/* 3. USER AVATAR (Style cho icon sau khi đăng nhập) */
-.user-avatar {
-    width: 32px;
-    height: 32px;
-    background-color: #ffffff;
-    color: #000000;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 14px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 1px solid #fff;
-}
-
-.user-avatar:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-}
 
 /* 4. HERO SECTION */
 .hero-section { 
@@ -278,21 +171,21 @@ body {
 }
 
 /* 7. FOOTER */
-.main-footer { 
-    padding: 60px 5%; 
-    text-align: center; 
-    border-top: 1px solid var(--gray-border); 
+.main-footer {
+    padding: 60px 5%;
+    text-align: center;
+    border-top: 1px solid var(--gray-border);
     background: #000;
 }
 
-.main-footer h2 { 
-    font-family: 'Space Grotesk', sans-serif; 
-    margin-bottom: 10px; 
+.main-footer h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    margin-bottom: 10px;
 }
 
-.main-footer p { 
-    color: #444; 
-    font-size: 11px; 
+.main-footer p {
+    color: #444;
+    font-size: 11px;
 }
 
 /* 8. SEARCH OVERLAY */

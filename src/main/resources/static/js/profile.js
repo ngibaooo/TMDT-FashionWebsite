@@ -123,7 +123,6 @@ function renderOrders(orders) {
 
     if (!Array.isArray(orders) || orders.length === 0) {
         table.innerHTML = `<tr><td colspan="5">Không có đơn hàng</td></tr>`;
-        updateSummary(0, 0);
         return;
     }
 

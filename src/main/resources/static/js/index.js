@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    updateHeaderAvatar();
+//    updateHeaderAvatar();
     // Luôn chạy hàm này khi load trang để khớp số lượng giỏ hàng
     syncGlobalCartBadge();
 
@@ -16,16 +16,16 @@ function syncGlobalCartBadge() {
         badge.style.display = (parseInt(count) > 0) ? "flex" : "none";
     }
 }
-function updateHeaderAvatar() {
-    const userName = localStorage.getItem("userName");
-    const loginLink = document.querySelector('.header-right a[href*="login"]') 
-                   || document.getElementById('user-avatar-link');
-    if (userName && loginLink) {
-        const firstLetter = userName.charAt(0).toUpperCase();
-        loginLink.innerHTML = `<div class="user-avatar" title="${userName}">${firstLetter}</div>`;
-        loginLink.href = "/user/profile";
-    }
-}
+//function updateHeaderAvatar() {
+//    const userName = localStorage.getItem("userName");
+//    const loginLink = document.querySelector('.header-right a[href*="login"]')
+//                   || document.getElementById('user-avatar-link');
+//    if (userName && loginLink) {
+//        const firstLetter = userName.charAt(0).toUpperCase();
+//        loginLink.innerHTML = `<div class="user-avatar" title="${userName}">${firstLetter}</div>`;
+//        loginLink.href = "/user/profile";
+//    }
+//}
 
 /**
  * LOGIC 3: LẤY DANH SÁCH 8 SẢN PHẨM MỚI NHẤT

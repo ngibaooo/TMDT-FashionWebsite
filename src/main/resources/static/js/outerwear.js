@@ -59,37 +59,37 @@ async function fetchOuterwear() {
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ff4d4d; padding: 50px;">KHÔNG THỂ TẢI DỮ LIỆU ÁO KHOÁC.</p>';
     }
     /**
- * HÀM KIỂM TRA VÀ HIỂN THỊ AVATAR TRÊN HEADER
- */
-function updateHeaderAvatar() {
-    const userName = localStorage.getItem("userName");
-    // Tìm thẻ 'a' chứa icon person (thường là link dẫn đến trang login)
-    const loginLink = document.querySelector('a[href*="login"]'); 
-
-    if (userName && loginLink) {
-        // Lấy chữ cái đầu tiên và viết hoa
-        const firstLetter = userName.charAt(0).toUpperCase();
-        
-        // Thay thế icon bằng vòng tròn Avatar
-        loginLink.innerHTML = `<div class="user-avatar" 
-                                    style="width: 32px; 
-                                           height: 32px; 
-                                           background: #fff; 
-                                           color: #000; 
-                                           border-radius: 50%; 
-                                           display: flex; 
-                                           align-items: center; 
-                                           justify-content: center; 
-                                           font-weight: 900; 
-                                           font-size: 14px; 
-                                           text-transform: uppercase; 
-                                           cursor: pointer;" 
-                                    title="${userName}">${firstLetter}</div>`;
-        
-        // Đổi link dẫn sang trang Profile thay vì trang Login
-        loginLink.href = "/user/profile"; 
-    }
-}
+// * HÀM KIỂM TRA VÀ HIỂN THỊ AVATAR TRÊN HEADER
+// */
+//function updateHeaderAvatar() {
+//    const userName = localStorage.getItem("userName");
+//    // Tìm thẻ 'a' chứa icon person (thường là link dẫn đến trang login)
+//    const loginLink = document.querySelector('a[href*="login"]');
+//
+//    if (userName && loginLink) {
+//        // Lấy chữ cái đầu tiên và viết hoa
+//        const firstLetter = userName.charAt(0).toUpperCase();
+//
+//        // Thay thế icon bằng vòng tròn Avatar
+//        loginLink.innerHTML = `<div class="user-avatar"
+//                                    style="width: 32px;
+//                                           height: 32px;
+//                                           background: #fff;
+//                                           color: #000;
+//                                           border-radius: 50%;
+//                                           display: flex;
+//                                           align-items: center;
+//                                           justify-content: center;
+//                                           font-weight: 900;
+//                                           font-size: 14px;
+//                                           text-transform: uppercase;
+//                                           cursor: pointer;"
+//                                    title="${userName}">${firstLetter}</div>`;
+//
+//        // Đổi link dẫn sang trang Profile thay vì trang Login
+//        loginLink.href = "/user/profile";
+//    }
+//}
 
 // Chạy hàm ngay khi trang web tải xong
 document.addEventListener("DOMContentLoaded", updateHeaderAvatar);

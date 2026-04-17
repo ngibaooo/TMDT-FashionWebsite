@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHI TIẾT | EAZY VIBES</title>
+    <link rel="stylesheet" th:href="@{/css/components/header.css}">
+    <link rel="stylesheet" th:href="@{/css/components/footer.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/product-detail.css}">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,21 +13,7 @@
 </head>
 <body class="dark-theme">
 
-    <header class="main-header">
-        <div class="header-content">
-            <div class="header-center">
-                <a th:href="@{/}" class="logo">EAZY VIBES</a>
-            </div>
-            <div class="header-right">
-                <span class="material-symbols-outlined">search</span>
-                <a th:href="@{/login}"><div id="user-avatar-placeholder"></div></a>
-                <a th:href="@{/user/cart}" id="cart-icon-target">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                    <span id="cart-count" class="cart-badge">0</span>
-                </a>
-            </div>
-        </div>
-    </header>
+    <div th:replace="components/header :: header"></div>
 
     <nav class="breadcrumb-container">
         <div class="breadcrumb-inner">
@@ -78,7 +66,10 @@
             </div>
         </div>
     </main>
+    <div th:replace="components/footer :: footer"></div>
 
+    <script th:src="@{/js/components/header.js}"></script>
+    <script th:src="@{/js/components/footer.js}"></script>
     <script th:src="@{/js/index.js}"></script>
     <script th:src="@{/js/product-detail.js}"></script>
 </body>

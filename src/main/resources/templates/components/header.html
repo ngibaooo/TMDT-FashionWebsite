@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="header">
+
+    <div class="top-banner">
+        MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG
+    </div>
+
+    <header class="main-header">
+        <div class="header-content">
+
+            <div class="header-left"></div>
+
+            <div class="header-center">
+                <a th:href="@{/}" class="logo">EAZY VIBES</a>
+            </div>
+
+            <div class="header-right">
+                <span class="material-symbols-outlined icon" onclick="toggleSearch()">search</span>
+
+                <a th:href="@{/login}" id="loginBtn">
+                    <span class="material-symbols-outlined icon">person</span>
+                </a>
+
+                <div id="userAvatar" class="user-avatar" style="display:none;"></div>
+
+                <a th:href="@{/user/cart}">
+                    <span class="material-symbols-outlined icon">shopping_bag</span>
+                </a>
+            </div>
+
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li>
+                    <a th:href="@{/}"
+                       th:classappend="${activePage == 'home'} ? 'active'">
+                        SẢN PHẨM MỚI
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/best-selling}"
+                       th:classappend="${activePage == 'best'} ? 'active'">
+                        BEST SELLING
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/tops}"
+                       th:classappend="${activePage == 'tops'} ? 'active'">
+                        ÁO
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/bottoms}"
+                       th:classappend="${activePage == 'bottoms'} ? 'active'">
+                        QUẦN
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/outerwear}"
+                       th:classappend="${activePage == 'outerwear'} ? 'active'">
+                        ÁO KHOÁC
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/sale}"
+                       class="sale-link"
+                       th:classappend="${activePage == 'sale'} ? 'active'">
+                        KHUYẾN MÃI
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- SEARCH OVERLAY -->
+        <div id="search-overlay" class="search-overlay">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Tìm sản phẩm..." />
+                <button onclick="handleSearch()">TÌM</button>
+                <span class="close-btn" onclick="toggleSearch()">✕</span>
+            </div>
+
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </header>
+
+</div>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.tmdt.fashion_shop.service.orders;
 
 import com.tmdt.fashion_shop.dto.orders.*;
+import com.tmdt.fashion_shop.dto.voucher.VoucherDTO;
 import com.tmdt.fashion_shop.entity.*;
 import com.tmdt.fashion_shop.enums.*;
 import com.tmdt.fashion_shop.repository.*;
@@ -205,6 +206,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order không tồn tại"));
+
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại"));
 
@@ -228,14 +230,32 @@ public class OrderServiceImpl implements OrderService {
 
             return new OrderItemDTO(
                     pv.getProduct().getName(),
-                    image,// tên sản phẩm
-                    pv.getSize().toString(),       // size
-                    pv.getColor().toString(),      // màu
+                    image,
+                    pv.getSize().toString(),
+                    pv.getColor(),
                     item.getQuantity(),
                     item.getPrice()
             );
 
         }).toList();
+
+        // USER NAME
+        String userName = order.getUser().getName();
+
+        // VOUCHER
+        VoucherDTO voucherDTO = null;
+
+        Optional<OrderVoucher> ovOpt = orderVoucherRepository.findByOrder_Id(orderId);
+
+        if (ovOpt.isPresent()) {
+            Voucher v = ovOpt.get().getVoucher();
+
+            voucherDTO = new VoucherDTO(
+                    v.getCode(),
+                    v.getDiscountType(),
+                    v.getDiscountValue()
+            );
+        }
 
         return new OrderDetailDTO(
                 order.getId(),
@@ -245,7 +265,9 @@ public class OrderServiceImpl implements OrderService {
                 order.getDeliveryAddress(),
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
                 order.getCreatedAt(),
-                itemDTOs
+                itemDTOs,
+                userName,
+                voucherDTO
         );
     }
 

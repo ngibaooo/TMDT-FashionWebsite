@@ -5,36 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOTTOMS | EAZY VIBES</title>
     
+    <link rel="stylesheet" href="/css/components/header.css">
+    <link rel="stylesheet" href="/css/components/footer.css">
     <link rel="stylesheet" href="/css/bottoms.css">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
 
-    <header class="main-header">
-        <div class="header-content">
-            <div class="header-center">
-                <a th:href="@{/}" class="logo">EAZY VIBES</a>
-            </div>
-            <div class="header-right">
-                <span class="material-symbols-outlined">search</span>
-                <a th:href="@{/login}"><span class="material-symbols-outlined">person</span></a>
-                <a th:href="@{/user/cart}"><span class="material-symbols-outlined">shopping_bag</span></a>
-            </div>
-        </div>
-        <nav class="main-nav">
-            <ul>
-                <li><a th:href="@{/}">SẢN PHẨM MỚI</a></li>
-                <li><a th:href="@{/best-selling}">BEST SELLING</a></li>
-                <li><a th:href="@{/tops}">ÁO</a></li>
-                <li><a th:href="@{/bottoms}" class="active">QUẦN</a></li>
-                <li><a th:href="@{/outerwear}">ÁO KHOÁC</a></li>
-                <li><a th:href="@{/sale}" class="sale-link">KHUYẾN MÃI</a></li>
-            </ul>
-        </nav>
-    </header>
-
+    <div th:replace="components/header :: header"></div>
     <main class="bottoms-container">
         <div class="page-top-bar">
             <h1 class="category-title">BOTTOMS</h1>
@@ -80,11 +60,10 @@
         <div id="pagination" class="pagination"></div>
     </main>
 
-    <footer class="main-footer">
-        <h2>EAZY VIBES</h2>
-        <p>© 2026 EAZY VIBES STUDIO. ALL RIGHTS RESERVED.</p>
-    </footer>
+    <div th:replace="components/footer :: footer"></div>
 
+    <script src="/js/components/header.js"></script>
+    <script src="/js/components/footer.js"></script>
     <script src="/js/bottoms.js"></script>
 </body>
 </html>

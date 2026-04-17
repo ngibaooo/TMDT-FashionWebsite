@@ -8,17 +8,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Inter', sans-serif; background-color: var(--black); color: #fff; }
 
-.main-header { background: #000; border-bottom: 1px solid var(--gray-border); }
-.header-content { display: flex; justify-content: center; align-items: center; padding: 20px 5%; position: relative; }
-.logo { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 900; color: #fff; text-decoration: none; }
-.header-right { position: absolute; right: 5%; display: flex; gap: 20px; }
-.header-right a { color: #fff; text-decoration: none; }
-
-.main-nav ul { display: flex; justify-content: center; list-style: none; padding-bottom: 15px; gap: 30px; }
-.main-nav a { color: var(--text-dim); text-decoration: none; font-size: 13px; font-weight: 700; }
-.main-nav a.active { color: #fff; border-bottom: 2px solid #fff; padding-bottom: 5px; }
-.sale-link { color: var(--red-sale) !important; }
-
 .best-container { padding: 50px 5%; min-height: 80vh; }
 .page-top-bar { margin-bottom: 50px; border-bottom: 1px solid var(--gray-border); padding-bottom: 20px; }
 .category-title { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 900; }
