@@ -5,20 +5,6 @@ body {
     color: #111;
 }
 
-/* NAVBAR */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 50px;
-    border-bottom: 1px solid #eee;
-}
-
-.logo {
-    font-weight: 900;
-    font-size: 20px;
-    letter-spacing: 2px;
-}
-
 /* SIDEBAR */
 .sidebar {
     position: fixed;
@@ -289,45 +275,6 @@ body {
     display: inline-block;
 }
 
-/* DROPDOWN */
-.dropdown {
-    position: absolute;
-    right: 0;
-    top: 35px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    width: 180px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 100;
-}
-
-/* SHOW DROPDOWN */
-.dropdown.show {
-    display: flex;
-}
-
-/* ITEM */
-.dropdown-item {
-    padding: 10px 14px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-/* hover */
-.dropdown-item:hover {
-    background: #f5f5f5;
-}
-
-/* logout màu khác */
-.dropdown-item.logout {
-    color: red;
-}
 .status.PENDING { background: #fff3cd; }
 .status.PAID { background: #d4edda; }
 .status.FAILED { background: #f8d7da; }

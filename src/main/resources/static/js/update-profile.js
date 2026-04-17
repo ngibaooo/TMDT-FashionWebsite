@@ -15,7 +15,9 @@ async function loadUser() {
     document.getElementById("address").value = user.address || "";
 
     document.getElementById("previewAvatar").src =
-        "http://localhost:8080/uploads/" + user.avatar;
+        user.avatar
+            ? "http://localhost:8080/uploads/" + user.avatar
+            : "/images/default-avatar.png";
 }
 
 // PREVIEW AVATAR

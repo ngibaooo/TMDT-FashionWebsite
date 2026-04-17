@@ -1,79 +1,80 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const token = localStorage.getItem("token");
 
     const loginBtn = document.getElementById("loginBtn");
     const avatar = document.getElementById("userAvatar");
+    const dropdown = document.getElementById("headerDropdown");
 
     if (!loginBtn || !avatar) return;
 
-    if (token) {
-        loginBtn.style.display = "none";
-
-        const name = localStorage.getItem("userName") || "U";
-        avatar.innerText = name.charAt(0).toUpperCase();
-
-        avatar.style.display = "flex";
-
-        avatar.onclick = () => {
-            window.location.href = "/user/profile";
-        };
-    } else {
+    // ===== CHƯA LOGIN =====
+    if (!token) {
         avatar.style.display = "none";
         loginBtn.style.display = "inline-block";
+        return;
     }
-});
-function toggleSearch() {
-    const overlay = document.getElementById("search-overlay");
-    overlay.classList.toggle("active");
 
-    if (overlay.classList.contains("active")) {
-        document.getElementById("search-input").focus();
-    }
-}
-
-// ENTER để search
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        const overlay = document.getElementById("search-overlay");
-        if (overlay.classList.contains("active")) {
-            handleSearch();
-        }
-    }
-});
-
-async function handleSearch() {
-    const keyword = document.getElementById("search-input").value.trim();
-    const resultBox = document.getElementById("search-results");
-
-    if (!keyword) return;
-
-    resultBox.innerHTML = "<p>Đang tìm...</p>";
+    // ===== ĐÃ LOGIN =====
+    loginBtn.style.display = "none";
+    avatar.style.display = "flex";
 
     try {
-        const res = await fetch(`/api/products/search?keyword=${encodeURIComponent(keyword)}`);
-        const data = await res.json();
+        const res = await fetch("/api/users/me", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
 
-        const products = data.content || data;
-
-        if (products.length === 0) {
-            resultBox.innerHTML = "<p>Không tìm thấy sản phẩm</p>";
-            return;
+        if (!res.ok) {
+            console.warn("Token lỗi hoặc hết hạn");
+            return; // ❌ KHÔNG logout vội
         }
 
-        resultBox.innerHTML = products.map(p => `
-            <a href="/products/${p.id}" class="product-card">
-                <div class="img-box">
-                    <img src="${p.images && p.images.length ? p.images[0] : '/images/default.jpg'}">
-                </div>
-                <div class="product-info">
-                    <h3>${p.name}</h3>
-                    <p>${new Intl.NumberFormat('vi-VN').format(p.price)}đ</p>
-                </div>
-            </a>
-        `).join("");
+        const user = await res.json();
+
+        // ===== AVATAR =====
+        if (user.avatar) {
+            avatar.innerHTML = `
+                <img src="/uploads/${user.avatar}"
+                     onerror="this.src='/images/default-avatar.png'">
+            `;
+        } else {
+            const name = user.name || "U";
+            avatar.innerText = name.charAt(0).toUpperCase();
+        }
 
     } catch (err) {
-        console.error(err);
-        resultBox.innerHTML = "<p>Lỗi tìm kiếm</p>";
+        console.error("Lỗi fetch user:", err);
     }
-}
+
+    // ===== DROPDOWN =====
+    if (avatar && dropdown) {
+        avatar.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle("show");
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".account-wrapper")) {
+                dropdown.classList.remove("show");
+            }
+        });
+    }
+
+    // ===== PROFILE =====
+    const headerProfile = document.getElementById("headerProfile");
+    if (headerProfile) {
+        headerProfile.onclick = () => {
+            window.location.href = "/user/profile";
+        };
+    }
+
+    // ===== LOGOUT =====
+    const headerLogout = document.getElementById("headerLogout");
+    if (headerLogout) {
+        headerLogout.onclick = () => {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        };
+    }
+});

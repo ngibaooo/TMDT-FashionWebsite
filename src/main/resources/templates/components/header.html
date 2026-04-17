@@ -20,14 +20,31 @@
             <div class="header-right">
                 <span class="material-symbols-outlined icon" onclick="toggleSearch()">search</span>
 
-                <a th:href="@{/login}" id="loginBtn">
-                    <span class="material-symbols-outlined icon">person</span>
-                </a>
+                <div class="account-wrapper">
 
-                <div id="userAvatar" class="user-avatar" style="display:none;"></div>
+                    <!-- LOGIN -->
+                    <a th:href="@{/login}" id="loginBtn">
+                        <span class="material-symbols-outlined icon">person</span>
+                    </a>
+
+                    <!-- AVATAR -->
+                    <div id="userAvatar" class="user-avatar" style="display:none;"></div>
+
+                    <!-- DROPDOWN -->
+                    <div id="headerDropdown" class="dropdown">
+                        <div class="dropdown-item" id="headerProfile">
+                            Thông tin cá nhân
+                        </div>
+                        <div class="dropdown-item logout" id="headerLogout">
+                            Đăng xuất
+                        </div>
+                    </div>
+
+                </div>
 
                 <a th:href="@{/user/cart}">
-                    <span class="material-symbols-outlined icon">shopping_bag</span>
+<!--                    <span class="material-symbols-outlined icon">shopping_bag</span>-->
+                    <span class="material-symbols-outlined icon">🛒</span>
                 </a>
             </div>
 

@@ -1,39 +1,15 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
 
+    <link rel="stylesheet" href="/css/components/profile-header.css">
     <link rel="stylesheet" href="/css/profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<!-- NAVBAR -->
-<header class="navbar">
-    <div class="logo">EAZY VIBES</div>
-    <div class="icons">
-
-        <!-- CART -->
-        <span id="cartIcon" class="icon-btn">🛒</span>
-
-        <!-- ACCOUNT -->
-        <div class="account-wrapper">
-            <span id="accountIcon" class="icon-btn">👤</span>
-
-            <!-- DROPDOWN -->
-            <div id="accountDropdown" class="dropdown">
-                <div class="dropdown-item" id="btnProfile">
-                    Thông tin cá nhân
-                </div>
-                <div class="dropdown-item logout" id="btnLogout">
-                    Đăng xuất
-                </div>
-            </div>
-        </div>
-
-    </div>
-</header>
+<div th:replace="components/profile-header :: profile-header"></div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
@@ -140,7 +116,7 @@
     </div>
 
 </main>
-
+<script src="/js/components/profile-header.js"></script>
 <script src="/js/profile.js"></script>
 </body>
 </html>

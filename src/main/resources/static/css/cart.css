@@ -5,19 +5,6 @@ body {
     color: #111;
 }
 
-/* NAVBAR */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 50px;
-    border-bottom: 1px solid #eee;
-}
-
-.logo {
-    font-weight: 900;
-    letter-spacing: 2px;
-}
-
 /* MAIN */
 .main {
     padding: 30px 50px;

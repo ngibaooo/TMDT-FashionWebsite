@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Checkout</title>
 
+    <link rel="stylesheet" href="/css/components/profile-header.css">
     <link rel="stylesheet" href="/css/payment.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
 </head>
 <body>
 
-<header class="navbar">
-    <div class="logo">EAZY VIBES</div>
-</header>
+<div th:replace="components/profile-header :: profile-header"></div>
 
 <main class="main">
 
@@ -63,6 +62,7 @@
 
 </main>
 
+<script src="/js/components/profile-header.js"></script>
 <script src="/js/payment.js"></script>
 
 </body>

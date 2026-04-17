@@ -3,18 +3,6 @@ margin: 0;
 font-family: 'Inter', sans-serif;
 }
 
-/* NAV */
-.navbar {
-display: flex;
-justify-content: space-between;
-padding: 20px 50px;
-border-bottom: 1px solid #eee;
-}
-
-.logo {
-font-weight: 900;
-}
-
 /* MAIN */
 .main {
 padding: 30px 50px;
