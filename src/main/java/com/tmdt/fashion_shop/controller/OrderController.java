@@ -5,6 +5,7 @@ import com.tmdt.fashion_shop.security.JWTService;
 import com.tmdt.fashion_shop.service.orders.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,9 +43,18 @@ public class OrderController {
 
         return orderService.getOrders(userId, status, sort);
     }
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<OrderDTO> getOrdersByStatusForAdmin(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false, defaultValue = "newest") String sort
+    ) {
+        return orderService.getOrdersForAdmin(status, sort);
+    }
 
     // Admin
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<OrderDTO> getAllOrders() {
         return orderService.getAllOrders();
     }

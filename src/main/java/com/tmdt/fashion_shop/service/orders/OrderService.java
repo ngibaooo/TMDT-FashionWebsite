@@ -15,4 +15,5 @@ public interface OrderService {
     public OrderDetailDTO getOrderDetail(String userId, String orderId);
     List<OrderDTO> getOrders(String userId, String status, String sort);
     void updateOrderStatus(String orderId, String status);
+    public List<OrderDTO> getOrdersForAdmin(String status, String sort);
 }

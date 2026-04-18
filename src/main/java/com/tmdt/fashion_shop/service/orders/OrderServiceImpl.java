@@ -317,6 +317,49 @@ public class OrderServiceImpl implements OrderService {
         )).toList();
     }
     @Override
+    public List<OrderDTO> getOrdersForAdmin(String status, String sort) {
+
+        List<Order> orders;
+
+        // ===== FILTER STATUS =====
+        if (status != null && !status.isEmpty()) {
+
+            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
+
+            orders = orderRepository.findByStatus(orderStatus);
+
+        } else {
+            orders = orderRepository.findAll();
+        }
+
+        // ===== SORT =====
+        if (sort != null) {
+            switch (sort) {
+                case "price_asc":
+                    orders.sort(Comparator.comparing(Order::getTotalPrice));
+                    break;
+                case "price_desc":
+                    orders.sort(Comparator.comparing(Order::getTotalPrice).reversed());
+                    break;
+                case "oldest":
+                    orders.sort(Comparator.comparing(Order::getCreatedAt));
+                    break;
+                default: // newest
+                    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
+            }
+        }
+
+        return orders.stream().map(order -> new OrderDTO(
+                order.getId(),
+                order.getTotalPrice(),
+                order.getStatus() != null ? order.getStatus().name() : null,
+                order.getPhone(),
+                order.getDeliveryAddress(),
+                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
+                order.getCreatedAt()
+        )).toList();
+    }
+    @Override
     @Transactional
     public void updateOrderStatus(String orderId, String status) {
 
