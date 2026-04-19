@@ -13,18 +13,22 @@ import java.util.List;
 public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
     List<OrderItem> findByOrder_Id(String orderId);
     @Query("""
-    SELECT pv.product.id, pv.product.name, pv.product.price, SUM(oi.quantity)
+    SELECT p.id, p.name, p.price, SUM(oi.quantity)
     FROM OrderItem oi
+    JOIN oi.order o
     JOIN oi.productVariant pv
-    GROUP BY pv.product.id, pv.product.name, pv.product.price
+    JOIN pv.product p
+    WHERE o.status = 'COMPLETED'
+    GROUP BY p.id, p.name, p.price
     ORDER BY SUM(oi.quantity) DESC
-""")
+    """)
     Page<Object[]> findBestSellingProducts(Pageable pageable);
     @Query("""
     SELECT COUNT(oi) > 0
     FROM OrderItem oi
+    JOIN oi.order o
     WHERE oi.productVariant.product.id = :productId
-    AND oi.order.status IN ('PENDING', 'PAID', 'SHIPPING')
+    AND o.status IN ('PENDING', 'PAID', 'SHIPPING')
     """)
     boolean existsByProductIdAndActiveOrders(@Param("productId") String productId);
 }
