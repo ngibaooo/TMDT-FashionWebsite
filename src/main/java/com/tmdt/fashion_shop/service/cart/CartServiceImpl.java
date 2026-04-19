@@ -7,6 +7,7 @@ import com.tmdt.fashion_shop.dto.cart.CartUpdateRequestDTO;
 import com.tmdt.fashion_shop.entity.*;
 import com.tmdt.fashion_shop.enums.ProductStatus;
 import com.tmdt.fashion_shop.enums.UserStatus;
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import com.tmdt.fashion_shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,9 @@ public class CartServiceImpl implements CartService {
 
         List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
 
-        List<CartItemDTO> itemDTOs = items.stream().filter(item -> item.getProductVariant() != null).map(item -> {
+        List<CartItemDTO> itemDTOs = items.stream()
+                .filter(item -> item.getProductVariant() != null)
+                .map(item -> {
 
             var variant = item.getProductVariant();
             var product = variant.getProduct();
@@ -64,7 +67,8 @@ public class CartServiceImpl implements CartService {
                     quantity,
                     variant.getSize().name(),
                     variant.getColor(),
-                    price * quantity
+                    price * quantity,
+                    variant.getStatus()
             );
 
         }).toList();
@@ -101,7 +105,7 @@ public class CartServiceImpl implements CartService {
                 });
 
         // lấy variant
-        ProductVariant variant = productVariantRepository.findById(request.getVariantId())
+        ProductVariant variant = productVariantRepository.findByIdAndStatus(request.getVariantId(), VariantStatus.ACTIVE)
                 .orElseThrow(() -> new RuntimeException("Variant không tồn tại"));
 
         Product product = variant.getProduct();

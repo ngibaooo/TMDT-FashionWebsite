@@ -18,12 +18,15 @@ async function loadOrder() {
         });
 
         const data = await res.json();
-        console.log("CART DATA:", data);
 
-        originalPrice = data.totalPrice;
-        finalPrice = data.totalPrice;
+        // chỉ lấy ACTIVE
+        const activeItems = data.items.filter(i => i.variantStatus === "ACTIVE");
 
-        renderOrder(data.items);
+        // tính lại tiền chỉ cho ACTIVE
+        originalPrice = activeItems.reduce((sum, i) => sum + i.total, 0);
+        finalPrice = originalPrice;
+
+        renderOrder(activeItems);
         updateSummary();
 
     } catch (err) {

@@ -62,38 +62,47 @@ function renderCart(items, totalPrice) {
     }
 
     let totalItems = 0;
+    let totalPriceActive = 0;
 
     items.forEach(item => {
-        totalItems += Number(item.quantity || 0);
+        const isInactive = item.variantStatus === "INACTIVE";
 
-        container.innerHTML += `
-            <div class="cart-item">
-                <div class="left">
-                    <img src="http://localhost:8080${item.image}" />
-                    <div class="cart-info">
-                        <h3>${item.productName}</h3>
-                        <p>${formatMoney(item.price)}</p>
-                        <p>Size: ${item.size} | Color: ${item.color}</p>
-                    </div>
-                </div>
-
-                <div class="right">
-                    <div class="quantity">
-                        <button onclick="changeQty('${item.cartItemId}', 'DECREASE')"
-                            ${item.quantity <= 1 ? "disabled" : ""}>−</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="changeQty('${item.cartItemId}', 'INCREASE')">+</button>
+        if (!isInactive) {
+            totalItems += Number(item.quantity || 0);
+            totalPriceActive += Number(item.total || 0);
+        }
+            container.innerHTML += `
+                <div class="cart-item ${isInactive ? 'inactive' : ''}">
+                    <div class="left">
+                        <img src="http://localhost:8080${item.image}" />
+                        <div class="cart-info">
+                            <h3>${item.productName}</h3>
+                            <p>${formatMoney(item.price)}</p>
+                            <p>Size: ${item.size} | Color: ${item.color}</p>
+                            ${isInactive ? `<p class="unavailable">Sản phẩm hiện không khả dụng</p>` : ''}
+                        </div>
                     </div>
 
-                    <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">
-                        Xóa
-                    </button>
+                    <div class="right">
+                        <div class="quantity">
+                            <button onclick="changeQty('${item.cartItemId}', 'DECREASE')"
+                                ${item.quantity <= 1 || isInactive ? "disabled" : ""}>−</button>
+
+                            <span>${item.quantity}</span>
+
+                            <button onclick="changeQty('${item.cartItemId}', 'INCREASE')"
+                                ${isInactive ? "disabled" : ""}>+</button>
+                        </div>
+
+                        <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">
+                            Xóa
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
     });
 
-    updateSummary(totalItems, totalPrice);
+    updateSummary(totalItems, totalPriceActive);
 }
 
 // ===== UPDATE QTY =====

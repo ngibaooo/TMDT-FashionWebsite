@@ -28,8 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private void recalcProductStatus(Product product) {
 
         boolean hasStock = product.getVariants().stream()
-                .anyMatch(v -> v.getQuantity() > 0);
-
+                .anyMatch(v -> v.getStatus() == VariantStatus.ACTIVE && v.getQuantity() > 0);
         product.setStatus(hasStock ? ProductStatus.ACTIVE : ProductStatus.OUT_OF_STOCK);
     }
     @Override
@@ -44,7 +43,10 @@ public class OrderServiceImpl implements OrderService {
         if (user.getStatus() == UserStatus.LOCKED) {
             throw new RuntimeException("Tài khoản đã bị khóa");
         }
-        List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
+        List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId())
+                .stream()
+                .filter(i -> i.getProductVariant().getStatus() == VariantStatus.ACTIVE)
+                .toList();
 
         if (items.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống");
@@ -136,7 +138,9 @@ public class OrderServiceImpl implements OrderService {
 
             ProductVariant variant = item.getProductVariant();
             Product product = variant.getProduct();
-
+            if (variant.getStatus() != VariantStatus.ACTIVE) {
+                throw new RuntimeException("Sản phẩm không còn bán");
+            }
             if (variant.getQuantity() < item.getQuantity()) {
                 throw new RuntimeException("Sản phẩm không đủ hàng");
             }

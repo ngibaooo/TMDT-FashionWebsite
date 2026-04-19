@@ -216,3 +216,14 @@ body {
     opacity: 0.3;
     cursor: not-allowed;
 }
+.cart-item.inactive {
+    opacity: 0.5;
+    filter: grayscale(100%);
+    pointer-events: auto; /* vẫn cho bấm nút xóa */
+}
+
+.unavailable {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+}

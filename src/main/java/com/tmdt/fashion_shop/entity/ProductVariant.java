@@ -1,6 +1,7 @@
 package com.tmdt.fashion_shop.entity;
 
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,6 @@ public class ProductVariant {
 
     @OneToMany(mappedBy = "productVariant")
     private List<ProductImage> images = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private VariantStatus status = VariantStatus.ACTIVE;
 }

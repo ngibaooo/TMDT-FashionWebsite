@@ -1,5 +1,6 @@
 package com.tmdt.fashion_shop.dto.cart;
 
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +17,5 @@ public class CartItemDTO {
     private String size;
     private String color;
     private double total;
+    private VariantStatus variantStatus;
 }

@@ -42,6 +42,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAll(pageable));
     }
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(
             @PathVariable String id,
             @ModelAttribute ProductUpdateRequestDTO request
@@ -112,6 +113,7 @@ public class ProductController {
         return productService.getBestSellingProductsForUser(pageable);
     }
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ProductDTO create(@ModelAttribute ProductCreateRequestDTO request) {
         return productService.create(request);
     }

@@ -4,6 +4,7 @@ import com.tmdt.fashion_shop.dto.voucher.*;
 import com.tmdt.fashion_shop.entity.Cart;
 import com.tmdt.fashion_shop.entity.CartItem;
 import com.tmdt.fashion_shop.entity.Voucher;
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import com.tmdt.fashion_shop.enums.VoucherDiscountType;
 import com.tmdt.fashion_shop.enums.VoucherStatus;
 import com.tmdt.fashion_shop.repository.CartItemRepository;
@@ -57,7 +58,10 @@ public class VoucherServiceImpl implements VoucherService {
         Cart cart = cartRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new RuntimeException("Cart không tồn tại"));
 
-        List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId());
+        List<CartItem> items = cartItemRepository.findByCart_Id(cart.getId())
+                .stream()
+                .filter(i -> i.getProductVariant().getStatus() == VariantStatus.ACTIVE)
+                .toList();
 
         if (items.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống");

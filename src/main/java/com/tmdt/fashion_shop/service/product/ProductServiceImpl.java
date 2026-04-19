@@ -9,6 +9,7 @@ import com.tmdt.fashion_shop.entity.ProductImage;
 import com.tmdt.fashion_shop.entity.ProductVariant;
 import com.tmdt.fashion_shop.enums.ProductSize;
 import com.tmdt.fashion_shop.enums.ProductStatus;
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import com.tmdt.fashion_shop.filter.ProductSpecification;
 import com.tmdt.fashion_shop.repository.*;
 import jakarta.transaction.Transactional;
@@ -77,7 +78,9 @@ public class ProductServiceImpl implements ProductService {
                         .toList()
         );
         dto.setVariants(
-                product.getVariants().stream().map(v -> {
+                product.getVariants().stream()
+                        .filter(v -> v.getStatus() == VariantStatus.ACTIVE)
+                        .map(v -> {
 
                     ProductVariantDTO vd = new ProductVariantDTO();
                     vd.setId(v.getId());
