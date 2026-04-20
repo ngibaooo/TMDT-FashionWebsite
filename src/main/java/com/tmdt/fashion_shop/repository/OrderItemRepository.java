@@ -31,4 +31,11 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
     AND o.status IN ('PENDING', 'PAID', 'SHIPPING')
     """)
     boolean existsByProductIdAndActiveOrders(@Param("productId") String productId);
+    @Query("""
+    SELECT COALESCE(SUM(oi.quantity), 0)
+    FROM OrderItem oi
+    JOIN oi.order o
+    WHERE o.status = 'COMPLETED'
+    """)
+    long getTotalProductsSold();
 }
