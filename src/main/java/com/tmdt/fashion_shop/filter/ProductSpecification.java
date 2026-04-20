@@ -2,6 +2,7 @@ package com.tmdt.fashion_shop.filter;
 
 import com.tmdt.fashion_shop.entity.Product;
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.ProductStatus;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -52,5 +53,8 @@ public class ProductSpecification {
 
             return predicates;
         };
+    }
+    public static Specification<Product> hasStatus(ProductStatus status) {
+        return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 }

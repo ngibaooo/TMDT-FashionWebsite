@@ -2,6 +2,7 @@ package com.tmdt.fashion_shop.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class PageController {
@@ -105,6 +106,40 @@ public class PageController {
     @GetMapping("/sale")
     public String salePage() {
         return "user/sale";
+    }
+
+//    admin
+    @GetMapping("/admin/dashboard")
+    public String dashboardPage() {
+    return "admin/dashboard";
+}
+    @GetMapping("/admin/products")
+    public String productsPage() {
+        return "admin/products";
+    }
+    @GetMapping("/admin/orders")
+    public String ordersPage() {
+        return "admin/orders";
+    }
+    @GetMapping("/admin/users")
+    public String usersPage() {
+        return "admin/users";
+    }
+    @GetMapping("/admin/vouchers")
+    public String vouchersPage() {
+        return "admin/vouchers";
+    }
+    @GetMapping("/admin/variants")
+    public String variantsPage() {
+        return "admin/variants";
+    }
+    @GetMapping("/admin/categories")
+    public String categoriesPage() {
+        return "admin/categories";
+    }
+    @GetMapping("/admin/products/edit-product/{id}")
+    public String editProductPage(@PathVariable String id) {
+        return "admin/edit-product";
     }
 }
 

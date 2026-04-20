@@ -68,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
         dto.setOldPrice(product.getOldPrice());
+        dto.setStatus(product.getStatus());
 
         if (product.getCategory() != null) {
             dto.setCategoryName(product.getCategory().getName());
@@ -124,9 +125,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getAll(Pageable pageable) {
+    public Page<ProductDTO> getAllForUser(Pageable pageable) {
         return productRepository.findByStatus(ProductStatus.ACTIVE, pageable)
                 .map(this::toDTO); //convert
+    }
+    @Override
+    public Page<ProductDTO> getAllForAdmin(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(this::toDTO);
     }
 
     @Override
@@ -150,6 +156,7 @@ public class ProductServiceImpl implements ProductService {
         return toDetailDTO(p);
     }
 
+//    user
     @Override
     public Page<ProductDetailDTO> filter(Double minPrice,
                                    Double maxPrice,
@@ -158,7 +165,22 @@ public class ProductServiceImpl implements ProductService {
                                    Pageable pageable) {
 
         return productRepository.findAll(
-                ProductSpecification.filter(minPrice, maxPrice, productSize, color),
+                ProductSpecification.filter(minPrice, maxPrice, productSize, color)
+                        .and(ProductSpecification.hasStatus(ProductStatus.ACTIVE)),
+                pageable
+        ).map(this::toDetailDTO);
+    }
+    @Override
+    public Page<ProductDetailDTO> filterForAdmin(
+            Double minPrice,
+            Double maxPrice,
+            ProductSize productSize,
+            String color,
+            Pageable pageable
+    ) {
+        return productRepository.findAll(
+                ProductSpecification.filter(minPrice, maxPrice, productSize, color)
+                        .and(ProductSpecification.hasStatus(ProductStatus.ACTIVE)),
                 pageable
         ).map(this::toDetailDTO);
     }

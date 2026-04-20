@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/admin/dashboard.css">
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <h1>TỔNG QUAN HỆ THỐNG</h1>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <p>DOANH THU</p>
+                <h2 id="revenue">0đ</h2>
+            </div>
+
+            <div class="card">
+                <p>ĐƠN HÀNG</p>
+                <h2 id="orders">0</h2>
+            </div>
+
+            <div class="card">
+                <p>SẢN PHẨM ĐÃ BÁN</p>
+                <h2 id="products">0</h2>
+            </div>
+
+            <div class="card">
+                <p>TOP SẢN PHẨM</p>
+                <h2 id="topProduct">-</h2>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/admin/dashboard.js"></script>
+
+</body>
+</html>

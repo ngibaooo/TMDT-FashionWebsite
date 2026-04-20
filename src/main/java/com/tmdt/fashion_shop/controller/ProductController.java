@@ -39,7 +39,12 @@ public class ProductController {
 
         Pageable pageable = PageRequest.of(page, size, sortObj);
 
-        return ResponseEntity.ok(productService.getAll(pageable));
+        return ResponseEntity.ok(productService.getAllForUser(pageable));
+    }
+    @GetMapping ("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllProducts(Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllForAdmin(pageable));
     }
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -88,7 +93,7 @@ public class ProductController {
         return productService.getById(id);
     }
 
-    //filter
+    //filter for user
     @GetMapping("/filter")
     public Page<ProductDetailDTO> filter(
             @RequestParam(required = false) Double minPrice,
@@ -98,6 +103,17 @@ public class ProductController {
             Pageable pageable
     ) {
         return productService.filter(minPrice, maxPrice, productSize, color, pageable);
+    }
+    @GetMapping("/admin/filter")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<ProductDetailDTO> filterAdmin(
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) ProductSize productSize,
+            @RequestParam(required = false) String color,
+            Pageable pageable
+    ) {
+        return productService.filterForAdmin(minPrice, maxPrice, productSize, color, pageable);
     }
     @GetMapping("/new")
     public Page<ProductDTO> getNewProducts(Pageable pageable) {
