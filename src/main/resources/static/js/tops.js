@@ -9,14 +9,11 @@
 const TOPS_ID = "c1";
 
 
-
 document.addEventListener('DOMContentLoaded', () => {
 
     fetchTops();
 
 });
-
-
 
 async function fetchTops() {
 
@@ -27,8 +24,6 @@ async function fetchTops() {
     const priceRange = document.getElementById('filter-price').value;
 
     const size = document.getElementById('filter-size').value;
-
-
 
     if (!grid) return;
 
@@ -43,8 +38,6 @@ async function fetchTops() {
     let isFiltering = (priceRange || size);
 
     let url = `/api/products/category/${TOPS_ID}?page=0&size=12&sort=${sort}`;
-
-
 
     if (isFiltering) {
 
@@ -63,44 +56,16 @@ async function fetchTops() {
         }
 
     }
-
-
-
-    try {
+   try {
 
         const response = await fetch(url);
 
         if (!response.ok) throw new Error("API_ERROR");
 
-
-
-        const data = await response.json();
-
-       
-
-        // Lấy mảng gốc từ API
-
+      const data = await response.json();
         let products = data.content || data || [];
 
-
-
-        /**
-
-         * DEBUG: Hãy nhấn F12, chọn tab Console để xem dòng này.
-
-         * Nó sẽ hiện ra danh sách sản phẩm Server gửi về để bạn kiểm tra tên trường.
-
-         */
-
         console.log("Dữ liệu từ Server:", products);
-
-
-
-        /**
-
-         * GIẢI PHÁP ROOT CAUSE: Lọc tại Frontend với logic an toàn hơn
-
-         */
 
         if (isFiltering) {
 
@@ -113,73 +78,40 @@ async function fetchTops() {
                 const catIdDirect = p.categoryId;
 
                 const catName = p.categoryName; // Đề phòng trường hợp Backend trả về tên
-
-
-
-                // Nếu khớp c1 hoặc tên là Áo (đề phòng DB dùng tiếng Việt)
+               // Nếu khớp c1 hoặc tên là Áo (đề phòng DB dùng tiếng Việt)
 
                 return (catIdFromObject === TOPS_ID || catIdDirect === TOPS_ID || catName === "Áo");
 
             });
 
         }
-
-
-
-        if (products.length === 0) {
+       if (products.length === 0) {
 
             grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 100px; color: #555;">CHƯA CÓ MẪU ÁO NÀO KHỚP VỚI BỘ LỌC.</p>';
 
             return;
 
         }
-
-
-
-        grid.innerHTML = products.map(p => {
-
+      grid.innerHTML = products.map(p => {
             let displayImg = '/images/default.jpg';
-
             if (p.images && p.images.length > 0) {
-
                 const imgPath = p.images[0];
-
                 displayImg = imgPath.startsWith('http') ? imgPath : `http://localhost:8080${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
-
             }
-
-
-
             return `
-
                 <a href="/products/${p.id}" class="product-card">
-
                     <div class="img-box">
-
                         <img src="${displayImg}"
-
                              alt="${p.name}"
-
                              onerror="this.onerror=null; this.src='/images/default.jpg'">
-
                     </div>
-
                     <div class="product-info">
-
                         <h3>${p.name}</h3>
-
                         <div class="price">${new Intl.NumberFormat('vi-VN').format(p.price)}đ</div>
-
                     </div>
-
                 </a>
-
             `;
-
         }).join('');
-
-
-
     } catch (error) {
         console.error("Lỗi fetch TOPS:", error);
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ff4d4d; padding: 50px;">LỖI TẢI DỮ LIỆU. VUI LÒNG THỬ LẠI.</p>';
