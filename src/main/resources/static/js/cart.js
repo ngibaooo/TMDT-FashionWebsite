@@ -18,13 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const user = await res.json();
 
-        // CHẶN NGAY TỪ ĐẦU
         if (user.status === "LOCKED") {
             alert("Tài khoản của bạn đã bị khóa");
             return window.location.href = "/";
         }
 
-        // hợp lệ mới load cart
         loadCart();
 
     } catch (err) {
@@ -58,51 +56,60 @@ function renderCart(items, totalPrice) {
     if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = "<p>Giỏ hàng trống</p>";
         updateSummary(0, 0);
+        
+        // FIX: Cập nhật localStorage về 0 khi giỏ hàng trống
+        localStorage.setItem("cartCount", "0");
+        if (window.syncGlobalCartBadge) window.syncGlobalCartBadge();
         return;
     }
 
-    let totalItems = 0;
+    let totalItemsCount = 0;
     let totalPriceActive = 0;
 
     items.forEach(item => {
         const isInactive = item.variantStatus === "INACTIVE";
 
         if (!isInactive) {
-            totalItems += Number(item.quantity || 0);
+            totalItemsCount += Number(item.quantity || 0);
             totalPriceActive += Number(item.total || 0);
         }
-            container.innerHTML += `
-                <div class="cart-item ${isInactive ? 'inactive' : ''}">
-                    <div class="left">
-                        <img src="http://localhost:8080${item.image}" />
-                        <div class="cart-info">
-                            <h3>${item.productName}</h3>
-                            <p>${formatMoney(item.price)}</p>
-                            <p>Size: ${item.size} | Color: ${item.color}</p>
-                            ${isInactive ? `<p class="unavailable">Sản phẩm hiện không khả dụng</p>` : ''}
-                        </div>
-                    </div>
-
-                    <div class="right">
-                        <div class="quantity">
-                            <button onclick="changeQty('${item.cartItemId}', 'DECREASE')"
-                                ${item.quantity <= 1 || isInactive ? "disabled" : ""}>−</button>
-
-                            <span>${item.quantity}</span>
-
-                            <button onclick="changeQty('${item.cartItemId}', 'INCREASE')"
-                                ${isInactive ? "disabled" : ""}>+</button>
-                        </div>
-
-                        <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">
-                            Xóa
-                        </button>
+        
+        container.innerHTML += `
+            <div class="cart-item ${isInactive ? 'inactive' : ''}">
+                <div class="left">
+                    <img src="http://localhost:8080${item.image}" />
+                    <div class="cart-info">
+                        <h3>${item.productName}</h3>
+                        <p>${formatMoney(item.price)}</p>
+                        <p>Size: ${item.size} | Color: ${item.color}</p>
+                        ${isInactive ? `<p class="unavailable">Sản phẩm hiện không khả dụng</p>` : ''}
                     </div>
                 </div>
-            `;
+
+                <div class="right">
+                    <div class="quantity">
+                        <button onclick="changeQty('${item.cartItemId}', 'DECREASE')"
+                            ${item.quantity <= 1 || isInactive ? "disabled" : ""}>−</button>
+
+                        <span>${item.quantity}</span>
+
+                        <button onclick="changeQty('${item.cartItemId}', 'INCREASE')"
+                            ${isInactive ? "disabled" : ""}>+</button>
+                    </div>
+
+                    <button class="btn-remove" onclick="removeItem('${item.cartItemId}')">
+                        Xóa
+                    </button>
+                </div>
+            </div>
+        `;
     });
 
-    updateSummary(totalItems, totalPriceActive);
+    updateSummary(totalItemsCount, totalPriceActive);
+    
+    // FIX: Đồng bộ con số thực tế vào localStorage
+    localStorage.setItem("cartCount", totalItemsCount.toString());
+    if (window.syncGlobalCartBadge) window.syncGlobalCartBadge();
 }
 
 // ===== UPDATE QTY =====
@@ -137,13 +144,17 @@ function removeItem(cartItemId) {
 document.getElementById("confirmYes").onclick = async () => {
     const token = localStorage.getItem("token");
 
-    await fetch(`${API_DELETE}/${deleteId}`, {
-        method: "DELETE",
-        headers: { Authorization: "Bearer " + token }
-    });
+    try {
+        await fetch(`${API_DELETE}/${deleteId}`, {
+            method: "DELETE",
+            headers: { Authorization: "Bearer " + token }
+        });
 
-    document.getElementById("confirmModal").classList.remove("show");
-    loadCart();
+        document.getElementById("confirmModal").classList.remove("show");
+        loadCart(); // loadCart sẽ gọi renderCart và cập nhật Badge
+    } catch (err) {
+        console.error("Lỗi xóa sản phẩm:", err);
+    }
 };
 
 document.getElementById("confirmNo").onclick = () => {

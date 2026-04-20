@@ -6,46 +6,33 @@ let ezSearchDebounce = null;
 
 /**
  * HÀM HELPER: XỬ LÝ ĐƯỜNG DẪN ẢNH TỪ DATABASE
- * FIX: Xử lý lỗi lặp lại "uploads/uploads" và lỗi tiếng Việt (áo, quần)
  */
 function getEzImageUrl(path) {
     if (!path || path === "" || path === "null" || path === "undefined") {
-        return "/images/default.jpg"; // Ảnh LOADING của bạn
+        return "/images/default.jpg";
     }
-
-    // 1. Nếu là URL tuyệt đối thì trả về luôn
     if (path.startsWith("http")) return path;
-
-    // 2. Làm sạch đường dẫn (xóa gạch chéo ở đầu)
     let cleanPath = path.replace(/^\//, '');
-
-    /**
-     * GIẢI PHÁP ROOT CAUSE:
-     * Nếu dữ liệu từ API đã có "uploads/", chúng ta xóa nó đi để tránh bị lặp lại
-     * vì lát nữa ta sẽ cộng thêm BASE_URL + /uploads/ ở cuối.
-     */
     if (cleanPath.startsWith('uploads/')) {
         cleanPath = cleanPath.replace('uploads/', '');
     }
-
-    /**
-     * GIẢI PHÁP TIẾNG VIỆT & KHOẢNG TRẮNG:
-     * Tên file của bạn có chữ "áo", "quần" và khoảng trắng.
-     * Cần encodeURI để trình duyệt hiểu được.
-     */
     const encodedPath = encodeURI(cleanPath);
-
     return `${BASE_URL}/uploads/${encodedPath}`;
 }
 
 /**
  * ĐỒNG BỘ GIỎ HÀNG
+ * ROOT CAUSE FIX: Cập nhật đúng ID và logic hiển thị
  */
 window.syncGlobalCartBadge = function() {
     const badge = document.getElementById("cart-badge");
     if (!badge) return;
+    
     let count = parseInt(localStorage.getItem("cartCount") || "0");
+    if (count < 0) count = 0; // Edge case: không để số âm
+    
     badge.innerText = count;
+    // Nếu bằng 0 thì hiện màu xám, có hàng thì hiện đỏ (hoặc cam theo style streetwear)
     badge.style.backgroundColor = (count > 0) ? "#ff0000" : "#808080";
 };
 
@@ -155,8 +142,6 @@ async function fetchEzSearchAPI(keyword) {
     try {
         const res = await fetch(`${BASE_URL}/api/products/search?keyword=${encodeURIComponent(keyword)}`);
         const data = await res.json();
-
-        // Chấp nhận cấu trúc Page hoặc List
         const products = data.content || data || [];
 
         document.getElementById("ezDefaultSection").style.display = "none";
@@ -171,9 +156,7 @@ async function fetchEzSearchAPI(keyword) {
         }
 
         resList.innerHTML = products.map(p => {
-            // Lấy ảnh từ ProductDTO: private List<String> images;
             const mainImg = (p.images && p.images.length > 0) ? p.images[0] : null;
-
             return `
                 <a href="/products/${p.id}" class="ez-prod-res" onclick="performFinalSearch('${p.name}')">
                     <img src="${getEzImageUrl(mainImg)}" onerror="this.src='/images/default.jpg'">
