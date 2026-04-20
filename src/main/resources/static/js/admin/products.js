@@ -31,7 +31,7 @@ function buildUrl() {
         params.append("maxPrice", max);
     }
 
-    // 👉 FIX SORT
+    // FIX SORT
     if (sort === "newest") {
         params.append("sort", "createdAt,desc");
     } else if (sort === "oldest") {
@@ -107,54 +107,6 @@ async function loadProducts() {
 function applyFilter() {
     loadProducts();
 }
-//function renderProducts(products) {
-//    const table = document.getElementById("productTable");
-//    const status = (p.status || '').toUpperCase();
-//
-//    let statusClass = '';
-//    if (status === 'ACTIVE') {
-//        statusClass = 'active';
-//    } else if (status === 'OUT_OF_STOCK') {
-//        statusClass = 'out';
-//    } else {
-//        statusClass = 'inactive';
-//    }
-//    table.innerHTML = products.map(p => `
-//        <tr>
-//            <td>
-//                <img class="product-img"
-//                     src="${p.images && p.images[0] ? p.images[0] : '/images/default.jpg'}">
-//            </td>
-//            <td>${p.name}</td>
-//            <td class="category">${p.categoryName || '-'}</td>
-//            <td>${formatMoney(p.price)}</td>
-//            <td>${p.totalQuantity || 0}</td>
-//            <td>
-//                <span class="variant-badge">
-//                    ${p.variantCount || 0}
-//                </span>
-//            </td>
-//            <td>
-////                <span class="status ${p.status === 'ACTIVE' ? 'active' : 'inactive'}">
-////                    ${p.status || 'INACTIVE'}
-////                </span>
-//                <span class="status ${statusClass}">
-//                    ${status || 'INACTIVE'}
-//                </span>
-//            </td>
-//            <td>
-//                <div class="actions">
-//                    <button class="btn-edit" onclick="editProduct('${p.id}')">
-//                        Sửa
-//                    </button>
-//                    <button class="btn-delete" onclick="toggleStatus('${p.id}', '${p.status}')">
-//                        ${p.status === 'ACTIVE' ? 'Vô hiệu hóa' : 'Kích hoạt'}
-//                    </button>
-//                </div>
-//            </td>
-//        </tr>
-//    `).join("");
-//}
 function renderProducts(products) {
     const table = document.getElementById("productTable");
 
@@ -218,7 +170,7 @@ function filterProducts() {
 
 // ===== ACTION =====
 function goAddProduct() {
-    window.location.href = "/admin/products/create";
+    window.location.href = "/admin/products/add-product";
 }
 
 async function deleteProduct(id) {
