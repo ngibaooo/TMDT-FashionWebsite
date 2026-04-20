@@ -1,13 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 //    updateHeaderAvatar();
-    // Luôn chạy hàm này khi load trang để khớp số lượng giỏ hàng
     syncGlobalCartBadge();
 
     const productGrid = document.getElementById('index-products-grid');
     if (productGrid) fetchFeaturedProducts();
 });
 
-// Hàm này là "Sợi dây liên kết" toàn dự án
 function syncGlobalCartBadge() {
     const badge = document.getElementById('cart-count');
     if (badge) {
@@ -18,7 +16,7 @@ function syncGlobalCartBadge() {
 }
 async function fetchFeaturedProducts() {
     const grid = document.getElementById('index-products-grid');
-    
+
     try {
         const response = await fetch('/api/products/best-selling?size=4');
         if (!response.ok) throw new Error("Không thể kết nối API");
@@ -37,7 +35,7 @@ async function fetchFeaturedProducts() {
                 new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
 
             return `
-                <a href="/product/${p.id}" class="product-card">
+                <a href="/products/${p.id}" class="product-card">
                     <div class="img-box">
                         <img src="${displayImg}"
                              onerror="this.src='/images/default-product.png'">
@@ -56,9 +54,7 @@ async function fetchFeaturedProducts() {
     }
 }
 
-/**
- * LOGIC 4: ĐIỀU KHIỂN SEARCH OVERLAY
- */
+//ĐIỀU KHIỂN SEARCH OVERLAY
 function toggleSearch() {
     const overlay = document.getElementById('search-overlay');
     if (overlay) {
@@ -66,14 +62,22 @@ function toggleSearch() {
         document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
     }
 }
-
-/**
- * LOGIC 5: HÀM ĐĂNG XUẤT (LOGOUT)
- */
+function showSearchDropdown() {
+    const dropdown = document.getElementById('search-dropdown');
+    if (dropdown) dropdown.classList.add('active');
+}
+document.addEventListener('click', (e) => {
+        const wrap = document.getElementById('search-bar-wrap');
+        const dropdown = document.getElementById('search-dropdown');
+        if (wrap && !wrap.contains(e.target)) {
+            if (dropdown) dropdown.classList.remove('active');
+        }
+    });
+//HÀM ĐĂNG XUẤT (LOGOUT)
 function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
-    // Giữ lại cartCount nếu bạn muốn khách vẫn thấy giỏ hàng khi đăng xuất
+    // Giữ lại cartCount nếu muốn khách vẫn thấy giỏ hàng khi đăng xuất
     // localStorage.removeItem("cartCount"); 
     window.location.href = "/";
 }

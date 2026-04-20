@@ -1,7 +1,7 @@
 /**
  * LƯU Ý: Thay "outerwear" bằng ID thật trong DB của bạn.
  */
-const OUTERWEAR_ID = "outerwear"; 
+const OUTERWEAR_ID = "outerwear";
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchOuterwear();
@@ -16,7 +16,7 @@ async function fetchOuterwear() {
     grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444;">ĐANG TẢI DỮ LIỆU ÁO KHOÁC...</p>';
 
     let url = `/api/products/category/${OUTERWEAR_ID}?page=0&size=12&sort=${sort}`;
-    
+
     // Sử dụng logic filter Specification của bạn
     if (priceRange || size) {
         url = `/api/products/filter?page=0&size=12&category=${OUTERWEAR_ID}`;
@@ -43,8 +43,8 @@ async function fetchOuterwear() {
         grid.innerHTML = products.map(p => `
             <a href="/products/${p.id}" class="product-card">
                 <div class="img-box">
-                    <img src="${p.images && p.images.length > 0 ? p.images[0] : '/images/default.jpg'}" 
-                         alt="${p.name}" 
+                    <img src="${p.images && p.images.length > 0 ? p.images[0] : '/images/default.jpg'}"
+                         alt="${p.name}"
                          onerror="this.src='https://via.placeholder.com/400x533?text=OUTERWEAR+VIBES'">
                 </div>
                 <div class="product-info">

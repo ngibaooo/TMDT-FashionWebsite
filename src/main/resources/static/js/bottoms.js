@@ -1,7 +1,7 @@
 /**
  * LƯU Ý: Thay "bottoms" bằng ID thật trong DB của bạn.
  */
-const BOTTOMS_ID = "bottoms"; 
+const BOTTOMS_ID = "bottoms";
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchBottoms();
@@ -16,7 +16,7 @@ async function fetchBottoms() {
     grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444;">ĐANG TẢI DỮ LIỆU...</p>';
 
     let url = `/api/products/category/${BOTTOMS_ID}?page=0&size=12&sort=${sort}`;
-    
+
     if (priceRange || size) {
         url = `/api/products/filter?page=0&size=12&category=${BOTTOMS_ID}`;
         if (size) url += `&size=${size}`;
@@ -42,8 +42,8 @@ async function fetchBottoms() {
         grid.innerHTML = products.map(p => `
             <a href="/products/${p.id}" class="product-card">
                 <div class="img-box">
-                    <img src="${p.images && p.images.length > 0 ? p.images[0] : '/images/default.jpg'}" 
-                         alt="${p.name}" 
+                    <img src="${p.images && p.images.length > 0 ? p.images[0] : '/images/default.jpg'}"
+                         alt="${p.name}"
                          onerror="this.src='https://via.placeholder.com/400x533?text=EAZY+VIBES'">
                 </div>
                 <div class="product-info">

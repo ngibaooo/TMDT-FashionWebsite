@@ -10,10 +10,10 @@ async function fetchSaleProducts() {
         const data = await response.json();
         const products = data.content || [];
 
-        grid.innerHTML = products.map(p => `
+        grid.innerHTML = products.map(p =>
             <a href="/products/${p.id}" class="product-card">
                 <div class="img-box">
-                    <img src="${p.images && p.images.length > 0 ? p.images[0] : '/images/default.jpg'}" 
+                    <img src="${p.images && p.images.length > 0 ? p.images[0] : '/images/default.jpg'}"
                          onerror="this.src='https://via.placeholder.com/400x533?text=SALE+OFF'">
                 </div>
                 <div class="product-info">
@@ -21,6 +21,6 @@ async function fetchSaleProducts() {
                     <p style="color:#ff4d4d; font-weight:700;">${new Intl.NumberFormat('vi-VN').format(p.price)} VNĐ</p>
                 </div>
             </a>
-        `).join('');
+        ).join('');
     } catch (e) { console.error(e); }
 }

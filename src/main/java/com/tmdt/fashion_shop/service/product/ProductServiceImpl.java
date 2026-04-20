@@ -153,12 +153,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductDetailDTO> filter(Double minPrice,
                                    Double maxPrice,
-                                   ProductSize size,
+                                   ProductSize productSize,
                                    String color,
                                    Pageable pageable) {
 
         return productRepository.findAll(
-                ProductSpecification.filter(minPrice, maxPrice, size, color),
+                ProductSpecification.filter(minPrice, maxPrice, productSize, color),
                 pageable
         ).map(this::toDetailDTO);
     }

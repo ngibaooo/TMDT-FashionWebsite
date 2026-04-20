@@ -16,7 +16,7 @@ public interface ProductService {
     Page<ProductDetailDTO> filter(
             Double minPrice,
             Double maxPrice,
-            ProductSize size,
+            ProductSize productSize,
             String color,
             Pageable pageable
     );

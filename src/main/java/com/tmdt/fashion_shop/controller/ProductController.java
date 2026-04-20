@@ -93,11 +93,11 @@ public class ProductController {
     public Page<ProductDetailDTO> filter(
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) ProductSize size,
+            @RequestParam(required = false) ProductSize productSize,
             @RequestParam(required = false) String color,
             Pageable pageable
     ) {
-        return productService.filter(minPrice, maxPrice, size, color, pageable);
+        return productService.filter(minPrice, maxPrice, productSize, color, pageable);
     }
     @GetMapping("/new")
     public Page<ProductDTO> getNewProducts(Pageable pageable) {

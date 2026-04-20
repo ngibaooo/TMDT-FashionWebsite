@@ -12,57 +12,57 @@
 </head>
 <body>
 
-    <div th:replace="components/header :: header"></div>
+<div th:replace="components/header :: header"></div>
 
-    <main>
-        <section class="hero-section">
-            <img th:src="@{/images/hero_banner.jpg}" alt="Hero" class="hero-image">
-        </section>
+<main>
+    <section class="hero-section">
+        <img th:src="@{/images/hero_banner.jpg}" alt="Hero" class="hero-image">
+    </section>
 
-        <section class="category-showcase">
-            <div class="category-grid">
-                <a th:href="@{/tops}" class="category-card">
-                    <img th:src="@{/images/cat_tops.jpg}" alt="Tops">
-                    <div class="card-overlay">
-                        <span class="tag-l">2026</span>
-                        <h2 class="category-name">TOP</h2>
-                        <span class="tag-r">SPRING</span>
-                    </div>
-                </a>
+    <section class="category-showcase">
+        <div class="category-grid">
+            <a th:href="@{/tops}" class="category-card">
+                <img th:src="@{/images/cat_tops.jpg}" alt="Tops">
+                <div class="card-overlay">
+                    <span class="tag-l">2026</span>
+                    <h2 class="category-name">TOP</h2>
+                    <span class="tag-r">SPRING</span>
+                </div>
+            </a>
 
-                <a th:href="@{/bottoms}" class="category-card">
-                    <img th:src="@{/images/cat_bottoms.jpg}" alt="Bottoms">
-                    <div class="card-overlay">
-                        <span class="tag-l">2026</span>
-                        <h2 class="category-name">BOTTOM</h2>
-                        <span class="tag-r">SPRING</span>
-                    </div>
-                </a>
+            <a th:href="@{/bottoms}" class="category-card">
+                <img th:src="@{/images/cat_bottoms.jpg}" alt="Bottoms">
+                <div class="card-overlay">
+                    <span class="tag-l">2026</span>
+                    <h2 class="category-name">BOTTOM</h2>
+                    <span class="tag-r">SPRING</span>
+                </div>
+            </a>
 
-                <a th:href="@{/outerwear}" class="category-card">
-                    <img th:src="@{/images/cat_outerwear.jpg}" alt="Outerwear">
-                    <div class="card-overlay">
-                        <span class="tag-l">2026</span>
-                        <h2 class="category-name">OUTERWEAR</h2>
-                        <span class="tag-r">SPRING</span>
-                    </div>
-                </a>
-            </div>
-        </section>
+            <a th:href="@{/outerwear}" class="category-card">
+                <img th:src="@{/images/cat_outerwear.jpg}" alt="Outerwear">
+                <div class="card-overlay">
+                    <span class="tag-l">2026</span>
+                    <h2 class="category-name">OUTERWEAR</h2>
+                    <span class="tag-r">SPRING</span>
+                </div>
+            </a>
+        </div>
+    </section>
 
-        <section class="featured-products">
-            <div class="section-title">
-                <h2>SẢN PHẨM NỔI BẬT</h2>
-                <a th:href="@{/best-selling}" class="btn-all">XEM TẤT CẢ</a>
-            </div>
-            <div id="index-products-grid" class="product-grid"></div>
-        </section>
-    </main>
+    <section class="featured-products">
+        <div class="section-title">
+            <h2>SẢN PHẨM NỔI BẬT</h2>
+            <a th:href="@{/best-selling}" class="btn-all">XEM TẤT CẢ</a>
+        </div>
+        <div id="index-products-grid" class="product-grid"></div>
+    </section>
+</main>
 
-    <div th:replace="components/footer :: footer"></div>
+<div th:replace="components/footer :: footer"></div>
 
-    <script src="/js/components/header.js"></script>
-    <script src="/js/components/footer.js"></script>
-    <script th:src="@{/js/index.js}"></script>
+<script src="/js/components/header.js"></script>
+<script src="/js/components/footer.js"></script>
+<script th:src="@{/js/index.js}"></script>
 </body>
 </html>

@@ -13,64 +13,64 @@
 </head>
 <body class="dark-theme">
 
-    <div th:replace="components/header :: header"></div>
+<div th:replace="components/header :: header"></div>
 
-    <nav class="breadcrumb-container">
-        <div class="breadcrumb-inner">
-            <a th:href="@{/}">Trang chủ</a> <span>/</span> <span id="breadcrumb-cat">Streetwear</span>
-        </div>
-    </nav>
-
-    <main class="product-detail-wrapper">
-        <div class="detail-grid">
-            <div class="gallery-side">
-                <div class="main-img-wrap" id="img-fly-origin">
-                    <img id="main-product-img" src="" alt="Main">
-                </div>
-                <div class="thumb-list" id="thumbnail-list"></div>
-            </div>
-
-            <div class="info-side">
-                <h1 id="product-name">ĐANG TẢI...</h1>
-                <div id="product-price" class="price-tag">0đ</div>
-
-                <div class="select-box">
-                    <p class="label">MÀU SẮC</p>
-                    <div class="chips" id="color-options"></div>
-                </div>
-
-                <div class="select-box">
-                    <p class="label">KÍCH THƯỚC</p>
-                    <div class="chips" id="size-options"></div>
-                </div>
-
-                <div class="selection-group">
-    <label>SỐ LƯỢNG</label>
-    <div class="quantity-control">
-        <button type="button" onclick="changeQty(-1)">-</button>
-        <input type="number" id="buy-quantity" value="1" min="1" readonly>
-        <button type="button" onclick="changeQty(1)">+</button>
+<nav class="breadcrumb-container">
+    <div class="breadcrumb-inner">
+        <a th:href="@{/}">Trang chủ</a> <span>/</span> <span id="breadcrumb-cat">Streetwear</span>
     </div>
-</div>
+</nav>
 
-<button class="add-to-cart-btn" id="add-btn" onclick="handleAddToCart()">
-    THÊM VÀO GIỎ HÀNG
-</button>
-
-                <div class="description-box">
-                    <p class="label">MÔ TẢ SẢN PHẨM</p>
-                    <p id="product-desc">Đang tải thông tin...</p>
-                </div>
-
-                <button class="add-cart-btn" onclick="handleAddToCart()">THÊM VÀO GIỎ HÀNG</button>
+<main class="product-detail-wrapper">
+    <div class="detail-grid">
+        <div class="gallery-side">
+            <div class="thumb-list" id="thumbnail-list">
+            </div>
+            <div class="main-img-wrap" id="img-fly-origin">
+                <img id="main-product-img" src="" alt="Main Product Image">
             </div>
         </div>
-    </main>
-    <div th:replace="components/footer :: footer"></div>
 
-    <script th:src="@{/js/components/header.js}"></script>
-    <script th:src="@{/js/components/footer.js}"></script>
-    <script th:src="@{/js/index.js}"></script>
-    <script th:src="@{/js/product-detail.js}"></script>
+        <div class="info-side">
+            <h1 id="product-name">ĐANG TẢI...</h1>
+            <div id="product-price" class="price-tag">0đ</div>
+
+            <div class="select-box">
+                <p class="label">MÀU SẮC</p>
+                <div class="chips" id="color-options"></div>
+            </div>
+
+            <div class="select-box">
+                <p class="label">KÍCH THƯỚC</p>
+                <div class="chips" id="size-options"></div>
+            </div>
+
+            <div class="selection-group">
+                <p class="label">SỐ LƯỢNG</p>
+                <div class="quantity-wrapper">
+                    <div class="quantity-control">
+                        <button type="button" onclick="changeQty(-1)">-</button>
+                        <input type="number" id="buy-quantity" value="1" min="1" readonly>
+                        <button type="button" onclick="changeQty(1)">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="add-to-cart-btn" id="add-btn" onclick="handleAddToCart()">
+                THÊM VÀO GIỎ HÀNG
+            </button>
+
+            <div class="description-box">
+                <p class="label">MÔ TẢ SẢN PHẨM</p>
+                <p id="product-desc">Đang tải thông tin...</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="components/footer :: footer"></div>
+
+<script th:src="@{/js/components/header.js}"></script>
+<script th:src="@{/js/product-detail.js}"></script>
 </body>
 </html>

@@ -107,7 +107,7 @@ function renderProducts(products) {
             : "/images/default-product.png";
 
         grid.innerHTML += `
-            <a href="/product/${p.id}" class="product-card">
+            <a href="/products/${p.id}" class="product-card">
                 <div class="img-box">
                     <img src="http://localhost:8080${img}">
                 </div>

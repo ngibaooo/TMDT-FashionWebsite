@@ -1,80 +1,235 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem("token");
+/**
+ * BIẾN TOÀN CỤC & CẤU HÌNH API
+ */
+const BASE_URL = "http://localhost:8080";
+let ezSearchDebounce = null;
 
-    const loginBtn = document.getElementById("loginBtn");
-    const avatar = document.getElementById("userAvatar");
-    const dropdown = document.getElementById("headerDropdown");
-
-    if (!loginBtn || !avatar) return;
-
-    // ===== CHƯA LOGIN =====
-    if (!token) {
-        avatar.style.display = "none";
-        loginBtn.style.display = "inline-block";
-        return;
+/**
+ * HÀM HELPER: XỬ LÝ ĐƯỜNG DẪN ẢNH TỪ DATABASE
+ * FIX: Xử lý lỗi lặp lại "uploads/uploads" và lỗi tiếng Việt (áo, quần)
+ */
+function getEzImageUrl(path) {
+    if (!path || path === "" || path === "null" || path === "undefined") {
+        return "/images/default.jpg"; // Ảnh LOADING của bạn
     }
 
-    // ===== ĐÃ LOGIN =====
-    loginBtn.style.display = "none";
-    avatar.style.display = "flex";
+    // 1. Nếu là URL tuyệt đối thì trả về luôn
+    if (path.startsWith("http")) return path;
+
+    // 2. Làm sạch đường dẫn (xóa gạch chéo ở đầu)
+    let cleanPath = path.replace(/^\//, '');
+
+    /**
+     * GIẢI PHÁP ROOT CAUSE:
+     * Nếu dữ liệu từ API đã có "uploads/", chúng ta xóa nó đi để tránh bị lặp lại
+     * vì lát nữa ta sẽ cộng thêm BASE_URL + /uploads/ ở cuối.
+     */
+    if (cleanPath.startsWith('uploads/')) {
+        cleanPath = cleanPath.replace('uploads/', '');
+    }
+
+    /**
+     * GIẢI PHÁP TIẾNG VIỆT & KHOẢNG TRẮNG:
+     * Tên file của bạn có chữ "áo", "quần" và khoảng trắng.
+     * Cần encodeURI để trình duyệt hiểu được.
+     */
+    const encodedPath = encodeURI(cleanPath);
+
+    return `${BASE_URL}/uploads/${encodedPath}`;
+}
+
+/**
+ * ĐỒNG BỘ GIỎ HÀNG
+ */
+window.syncGlobalCartBadge = function() {
+    const badge = document.getElementById("cart-badge");
+    if (!badge) return;
+    let count = parseInt(localStorage.getItem("cartCount") || "0");
+    badge.innerText = count;
+    badge.style.backgroundColor = (count > 0) ? "#ff0000" : "#808080";
+};
+
+/**
+ * KHỞI TẠO KHI TẢI TRANG
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    window.syncGlobalCartBadge();
+    loadHeaderAvatar();
+    initEzSearchLogic();
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".ez-search-wrapper")) {
+            const box = document.getElementById("ezSearchBox");
+            if (box) box.classList.remove("active");
+        }
+        if (!e.target.closest(".account-wrapper")) {
+            const drop = document.getElementById("headerDropdown");
+            if (drop) drop.classList.remove("show");
+        }
+    });
+});
+
+/**
+ * LOAD AVATAR
+ */
+async function loadHeaderAvatar() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
     try {
-        const res = await fetch("/api/users/me", {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
+        const res = await fetch(`${BASE_URL}/api/users/me`, {
+            headers: { "Authorization": "Bearer " + token }
         });
 
-        if (!res.ok) {
-            console.warn("Token lỗi hoặc hết hạn");
-            return; // ❌ KHÔNG logout vội
+        if (res.ok) {
+            const user = await res.json();
+            const avatarBox = document.getElementById("userAvatar");
+            const loginBtn = document.getElementById("loginBtn");
+
+            if (loginBtn) loginBtn.style.display = "none";
+            if (avatarBox) {
+                avatarBox.style.display = "flex";
+                if (user.avatar) {
+                    avatarBox.innerHTML = `<img src="${getEzImageUrl(user.avatar)}" onerror="this.src='/images/default-avatar.png'">`;
+                } else {
+                    const initial = (user.name || "U").charAt(0).toUpperCase();
+                    avatarBox.innerHTML = `<span>${initial}</span>`;
+                }
+
+                avatarBox.onclick = (e) => {
+                    e.stopPropagation();
+                    const drop = document.getElementById("headerDropdown");
+                    if (drop) drop.classList.toggle("show");
+                };
+            }
+        }
+    } catch (err) { console.error("Lỗi Avatar:", err); }
+}
+
+/**
+ * LOGIC TÌM KIẾM
+ */
+function toggleEzSearch() {
+    const box = document.getElementById("ezSearchBox");
+    if (!box) return;
+    box.classList.toggle("active");
+    if (box.classList.contains("active")) {
+        document.getElementById("ez-search-input").focus();
+        updateEzSearchUI();
+    }
+}
+
+function initEzSearchLogic() {
+    const input = document.getElementById("ez-search-input");
+    if (!input) return;
+
+    input.addEventListener("input", (e) => {
+        const val = e.target.value.trim();
+        clearTimeout(ezSearchDebounce);
+
+        if (val === "") {
+            updateEzSearchUI();
+            return;
         }
 
-        const user = await res.json();
+        ezSearchDebounce = setTimeout(() => fetchEzSearchAPI(val), 400);
+    });
 
-        // ===== AVATAR =====
-        if (user.avatar) {
-            avatar.innerHTML = `
-                <img src="/uploads/${user.avatar}"
-                     onerror="this.src='/images/default-avatar.png'">
+    input.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && input.value.trim()) {
+            performFinalSearch(input.value.trim());
+        }
+    });
+}
+
+function updateEzSearchUI() {
+    const val = document.getElementById("ez-search-input").value.trim();
+    if (val === "") {
+        document.getElementById("ezResultSection").style.display = "none";
+        document.getElementById("ezDefaultSection").style.display = "block";
+        renderEzHistory();
+    }
+}
+
+async function fetchEzSearchAPI(keyword) {
+    try {
+        const res = await fetch(`${BASE_URL}/api/products/search?keyword=${encodeURIComponent(keyword)}`);
+        const data = await res.json();
+
+        // Chấp nhận cấu trúc Page hoặc List
+        const products = data.content || data || [];
+
+        document.getElementById("ezDefaultSection").style.display = "none";
+        document.getElementById("ezHistorySection").style.display = "none";
+        const resSec = document.getElementById("ezResultSection");
+        const resList = document.getElementById("ezResultList");
+
+        resSec.style.display = "block";
+        if (!Array.isArray(products) || products.length === 0) {
+            resList.innerHTML = '<p style="color:#666; font-size:12px; padding:10px;">Không có kết quả...</p>';
+            return;
+        }
+
+        resList.innerHTML = products.map(p => {
+            // Lấy ảnh từ ProductDTO: private List<String> images;
+            const mainImg = (p.images && p.images.length > 0) ? p.images[0] : null;
+
+            return `
+                <a href="/products/${p.id}" class="ez-prod-res" onclick="performFinalSearch('${p.name}')">
+                    <img src="${getEzImageUrl(mainImg)}" onerror="this.src='/images/default.jpg'">
+                    <div>
+                        <h4>${p.name}</h4>
+                        <p>${new Intl.NumberFormat('vi-VN').format(p.price || 0)}đ</p>
+                    </div>
+                </a>
             `;
-        } else {
-            const name = user.name || "U";
-            avatar.innerText = name.charAt(0).toUpperCase();
-        }
+        }).join('');
+    } catch (err) { console.error("Lỗi Fetch API:", err); }
+}
 
-    } catch (err) {
-        console.error("Lỗi fetch user:", err);
-    }
+function performFinalSearch(keyword) {
+    let hist = JSON.parse(localStorage.getItem("ez_hist_final") || "[]");
+    hist = hist.filter(i => i !== keyword);
+    hist.unshift(keyword);
+    localStorage.setItem("ez_hist_final", JSON.stringify(hist.slice(0, 6)));
+    window.location.href = `/all-products?search=${encodeURIComponent(keyword)}`;
+}
 
-    // ===== DROPDOWN =====
-    if (avatar && dropdown) {
-        avatar.addEventListener("click", (e) => {
-            e.stopPropagation();
-            dropdown.classList.toggle("show");
-        });
+function renderEzHistory() {
+    const list = JSON.parse(localStorage.getItem("ez_hist_final") || "[]");
+    const histSec = document.getElementById("ezHistorySection");
+    const histList = document.getElementById("ezHistoryList");
 
-        document.addEventListener("click", (e) => {
-            if (!e.target.closest(".account-wrapper")) {
-                dropdown.classList.remove("show");
-            }
-        });
-    }
+    if (!histSec || !histList) return;
+    if (list.length === 0) { histSec.style.display = "none"; return; }
 
-    // ===== PROFILE =====
-    const headerProfile = document.getElementById("headerProfile");
-    if (headerProfile) {
-        headerProfile.onclick = () => {
-            window.location.href = "/user/profile";
-        };
-    }
+    histSec.style.display = "block";
+    histList.innerHTML = list.map(item => `
+        <div class="ez-history-item">
+            <span onclick="performFinalSearch('${item}')">${item}</span>
+            <i onclick="removeEzHistoryItem('${item}')">✕</i>
+        </div>
+    `).join('');
+}
 
-    // ===== LOGOUT =====
-    const headerLogout = document.getElementById("headerLogout");
-    if (headerLogout) {
-        headerLogout.onclick = () => {
-            localStorage.removeItem("token");
-            window.location.href = "/login";
-        };
-    }
-});
+function removeEzHistoryItem(key) {
+    let list = JSON.parse(localStorage.getItem("ez_hist_final") || "[]");
+    list = list.filter(i => i !== key);
+    localStorage.setItem("ez_hist_final", JSON.stringify(list));
+    renderEzHistory();
+}
+
+function clearAllEzHistory() {
+    localStorage.removeItem("ez_hist_final");
+    renderEzHistory();
+}
+
+// LOGOUT
+const logoutBtn = document.getElementById("headerLogout");
+if (logoutBtn) {
+    logoutBtn.onclick = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("cartCount");
+        window.location.href = "/login";
+    };
+}
