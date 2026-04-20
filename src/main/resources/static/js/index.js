@@ -1,19 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-//    updateHeaderAvatar();
-    syncGlobalCartBadge();
+    // FIX: Không tự viết hàm sync ở đây để tránh xung đột với header.js
+    // Chỉ gọi hàm từ header.js nếu cần thiết, nhưng thường header.js đã tự chạy khi load rồi.
+    if (window.syncGlobalCartBadge) {
+        window.syncGlobalCartBadge();
+    }
 
     const productGrid = document.getElementById('index-products-grid');
     if (productGrid) fetchFeaturedProducts();
 });
 
-function syncGlobalCartBadge() {
-    const badge = document.getElementById('cart-count');
-    if (badge) {
-        const count = localStorage.getItem("cartCount") || "0";
-        badge.innerText = count;
-        badge.style.display = (parseInt(count) > 0) ? "flex" : "none";
-    }
-}
+// XÓA HÀM syncGlobalCartBadge CŨ Ở ĐÂY VÌ NÓ SAI ID (cart-count)
+
 async function fetchFeaturedProducts() {
     const grid = document.getElementById('index-products-grid');
 
@@ -28,16 +25,16 @@ async function fetchFeaturedProducts() {
             let displayImg = '/images/default-product.png';
 
             if (p.images && p.images.length > 0) {
-                displayImg = "http://localhost:8080" + p.images[0];
+                // Sử dụng đường dẫn tuyệt đối từ server
+                displayImg = "http://localhost:8080" + (p.images[0].startsWith('/') ? '' : '/') + p.images[0];
             }
 
-            const price =
-                new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
+            const price = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
 
             return `
                 <a href="/products/${p.id}" class="product-card">
                     <div class="img-box">
-                        <img src="${displayImg}"
+                        <img src="${displayImg}" 
                              onerror="this.src='/images/default-product.png'">
                     </div>
                     <div class="product-info">
@@ -50,11 +47,11 @@ async function fetchFeaturedProducts() {
 
     } catch (error) {
         console.error("Lỗi Fetch:", error);
-        grid.innerHTML = '<p>Lỗi tải sản phẩm</p>';
+        if (grid) grid.innerHTML = '<p>Lỗi tải sản phẩm</p>';
     }
 }
 
-//ĐIỀU KHIỂN SEARCH OVERLAY
+// ĐIỀU KHIỂN SEARCH OVERLAY
 function toggleSearch() {
     const overlay = document.getElementById('search-overlay');
     if (overlay) {
@@ -62,22 +59,24 @@ function toggleSearch() {
         document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
     }
 }
+
 function showSearchDropdown() {
     const dropdown = document.getElementById('search-dropdown');
     if (dropdown) dropdown.classList.add('active');
 }
+
 document.addEventListener('click', (e) => {
-        const wrap = document.getElementById('search-bar-wrap');
-        const dropdown = document.getElementById('search-dropdown');
-        if (wrap && !wrap.contains(e.target)) {
-            if (dropdown) dropdown.classList.remove('active');
-        }
-    });
-//HÀM ĐĂNG XUẤT (LOGOUT)
+    const wrap = document.getElementById('search-bar-wrap');
+    const dropdown = document.getElementById('search-dropdown');
+    if (wrap && !wrap.contains(e.target)) {
+        if (dropdown) dropdown.classList.remove('active');
+    }
+});
+
+// HÀM ĐĂNG XUẤT (LOGOUT) - Đã có trong header.js nhưng giữ ở đây nếu bạn có nút logout riêng ở trang chủ
 function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
-    // Giữ lại cartCount nếu muốn khách vẫn thấy giỏ hàng khi đăng xuất
-    // localStorage.removeItem("cartCount"); 
+    localStorage.removeItem("cartCount"); 
     window.location.href = "/";
 }

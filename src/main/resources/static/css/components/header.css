@@ -34,7 +34,19 @@
 }
 #headerDropdown.show { display: flex; }
 .account-wrapper { position: relative; }
-.dropdown-item { padding: 12px 16px; font-size: 14px; cursor: pointer; color: #000; }
+
+/* CHỈNH SỬA TẠI ĐÂY: Đảm bảo thẻ a trong dropdown hiển thị đúng */
+.dropdown-item { 
+    padding: 12px 16px; 
+    font-size: 14px; 
+    cursor: pointer; 
+    color: #000; 
+    text-decoration: none; /* Xóa gạch chân của thẻ a */
+    display: block; /* Để link chiếm hết chiều ngang menu */
+}
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
 .dropdown-item.logout { color: red; border-top: 1px solid #eee; }
 
 /* ===== SEARCH BOX STYLE (THEO ẢNH YÊU CẦU) ===== */
