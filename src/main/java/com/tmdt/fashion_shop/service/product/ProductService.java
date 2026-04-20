@@ -6,13 +6,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-    Page<ProductDTO> getAll(Pageable pageable);
+    public Page<ProductDTO> getAllForUser(Pageable pageable);
+    public Page<ProductDTO> getAllForAdmin(Pageable pageable);
 
     Page<ProductDTO> search(String keyword, Pageable pageable);
 
     Page<ProductDTO> getByCategory(String categoryId, Pageable pageable);
 
     ProductDetailDTO getById(String id);
+    //user
     Page<ProductDetailDTO> filter(
             Double minPrice,
             Double maxPrice,
@@ -29,4 +31,12 @@ public interface ProductService {
     public ProductDTO update(String id, ProductUpdateRequestDTO request);
     public void deleteProduct(String productId);
     public void restoreProduct(String productId);
+//   admin
+    public Page<ProductDetailDTO> filterForAdmin(
+            Double minPrice,
+            Double maxPrice,
+            ProductSize productSize,
+            String color,
+            Pageable pageable
+    );
 }

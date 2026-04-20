@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Products</title>
+
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link rel="stylesheet" href="/css/admin/products.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="top-bar">
+            <h1>Products</h1>
+
+            <button class="btn-add" onclick="goAddProduct()">
+                + Thêm sản phẩm
+            </button>
+        </div>
+
+        <div class="filter-bar">
+            <input type="text" id="search" placeholder="Tìm sản phẩm...">
+            <select id="sort">
+                <option value="">Sắp xếp</option>
+                <option value="newest">Mới nhất</option>
+                <option value="price_asc">Giá tăng</option>
+                <option value="price_desc">Giá giảm</option>
+            </select>
+
+            <select id="price">
+                <option value="">Giá</option>
+                <option value="0-200000">Dưới 200k</option>
+                <option value="200000-500000">200k - 500k</option>
+                <option value="500000-99999999">Trên 500k</option>
+            </select>
+
+            <button class="btn-filter" onclick="applyFilter()">
+                Lọc
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Tên</th>
+                    <th>Danh mục</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Variants</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+
+                <tbody id="productTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/admin/products.js"></script>
+</body>
+</html>

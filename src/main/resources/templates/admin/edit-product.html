@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link rel="stylesheet" href="/css/admin/edit-product.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <div class="page-wrapper">
+            <h2 class="form-title">Chỉnh sửa sản phẩm</h2>
+
+            <div class="form-container">
+
+                <div class="form-group">
+                    <label>Tên sản phẩm</label>
+                    <input type="text" id="name">
+                </div>
+
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea id="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Giá</label>
+                    <input type="number" id="price">
+                </div>
+
+                <div class="form-group">
+                    <label>Giá cũ</label>
+                    <input type="number" id="oldPrice">
+                </div>
+
+                <div class="form-group">
+                    <label>Danh mục</label>
+                    <select id="category"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Hình ảnh</label>
+
+                    <div class="image-row">
+
+                        <!-- ẢNH CŨ -->
+                        <img id="preview" class="preview-img">
+
+                        <!-- UPLOAD -->
+                        <label class="upload-box">
+                            <p>Click để chọn ảnh mới</p>
+                            <input type="file" id="images" multiple>
+                        </label>
+
+                    </div>
+                </div>
+
+                <button class="btn-save" onclick="updateProduct()">
+                    Lưu thay đổi
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/admin/edit-product.js"></script>
+</body>
+</html>
