@@ -141,5 +141,10 @@ public class PageController {
     public String editProductPage(@PathVariable String id) {
         return "admin/edit-product";
     }
+    @GetMapping("/admin/products/add-product")
+    public String addProductPage() {
+        return "admin/add-product";
+    }
+
 }
 
