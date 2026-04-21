@@ -192,22 +192,38 @@ public class ProductServiceImpl implements ProductService {
                 .findByStatusOrderByCreatedAtDesc(ProductStatus.ACTIVE, pageable)
                 .map(this::toDTO);
     }
+//    @Override
+//    public Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable) {
+//
+//        return orderItemRepository.findBestSellingProducts(pageable)
+//                .map(obj -> new BestSellingProductDTO(
+//                        (String) obj[0],   // id
+//                        (String) obj[1],   // name
+//                        (Double) obj[2],   // price
+//                        (Long) obj[3]      // totalSold
+//                ));
+//    }
+//    Admin get by month
     @Override
-    public Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable) {
+    public Page<BestSellingProductDTO> getBestSellingProducts(
+            LocalDateTime from,
+            LocalDateTime to,
+            Pageable pageable
+    ) {
 
-        return orderItemRepository.findBestSellingProducts(pageable)
+        return orderItemRepository.findBestSellingProducts(from, to, pageable)
                 .map(obj -> new BestSellingProductDTO(
-                        (String) obj[0],   // id
-                        (String) obj[1],   // name
-                        (Double) obj[2],   // price
-                        (Long) obj[3]      // totalSold
+                        (String) obj[0],
+                        (String) obj[1],
+                        (Double) obj[2],
+                        (Long) obj[3]
                 ));
     }
 
     @Override
     public Page<ProductDTO> getBestSellingProductsForUser(Pageable pageable) {
 
-        Page<Object[]> result = orderItemRepository.findBestSellingProducts(pageable);
+        Page<Object[]> result = orderItemRepository.findBestSellingProductsForUser(pageable);
 
         List<String> productIds = result.getContent().stream()
                 .map(r -> (String) r[0])

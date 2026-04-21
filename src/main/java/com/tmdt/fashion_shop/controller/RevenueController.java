@@ -22,10 +22,21 @@ public class RevenueController {
 
     private final RevenueService revenueService;
 
+//    @GetMapping("/summary")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public RevenueSummaryDTO getSummary() {
+//        return revenueService.getSummary();
+//    }
     @GetMapping("/summary")
     @PreAuthorize("hasRole('ADMIN')")
-    public RevenueSummaryDTO getSummary() {
-        return revenueService.getSummary();
+    public RevenueSummaryDTO getSummary(
+            @RequestParam String from,
+            @RequestParam String to
+    ) {
+        return revenueService.getSummary(
+                LocalDate.parse(from),
+                LocalDate.parse(to)
+        );
     }
     @GetMapping("/by-date")
     @PreAuthorize("hasRole('ADMIN')")

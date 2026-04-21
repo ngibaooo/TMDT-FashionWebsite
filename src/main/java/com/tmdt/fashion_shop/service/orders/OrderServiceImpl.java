@@ -437,9 +437,31 @@ public class OrderServiceImpl implements OrderService {
                 recalcProductStatus(p);
             }
         }
-
         // ===== UPDATE STATUS =====
         order.setStatus(newStatus);
         orderRepository.save(order);
+    }
+    @Override
+    public Map<String, Long> getOrderStatusSummary() {
+
+        List<Object[]> result = orderRepository.countOrderByStatus();
+
+        Map<String, Long> map = new HashMap<>();
+
+        // default = 0
+        map.put("PENDING", 0L);
+        map.put("PAID", 0L);
+        map.put("FAILED", 0L);
+        map.put("SHIPPING", 0L);
+        map.put("COMPLETED", 0L);
+        map.put("CANCELLED", 0L);
+
+        for (Object[] row : result) {
+            String status = row[0].toString();
+            Long count = (Long) row[1];
+            map.put(status, count);
+        }
+
+        return map;
     }
 }

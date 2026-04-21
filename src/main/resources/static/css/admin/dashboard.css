@@ -25,10 +25,20 @@ body {
 /* CARDS */
 .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 25px;
 }
 
+.dashboard-cards .card:nth-child(1),
+.dashboard-cards .card:nth-child(2),
+.dashboard-cards .card:nth-child(3) {
+    grid-column: span 2;
+}
+
+.dashboard-cards .card:nth-child(4),
+.dashboard-cards .card:nth-child(5) {
+    grid-column: span 3;
+}
 /* CARD */
 .card {
     background: #fff;
@@ -59,4 +69,28 @@ body {
     background: #fff;
     padding: 25px;
     border-radius: 12px;
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    margin-top: 40px;
+}
+
+/* Chart chung */
+.chart-container {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+/* Chart lớn (Revenue) */
+.chart-container.big canvas {
+    height: 300px !important;
+}
+
+/* Chart nhỏ (Order Status) */
+.chart-container.small canvas {
+    height: 300px !important;
 }

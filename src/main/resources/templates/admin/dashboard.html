@@ -21,28 +21,52 @@
 
         <div class="dashboard-cards">
             <div class="card">
-                <p>DOANH THU</p>
+                <p>DOANH THU THÁNG NÀY</p>
                 <h2 id="revenue">0đ</h2>
             </div>
 
             <div class="card">
-                <p>ĐƠN HÀNG</p>
+                <p>ĐƠN HÀNG THÁNG NÀY</p>
                 <h2 id="orders">0</h2>
             </div>
 
             <div class="card">
-                <p>SẢN PHẨM ĐÃ BÁN</p>
+                <p>SẢN PHẨM ĐÃ BÁN TRONG THÁNG</p>
                 <h2 id="products">0</h2>
             </div>
 
             <div class="card">
-                <p>TOP SẢN PHẨM</p>
-                <h2 id="topProduct">-</h2>
+                <p>TOP SẢN PHẨM CỦA THÁNG</p>
+                <div id="topProduct"></div>
+            </div>
+            <div class="card">
+                <p>TRẠNG THÁI ĐƠN HÀNG</p>
+                <div id="orderStatus"></div>
             </div>
         </div>
 
-        <div class="chart-container">
-            <canvas id="revenueChart"></canvas>
+<!--        <div class="chart-container">-->
+<!--            <h5>DOANH THU TỪNG THÁNG</h5>-->
+<!--            <canvas id="revenueChart"></canvas>-->
+<!--        </div>-->
+<!--        <div class="card small-chart">-->
+<!--            <p>PHÂN BỐ ĐƠN HÀNG</p>-->
+<!--            <div class="chart-wrapper">-->
+<!--                <canvas id="orderStatusChart"></canvas>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="charts-row">
+
+            <div class="chart-container big">
+                <h5>DOANH THU TỪNG THÁNG</h5>
+                <canvas id="revenueChart"></canvas>
+            </div>
+
+            <div class="chart-container small">
+                <h5>PHÂN BỐ ĐƠN HÀNG</h5>
+                <canvas id="orderStatusChart"></canvas>
+            </div>
+
         </div>
 
     </div>

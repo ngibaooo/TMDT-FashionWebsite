@@ -22,12 +22,28 @@ public class RevenueServiceImpl implements RevenueService{
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
+//    @Override
+//    public RevenueSummaryDTO getSummary() {
+//
+//        double totalRevenue = orderRepository.getTotalRevenue();
+//        long totalOrders = orderRepository.getTotalOrders();
+//        long totalProductsSold = orderItemRepository.getTotalProductsSold();
+//
+//        return new RevenueSummaryDTO(
+//                totalRevenue,
+//                totalOrders,
+//                totalProductsSold
+//        );
+//    }
     @Override
-    public RevenueSummaryDTO getSummary() {
+    public RevenueSummaryDTO getSummary(LocalDate from, LocalDate to) {
 
-        double totalRevenue = orderRepository.getTotalRevenue();
-        long totalOrders = orderRepository.getTotalOrders();
-        long totalProductsSold = orderItemRepository.getTotalProductsSold();
+        LocalDateTime fromDateTime = from.atStartOfDay();
+        LocalDateTime toDateTime = to.atTime(23, 59, 59);
+
+        double totalRevenue = orderRepository.getRevenueBetween(fromDateTime, toDateTime);
+        long totalOrders = orderRepository.getOrdersBetween(fromDateTime, toDateTime);
+        long totalProductsSold = orderItemRepository.getProductsSoldBetween(fromDateTime, toDateTime);
 
         return new RevenueSummaryDTO(
                 totalRevenue,

@@ -6,6 +6,7 @@ import com.tmdt.fashion_shop.dto.orders.OrderRequestDTO;
 import com.tmdt.fashion_shop.dto.orders.OrderResponseDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
     public OrderResponseDTO createOrder(String userId, OrderRequestDTO request);
@@ -16,4 +17,5 @@ public interface OrderService {
     List<OrderDTO> getOrders(String userId, String status, String sort);
     void updateOrderStatus(String orderId, String status);
     public List<OrderDTO> getOrdersForAdmin(String status, String sort);
+    public Map<String, Long> getOrderStatusSummary();
 }
