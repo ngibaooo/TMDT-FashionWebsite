@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>EAZY VIBES | ĐƠN HÀNG</title>
+    <link rel="stylesheet" href="/css/admin/orders.css">
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="admin-container">
+
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
+
+    <div class="main-content">
+
+        <h1>QUẢN LÝ ĐƠN HÀNG</h1>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterBy('ALL', this)">TẤT CẢ</button>
+            <button class="filter-btn" onclick="filterBy('PENDING', this)">CHỜ XỬ LÝ</button>
+            <button class="filter-btn" onclick="filterBy('SHIPPING', this)">ĐANG GIAO</button>
+            <button class="filter-btn" onclick="filterBy('DELIVERED', this)">HOÀN TẤT</button>
+            <button class="filter-btn" onclick="filterBy('CANCELLED_FAILED', this)">ĐÃ HỦY</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>MÃ ĐƠN</th>
+                        <th>KHÁCH HÀNG</th>
+                        <th>NGÀY ĐẶT</th>
+                        <th>TỔNG TIỀN</th>
+                        <th style="text-align: center;">TRẠNG THÁI</th>
+                        <th style="text-align: right;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 50px; color: #888;">Đang tải dữ liệu đơn hàng...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="statusModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>CẬP NHẬT TRẠNG THÁI</h2>
+            <p id="modalOrderIdText">Đơn hàng: #...</p>
+        </div>
+        <div class="status-grid">
+            <button class="btn-status status-pending" onclick="confirmStatus('PENDING')">PENDING</button>
+            <button class="btn-status status-paid" onclick="confirmStatus('PAID')">PAID</button>
+            <button class="btn-status status-shipping" onclick="confirmStatus('SHIPPING')">SHIPPING</button>
+            <button class="btn-status status-completed" onclick="confirmStatus('COMPLETED')">COMPLETED</button>
+            <button class="btn-status status-cancelled" onclick="confirmStatus('CANCELLED')">CANCELLED</button>
+            <button class="btn-status status-failed" onclick="confirmStatus('FAILED')">FAILED</button>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">HỦY BỎ</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin/orders.js"></script>
+
+</body>
+</html>
