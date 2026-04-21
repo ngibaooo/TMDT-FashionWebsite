@@ -1,5 +1,6 @@
 const API_SUMMARY = "http://localhost:8080/api/admin/revenue/summary";
 const API_MONTH = "http://localhost:8080/api/admin/revenue/by-month";
+const API_DATE = "http://localhost:8080/api/admin/revenue/by-date";
 const API_TOP = "http://localhost:8080/api/products/admin/best-selling";
 const API_ORDER_STATUS = "http://localhost:8080/api/orders/admin/status-summary";
 
@@ -14,10 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadSummaryWithGrowth();
-    loadRevenueChart();
+    loadRevenueByMonthChart();
     loadTopProduct();
     loadOrderStatus();
     loadOrderStatusChart();
+    loadRevenueByWeekChart();
 });
 async function loadOrderStatus() {
     try {
@@ -184,7 +186,7 @@ async function loadTopProduct() {
     }
 }
 // CHART
-async function loadRevenueChart() {
+async function loadRevenueByMonthChart() {
     try {
         const token = localStorage.getItem("token");
 
@@ -206,7 +208,7 @@ async function loadRevenueChart() {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: "Doanh thu",
+                    label: "Doanh thu tháng trong năm",
                     data: values,
                     tension: 0.4
                 }]
@@ -225,6 +227,62 @@ const statusColors = {
     CANCELLED: "#dc2626",  // đỏ
     FAILED: "#f97316"      // cam
 };
+async function loadRevenueByWeekChart() {
+    try {
+        const token = localStorage.getItem("token");
+
+        const today = new Date();
+
+        // ngày bắt đầu = 6 ngày trước
+        const from = new Date();
+        from.setDate(today.getDate() - 6);
+
+        const res = await fetch(
+            `${API_DATE}?from=${formatDate(from)}&to=${formatDate(today)}`,
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const data = await res.json();
+
+        // FIX thiếu ngày
+        const map = {};
+        data.forEach(d => {
+            map[d.date] = d.revenue;
+        });
+
+        const labels = [];
+        const values = [];
+
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(from);
+            d.setDate(from.getDate() + i);
+
+            const dateStr = formatDate(d);
+
+            labels.push(`${d.getDate()}/${d.getMonth() + 1}`);
+            values.push(map[dateStr] || 0);
+        }
+
+        new Chart(document.getElementById("revenueByDateChart"), {
+//            type: "line",
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Doanh thu 7 ngày gần nhất",
+                    data: values
+                }]
+            }
+        });
+
+    } catch (e) {
+        console.error("Revenue week error:", e);
+    }
+}
 
 async function loadOrderStatusChart() {
     const token = localStorage.getItem("token");
@@ -238,7 +296,7 @@ async function loadOrderStatusChart() {
     const labels = Object.keys(data);
     const values = Object.values(data);
 
-    // 👉 map màu theo đúng status
+    // map màu theo đúng status
     const colors = labels.map(status => statusColors[status] || "#ccc");
 
     new Chart(document.getElementById("orderStatusChart"), {
