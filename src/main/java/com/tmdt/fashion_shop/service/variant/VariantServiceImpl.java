@@ -1,6 +1,7 @@
 package com.tmdt.fashion_shop.service.variant;
 
 import com.tmdt.fashion_shop.dto.variants.UpdateVariantRequestDTO;
+import com.tmdt.fashion_shop.dto.variants.VariantResponseDTO;
 import com.tmdt.fashion_shop.entity.Product;
 import com.tmdt.fashion_shop.entity.ProductImage;
 import com.tmdt.fashion_shop.entity.ProductVariant;
@@ -10,7 +11,11 @@ import com.tmdt.fashion_shop.enums.VariantStatus;
 import com.tmdt.fashion_shop.repository.ProductImageRepository;
 import com.tmdt.fashion_shop.repository.ProductRepository;
 import com.tmdt.fashion_shop.repository.ProductVariantRepository;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +38,48 @@ public class VariantServiceImpl implements VariantService {
         boolean hasStock = product.getVariants().stream()
                 .anyMatch(v -> v.getStatus() == VariantStatus.ACTIVE && v.getQuantity() > 0);
         product.setStatus(hasStock ? ProductStatus.ACTIVE : ProductStatus.OUT_OF_STOCK);
+    }
+    @Override
+    public Page<VariantResponseDTO> getAllVariants(Pageable pageable,
+                                                   String productId,
+                                                   ProductSize productSize,
+                                                   VariantStatus status) {
+
+        Specification<ProductVariant> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (productId != null && !productId.isBlank()) {
+                predicates.add(cb.equal(root.get("product").get("id"), productId));
+            }
+
+            if (productSize != null) {
+                predicates.add(cb.equal(root.get("size"), productSize));
+            }
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return productVariantRepository.findAll(spec, pageable)
+                .map(v -> {
+                    VariantResponseDTO dto = new VariantResponseDTO();
+                    dto.setId(v.getId());
+                    dto.setProductId(v.getProduct().getId());
+                    dto.setProductName(v.getProduct().getName());
+                    dto.setColor(v.getColor());
+                    dto.setSize(v.getSize());
+                    dto.setQuantity(v.getQuantity());
+                    dto.setStatus(v.getStatus());
+
+                    if (v.getImages() != null && !v.getImages().isEmpty()) {
+                        dto.setImage(v.getImages().get(0).getImageUrl());
+                    }
+
+                    return dto;
+                });
     }
     @Override
     public void createVariant(String productId,
