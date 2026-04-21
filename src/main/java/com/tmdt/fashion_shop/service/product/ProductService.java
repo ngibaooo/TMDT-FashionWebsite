@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
@@ -28,7 +29,12 @@ public interface ProductService {
     );
     Page<ProductDTO> getNewProducts(Pageable pageable);
     //admin
-    Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable);
+//    Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable);
+    public Page<BestSellingProductDTO> getBestSellingProducts(
+            LocalDateTime from,
+            LocalDateTime to,
+            Pageable pageable
+    );
     //user
     Page<ProductDTO> getBestSellingProductsForUser(Pageable pageable);
 //    ProductDTO create(ProductCreateRequestDTO request, List<MultipartFile> images);

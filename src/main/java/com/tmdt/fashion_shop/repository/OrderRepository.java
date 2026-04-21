@@ -24,13 +24,6 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
         WHERE o.status = 'COMPLETED'
     """)
     Double getTotalRevenue();
-//    @Query("""
-//    SELECT COALESCE(SUM(o.totalPrice), 0)
-//    FROM Order o
-//    WHERE o.status = 'COMPLETED'
-//    """)
-//    double getTotalRevenue();
-
     @Query("""
     SELECT COUNT(o) > 0
     FROM Order o
@@ -68,4 +61,23 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
         ORDER BY MONTH(o.createdAt)
     """)
     List<Object[]> getRevenueByMonth(@Param("year") int year);
+    @Query("""
+    SELECT COALESCE(SUM(o.totalPrice), 0)
+    FROM Order o
+    WHERE o.createdAt BETWEEN :from AND :to
+    """)
+    double getRevenueBetween(LocalDateTime from, LocalDateTime to);
+    @Query("""
+    SELECT COUNT(o)
+    FROM Order o
+    WHERE o.createdAt BETWEEN :from AND :to
+    """)
+    long getOrdersBetween(LocalDateTime from, LocalDateTime to);
+
+    @Query("""
+    SELECT o.status, COUNT(o)
+    FROM Order o
+    GROUP BY o.status
+    """)
+    List<Object[]> countOrderByStatus();
 }

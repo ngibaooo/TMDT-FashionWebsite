@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
@@ -22,7 +23,22 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
     GROUP BY p.id, p.name, p.price
     ORDER BY SUM(oi.quantity) DESC
     """)
-    Page<Object[]> findBestSellingProducts(Pageable pageable);
+    Page<Object[]> findBestSellingProductsForUser(Pageable pageable);
+    @Query("""
+    SELECT p.id, p.name, p.price, SUM(oi.quantity) as totalSold
+    FROM OrderItem oi
+    JOIN oi.productVariant pv
+    JOIN pv.product p
+    JOIN oi.order o
+    WHERE o.createdAt BETWEEN :from AND :to
+    GROUP BY p.id, p.name, p.price
+    ORDER BY totalSold DESC
+    """)
+    Page<Object[]> findBestSellingProducts(
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to,
+            Pageable pageable
+    );
     @Query("""
     SELECT COUNT(oi) > 0
     FROM OrderItem oi
@@ -38,4 +54,10 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
     WHERE o.status = 'COMPLETED'
     """)
     long getTotalProductsSold();
+    @Query("""
+    SELECT COALESCE(SUM(oi.quantity), 0)
+    FROM OrderItem oi
+    WHERE oi.order.createdAt BETWEEN :from AND :to
+    """)
+    long getProductsSoldBetween(LocalDateTime from, LocalDateTime to);
 }
