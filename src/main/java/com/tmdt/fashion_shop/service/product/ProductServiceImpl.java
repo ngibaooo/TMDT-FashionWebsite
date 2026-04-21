@@ -91,11 +91,12 @@ public class ProductServiceImpl implements ProductService {
                     vd.setSize(v.getSize());
                     vd.setColor(v.getColor());
                     vd.setQuantity(v.getQuantity());
+                    vd.setStatus(v.getStatus());
 
                     vd.setImages(
-                            v.getImages().stream()
-                                    .map(img -> img.getImageUrl())
-                                    .toList()
+                    v.getImages().stream()
+                            .map(img -> img.getImageUrl())
+                            .toList()
                     );
 
                     return vd;

@@ -65,12 +65,14 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
     SELECT COALESCE(SUM(o.totalPrice), 0)
     FROM Order o
     WHERE o.createdAt BETWEEN :from AND :to
-    """)
+      AND o.status = 'COMPLETED'
+""")
     double getRevenueBetween(LocalDateTime from, LocalDateTime to);
     @Query("""
     SELECT COUNT(o)
     FROM Order o
     WHERE o.createdAt BETWEEN :from AND :to
+      AND o.status = 'COMPLETED'
     """)
     long getOrdersBetween(LocalDateTime from, LocalDateTime to);
 
