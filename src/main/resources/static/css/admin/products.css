@@ -197,3 +197,28 @@ tbody tr {
     background: #ffecec;
     color: #ff4d4f;
 }
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.pagination button.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
