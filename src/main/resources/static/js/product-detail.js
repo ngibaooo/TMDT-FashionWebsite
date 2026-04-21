@@ -7,15 +7,6 @@ let selectedColor = null;
 let selectedSize = null;
 let selectedVariantId = null;
 
-const btn = document.getElementById("add-btn");
-
-if (!selectedColor || !selectedSize) {
-    btn.disabled = true;
-    btn.style.opacity = "0.5";
-} else {
-    btn.disabled = false;
-    btn.style.opacity = "1";
-}
 
 // Hàm xử lý ảnh (Đồng bộ với Header - Xử lý khoảng trắng)
 function getEzImageUrl(path) {
