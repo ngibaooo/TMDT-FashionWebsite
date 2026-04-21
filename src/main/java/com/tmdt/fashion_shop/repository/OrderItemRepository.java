@@ -31,6 +31,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
     JOIN pv.product p
     JOIN oi.order o
     WHERE o.createdAt BETWEEN :from AND :to
+    AND o.status = 'COMPLETED'
     GROUP BY p.id, p.name, p.price
     ORDER BY totalSold DESC
     """)
@@ -58,6 +59,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
     SELECT COALESCE(SUM(oi.quantity), 0)
     FROM OrderItem oi
     WHERE oi.order.createdAt BETWEEN :from AND :to
+    AND oi.order.status = 'COMPLETED'
     """)
     long getProductsSoldBetween(LocalDateTime from, LocalDateTime to);
 }
