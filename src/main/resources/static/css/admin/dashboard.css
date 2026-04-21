@@ -94,3 +94,6 @@ body {
 .chart-container.small canvas {
     height: 300px !important;
 }
+#revenueByDateChart {
+    height: 300px !important;
+}

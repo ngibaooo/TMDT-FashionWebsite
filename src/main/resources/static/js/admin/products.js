@@ -1,6 +1,8 @@
 const API_PRODUCTS = "http://localhost:8080/api/products/admin";
 const API_DETAIL = "http://localhost:8080/api/products/";
 
+let currentPage = 0;
+let totalPages = 0;
 document.addEventListener("DOMContentLoaded", () => {
 
     const role = localStorage.getItem("role");
@@ -22,8 +24,8 @@ function buildUrl() {
     const price = document.getElementById("price").value;
 
     let params = new URLSearchParams();
-    params.append("page", 0);
-    params.append("size", 10);
+    params.append("page", currentPage);
+    params.append("size", 5);
 
     if (price) {
         const [min, max] = price.split("-");
@@ -60,12 +62,16 @@ async function loadProducts() {
             }
         });
         const data = await res.json();
+
+        totalPages = data.totalPages || 0;
+
+        let products = data.content || [];
         if (!res.ok) {
             console.error("API lỗi:", data);
             return;
         }
 
-        let products = data.content || data;
+//        let products = data.content || data;
 
         if (!Array.isArray(products)) {
             console.error("Không phải array:", data);
@@ -99,10 +105,50 @@ async function loadProducts() {
         allProducts = productsWithVariant;
 
         renderProducts(allProducts);
+        renderPagination();
 
     } catch (e) {
         console.error("Load product error:", e);
     }
+}
+function renderPagination() {
+    const container = document.getElementById("pagination");
+
+    if (!container) return;
+
+    let html = "";
+
+    // PREV
+    html += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    // PAGE NUMBER
+    for (let i = 0; i < totalPages; i++) {
+        html += `
+            <button class="${i === currentPage ? 'active' : ''}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // NEXT
+    html += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+
+    container.innerHTML = html;
+}
+function changePage(page) {
+    currentPage = page;
+    loadProducts();
 }
 function applyFilter() {
     loadProducts();
