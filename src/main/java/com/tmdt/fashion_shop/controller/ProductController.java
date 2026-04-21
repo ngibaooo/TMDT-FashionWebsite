@@ -3,14 +3,19 @@ package com.tmdt.fashion_shop.controller;
 import com.tmdt.fashion_shop.dto.product.*;
 import com.tmdt.fashion_shop.enums.ProductSize;
 import com.tmdt.fashion_shop.service.product.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -129,9 +134,24 @@ public class ProductController {
     public Page<ProductDTO> bestSelling(Pageable pageable) {
         return productService.getBestSellingProductsForUser(pageable);
     }
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ProductDTO create(@ModelAttribute ProductCreateRequestDTO request) {
-        return productService.create(request);
+//    @PostMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ProductDTO create(@ModelAttribute ProductCreateRequestDTO request) {
+//        return productService.create(request);
+//    }
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ProductDTO create(
+//            @RequestPart("data") ProductCreateRequestDTO request,
+//            @RequestPart(value = "images", required = false) List<MultipartFile> images
+//    ) {
+//        return productService.create(request, images);
+//    }
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ProductDTO create(
+            @RequestPart("data") ProductCreateRequestDTO request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest httpRequest
+    ) {
+        return productService.create(request, images, httpRequest);
     }
 }
