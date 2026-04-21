@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>EAZY VIBES | NGƯỜI DÙNG</title>
+    <link rel="stylesheet" href="/css/admin/users.css">
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="admin-container">
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
+
+    <div class="main-content">
+        <h1>QUẢN LÝ NGƯỜI DÙNG</h1>
+
+        <div class="action-bar">
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterByRole('ALL', this)">TẤT CẢ</button>
+                <button class="filter-btn" onclick="filterByRole('ADMIN', this)">ADMIN</button>
+                <button class="filter-btn" onclick="filterByRole('CUSTOMER', this)">CUSTOMER</button>
+            </div>
+
+            <div class="right-actions">
+                <div class="search-box">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="userSearch" placeholder="Tìm tên hoặc email..." onkeyup="searchUsers()">
+                </div>
+                
+                <div class="sort-container">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    <select id="userSort" onchange="changeSort(this.value)">
+                        <option value="neweast">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>AVATAR</th>
+                        <th>NGƯỜI DÙNG</th>
+                        <th>VAI TRÒ</th>
+                        <th>NGÀY THAM GIA</th>
+                        <th style="text-align: center;">TRẠNG THÁI</th>
+                        <th style="text-align: right;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 50px; color: #888;">Đang tải dữ liệu người dùng...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="userModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">THAY ĐỔI TRẠNG THÁI</h2>
+            <p id="modalUserName">Xác nhận thay đổi?</p>
+        </div>
+        <div class="modal-footer-btns">
+            <button class="btn-confirm" id="confirmActionBtn">XÁC NHẬN</button>
+            <button class="btn-cancel" onclick="closeUserModal()">HỦY BỎ</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin/users.js"></script>
+
+</body>
+</html>
