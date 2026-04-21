@@ -2,6 +2,7 @@ package com.tmdt.fashion_shop.dto.variants;
 
 
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class ProductVariantDTO {
     private ProductSize size;
     private String color;
     private int quantity;
+    private VariantStatus status;
     private List<String> images;
     public ProductVariantDTO() {}
 }
