@@ -1,6 +1,6 @@
 /**
  * EAZY VIBES - ORDERS SYSTEM
- * Chỉnh sửa: Thay CONFIRMED thành PENDING trong Modal, giữ nhãn KHÁCH HÀNG
+ * Chỉnh sửa: Xử lý lỗi 400 và hiện thông báo lỗi từ Backend
  */
 
 const API_ORDERS = "http://localhost:8080/api/orders";
@@ -77,8 +77,7 @@ function renderOrders(orders) {
     `).join("");
 }
 
-// --- LOGIC MODAL ---
-
+// LOGIC MODAL
 function openStatusModal(id, current) {
     currentEditingOrderId = id;
     document.getElementById("modalOrderIdText").innerText = `Đơn hàng: #${id}`;
@@ -90,7 +89,10 @@ function closeModal() {
     currentEditingOrderId = null;
 }
 
-// Hàm xác nhận từ nút bấm trong Modal
+/**
+ * HÀM XÁC NHẬN CẬP NHẬT
+ * Sửa lỗi 400: Kiểm tra chi tiết lỗi từ phản hồi của Server
+ */
 async function confirmStatus(newStatus) {
     if (!currentEditingOrderId) return;
 
@@ -102,6 +104,7 @@ async function confirmStatus(newStatus) {
                 "Authorization": "Bearer " + token,
                 "Content-Type": "application/json"
             },
+            // Đảm bảo body JSON khớp hoàn toàn với DTO ở Backend
             body: JSON.stringify({ status: newStatus })
         });
 
@@ -109,15 +112,17 @@ async function confirmStatus(newStatus) {
             closeModal();
             loadOrders();
         } else {
-            const errorText = await res.text();
-            alert("Lỗi cập nhật: " + errorText);
+            // Đọc thông báo lỗi từ Backend (ví dụ: "Không thể chuyển từ PENDING sang COMPLETED")
+            const errorMessage = await res.text();
+            alert("Lỗi: " + (errorMessage || "Không hợp lệ theo quy trình hệ thống."));
         }
     } catch (e) {
-        console.error(e);
+        console.error("Update error:", e);
+        alert("Lỗi kết nối máy chủ!");
     }
 }
 
-// --- BỘ LỌC ---
+// BỘ LỌC
 function filterBy(status, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -128,9 +133,11 @@ function filterBy(status, btn) {
     if (status === 'ALL') {
         filtered = allOrders;
     } else if (status === 'PENDING') {
-        filtered = allOrders.filter(o => o.status === 'PENDING' || o.status === 'CONFIRMED' || o.status === 'PAID');
+        filtered = allOrders.filter(o => o.status === 'PENDING' || o.status === 'PAID');
     } else if (status === 'DELIVERED') {
         filtered = allOrders.filter(o => o.status === 'COMPLETED' || o.status === 'DELIVERED');
+    } else if (status === 'CANCELLED_FAILED') {
+        filtered = allOrders.filter(o => o.status === 'CANCELLED' || o.status === 'FAILED');
     } else {
         filtered = allOrders.filter(o => o.status === status);
     }

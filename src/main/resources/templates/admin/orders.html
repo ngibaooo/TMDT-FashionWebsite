@@ -22,6 +22,7 @@
             <button class="filter-btn" onclick="filterBy('PENDING', this)">CHỜ XỬ LÝ</button>
             <button class="filter-btn" onclick="filterBy('SHIPPING', this)">ĐANG GIAO</button>
             <button class="filter-btn" onclick="filterBy('DELIVERED', this)">HOÀN TẤT</button>
+            <button class="filter-btn" onclick="filterBy('CANCELLED_FAILED', this)">ĐÃ HỦY</button>
         </div>
 
         <div class="table-container">
@@ -55,11 +56,12 @@
             <p id="modalOrderIdText">Đơn hàng: #...</p>
         </div>
         <div class="status-grid">
-            <button class="btn-status status-paid" onclick="confirmStatus('PAID')">PAID</button>
             <button class="btn-status status-pending" onclick="confirmStatus('PENDING')">PENDING</button>
+            <button class="btn-status status-paid" onclick="confirmStatus('PAID')">PAID</button>
             <button class="btn-status status-shipping" onclick="confirmStatus('SHIPPING')">SHIPPING</button>
             <button class="btn-status status-completed" onclick="confirmStatus('COMPLETED')">COMPLETED</button>
             <button class="btn-status status-cancelled" onclick="confirmStatus('CANCELLED')">CANCELLED</button>
+            <button class="btn-status status-failed" onclick="confirmStatus('FAILED')">FAILED</button>
         </div>
         <div class="modal-footer">
             <button class="btn-cancel" onclick="closeModal()">HỦY BỎ</button>

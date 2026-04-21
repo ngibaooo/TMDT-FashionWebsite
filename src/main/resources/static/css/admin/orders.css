@@ -72,22 +72,23 @@ tbody td {
     font-size: 14px;
 }
 
+/* --- ĐỒNG BỘ MÀU SẮC TRẠNG THÁI THEO DASHBOARD --- */
 .status {
     padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
     text-transform: uppercase;
     display: inline-block;
+    color: #fff;
 }
 
-/* ĐỊNH NGHĨA MÀU SẮC TRẠNG THÁI */
-.status-pending { background: #fff8e6; color: #ffa000; }
-
-.status-shipping { background: #f3e6ff; color: #9c27b0; }
-.status-cancelled { background: #ffecec; color: #ff4d4f; }
-.status-paid { background: #f3f4f6; color: #6b7280; } /* Màu xám */
-.status-completed { background: #e6f9f0; color: #00a86b; } /* Màu xanh */
+.status-pending { background: #facc15; color: #000; } /* Vàng */
+.status-paid { background: #16a34a; }                /* Xanh lá */
+.status-shipping { background: #3b82f6; }            /* Xanh dương */
+.status-completed { background: #9ca3af; }           /* Xám */
+.status-cancelled { background: #dc2626; }           /* Đỏ */
+.status-failed { background: #f97316; }              /* Cam */
 
 .btn-edit {
     background: none;
@@ -136,25 +137,33 @@ tbody td {
 }
 
 .status-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
 .btn-status {
     padding: 12px;
     border: none;
-    border-radius: 12px;
-    font-size: 12px;
+    border-radius: 10px;
+    font-size: 11px;
     font-weight: 800;
     cursor: pointer;
     transition: 0.2s;
     text-transform: uppercase;
+    color: #fff;
 }
 
+.btn-status.status-pending { background: #facc15; color: #000; }
+.btn-status.status-paid { background: #16a34a; }
+.btn-status.status-shipping { background: #3b82f6; }
+.btn-status.status-completed { background: #9ca3af; }
+.btn-status.status-cancelled { background: #dc2626; }
+.btn-status.status-failed { background: #f97316; }
+
 .btn-status:hover {
-    transform: scale(1.02);
-    filter: brightness(0.9);
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .modal-footer {
