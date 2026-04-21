@@ -205,6 +205,28 @@ body {
     font-size: 15px;
     white-space: pre-line; /* Giữ ngắt dòng từ database */
 }
+/* HẾT HÀNG */
+.option-chip.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: line-through;
+    border-color: #444;
+    color: #777;
+}
+
+/* ACTIVE vẫn nổi bật */
+.option-chip.active {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+/* hover chỉ áp dụng khi không disabled */
+.option-chip:not(.disabled):hover {
+    background: #fff;
+    color: #000;
+}
 
 /* --- 8. RESPONSIVE --- */
 @media (max-width: 1024px) {

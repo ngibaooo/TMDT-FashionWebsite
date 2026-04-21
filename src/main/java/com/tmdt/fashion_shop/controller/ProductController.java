@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -126,26 +127,22 @@ public class ProductController {
     }
     @GetMapping("/admin/best-selling")
     @PreAuthorize("hasRole('ADMIN')")
-    public Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable) {
-        return productService.getBestSellingProducts(pageable);
+    public Page<BestSellingProductDTO> getBestSellingProducts(
+            @RequestParam String from,
+            @RequestParam String to,
+            Pageable pageable
+    ) {
+        return productService.getBestSellingProducts(
+                LocalDate.parse(from).atStartOfDay(),
+                LocalDate.parse(to).atTime(23, 59, 59),
+                pageable
+        );
     }
     // USER
     @GetMapping("/best-selling")
     public Page<ProductDTO> bestSelling(Pageable pageable) {
         return productService.getBestSellingProductsForUser(pageable);
     }
-//    @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public ProductDTO create(@ModelAttribute ProductCreateRequestDTO request) {
-//        return productService.create(request);
-//    }
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ProductDTO create(
-//            @RequestPart("data") ProductCreateRequestDTO request,
-//            @RequestPart(value = "images", required = false) List<MultipartFile> images
-//    ) {
-//        return productService.create(request, images);
-//    }
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ProductDTO create(
             @RequestPart("data") ProductCreateRequestDTO request,

@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // FIX: Không tự viết hàm sync ở đây để tránh xung đột với header.js
-    // Chỉ gọi hàm từ header.js nếu cần thiết, nhưng thường header.js đã tự chạy khi load rồi.
     if (window.syncGlobalCartBadge) {
         window.syncGlobalCartBadge();
     }
@@ -8,8 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const productGrid = document.getElementById('index-products-grid');
     if (productGrid) fetchFeaturedProducts();
 });
-
-// XÓA HÀM syncGlobalCartBadge CŨ Ở ĐÂY VÌ NÓ SAI ID (cart-count)
 
 async function fetchFeaturedProducts() {
     const grid = document.getElementById('index-products-grid');
@@ -21,22 +17,53 @@ async function fetchFeaturedProducts() {
         const data = await response.json();
         const products = (data.content || []).slice(0, 4);
 
+//        grid.innerHTML = products.map(p => {
+//            let displayImg = '/images/default-product.png';
+//
+//            if (p.images && p.images.length > 0) {
+//                // Sử dụng đường dẫn tuyệt đối từ server
+//                displayImg = "http://localhost:8080" + (p.images[0].startsWith('/') ? '' : '/') + p.images[0];
+//            }
+//
+//            const price = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
+//
+//            return `
+//                <a href="/products/${p.id}" class="product-card">
+//                    <div class="img-box">
+//                        <img src="${displayImg}"
+//                             onerror="this.src='/images/default-product.png'">
+//                    </div>
+//                    <div class="product-info">
+//                        <h3>${p.name}</h3>
+//                        <div class="price">${price}</div>
+//                    </div>
+//                </a>
+//            `;
+//        }).join('');
         grid.innerHTML = products.map(p => {
+
+            const isOut = p.status === "OUT_OF_STOCK";
+
             let displayImg = '/images/default-product.png';
 
             if (p.images && p.images.length > 0) {
-                // Sử dụng đường dẫn tuyệt đối từ server
                 displayImg = "http://localhost:8080" + (p.images[0].startsWith('/') ? '' : '/') + p.images[0];
             }
 
             const price = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
 
             return `
-                <a href="/products/${p.id}" class="product-card">
+                <a href="${isOut ? '#' : `/products/${p.id}`}"
+                   class="product-card ${isOut ? 'out-of-stock' : ''}"
+                   ${isOut ? 'onclick="return false;"' : ''}>
+
                     <div class="img-box">
-                        <img src="${displayImg}" 
+                        <img src="${displayImg}"
                              onerror="this.src='/images/default-product.png'">
+
+                        ${isOut ? `<div class="sold-out-overlay">HẾT HÀNG</div>` : ''}
                     </div>
+
                     <div class="product-info">
                         <h3>${p.name}</h3>
                         <div class="price">${price}</div>

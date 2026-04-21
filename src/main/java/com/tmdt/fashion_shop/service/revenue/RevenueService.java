@@ -8,7 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface RevenueService {
-    public RevenueSummaryDTO getSummary();
+//    public RevenueSummaryDTO getSummary();
     public List<RevenueByDateDTO> getRevenueByDate(LocalDate from, LocalDate to);
     public List<RevenueByMonthDTO> getRevenueByMonth(int year);
+    public RevenueSummaryDTO getSummary(LocalDate from, LocalDate to);
 }

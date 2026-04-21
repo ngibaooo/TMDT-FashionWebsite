@@ -1,7 +1,3 @@
-/**
- * EAZY VIBES - SALE PRODUCTS LOGIC
- * FIX: Sửa lỗi cú pháp template literal và đồng bộ logic ảnh.
- */
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchSaleProducts();
@@ -15,10 +11,6 @@ async function fetchSaleProducts() {
     grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444;">ĐANG TÌM KIẾM CÁC DEAL HỜI...</p>';
 
     try {
-        /**
-         * TRACE DATA FLOW:
-         * Gọi API Filter với mức giá trần để lấy sản phẩm khuyến mãi (theo giả định của bạn).
-         */
         const response = await fetch('/api/products/filter?page=0&size=12&maxPrice=1000000');
         if (!response.ok) throw new Error("API_ERROR");
 
@@ -30,9 +22,7 @@ async function fetchSaleProducts() {
             return;
         }
 
-        /**
-         * FIX ROOT CAUSE: Thêm dấu backtick (`) bao quanh template HTML
-         */
+
         grid.innerHTML = products.map(p => {
             // Đồng bộ xử lý ảnh với các trang tops/bottoms
             let displayImg = '/images/default.jpg';

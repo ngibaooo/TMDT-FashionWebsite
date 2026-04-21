@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -75,5 +76,10 @@ public class OrderController {
     ) {
         orderService.updateOrderStatus(orderId, request.getStatus());
         return ResponseEntity.ok("Cập nhật trạng thái thành công");
+    }
+    @GetMapping("/admin/status-summary")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Map<String, Long> getOrderStatusSummary() {
+        return orderService.getOrderStatusSummary();
     }
 }

@@ -14,6 +14,11 @@ public interface ProductRepository extends JpaRepository<Product, String>, JpaSp
 
     Page<Product> findByStatus(ProductStatus status, Pageable pageable);
     Page<Product> findByCategory_Id(String categoryId, Pageable pageable);
+    Page<Product> findByCategory_IdAndStatus(
+            String categoryId,
+            ProductStatus status,
+            Pageable pageable
+    );
     Page<Product> findByStatusOrderByCreatedAtDesc(ProductStatus status, Pageable pageable);
 
     @Query("""
