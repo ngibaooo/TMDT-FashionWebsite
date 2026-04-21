@@ -56,13 +56,12 @@
             <p id="modalOrderIdText">Đơn hàng: #...</p>
         </div>
         <div class="status-grid">
-            <button class="btn-status status-pending" onclick="confirmStatus('PENDING')">PENDING</button>
-            <button class="btn-status status-paid" onclick="confirmStatus('PAID')">PAID</button>
-            <button class="btn-status status-shipping" onclick="confirmStatus('SHIPPING')">SHIPPING</button>
-            <button class="btn-status status-completed" onclick="confirmStatus('COMPLETED')">COMPLETED</button>
-            <button class="btn-status status-cancelled" onclick="confirmStatus('CANCELLED')">CANCELLED</button>
-            <button class="btn-status status-failed" onclick="confirmStatus('FAILED')">FAILED</button>
-        </div>
+            <button id="btn-pending" class="btn-status status-pending" onclick="confirmStatus('PENDING')">PENDING</button>
+            <button id="btn-paid" class="btn-status status-paid" onclick="confirmStatus('PAID')">PAID</button>
+            <button id="btn-shipping" class="btn-status status-shipping" onclick="confirmStatus('SHIPPING')">SHIPPING</button>
+            <button id="btn-completed" class="btn-status status-completed" onclick="confirmStatus('COMPLETED')">COMPLETED</button>
+            <button id="btn-cancelled" class="btn-status status-cancelled" onclick="confirmStatus('CANCELLED')">CANCELLED</button>
+            </div>
         <div class="modal-footer">
             <button class="btn-cancel" onclick="closeModal()">HỦY BỎ</button>
         </div>
