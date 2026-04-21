@@ -125,11 +125,6 @@ public class ProductController {
     public Page<ProductDTO> getNewProducts(Pageable pageable) {
         return productService.getNewProducts(pageable);
     }
-//    @GetMapping("/admin/best-selling")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable) {
-//        return productService.getBestSellingProducts(pageable);
-//    }
     @GetMapping("/admin/best-selling")
     @PreAuthorize("hasRole('ADMIN')")
     public Page<BestSellingProductDTO> getBestSellingProducts(

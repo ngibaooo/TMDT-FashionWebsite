@@ -143,9 +143,15 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::toDTO);
     }
 
+//    @Override
+//    public Page<ProductDTO> getByCategory(String categoryId, Pageable pageable) {
+//        return productRepository.findByCategory_Id(categoryId, pageable)
+//                .map(this::toDTO);
+//    }
     @Override
     public Page<ProductDTO> getByCategory(String categoryId, Pageable pageable) {
-        return productRepository.findByCategory_Id(categoryId, pageable)
+        return productRepository
+                .findByCategory_IdAndStatus(categoryId, ProductStatus.ACTIVE, pageable)
                 .map(this::toDTO);
     }
 
@@ -243,87 +249,6 @@ public class ProductServiceImpl implements ProductService {
 
         return new PageImpl<>(dtoList, pageable, result.getTotalElements());
     }
-//    @Transactional
-//    @Override
-//    public ProductDTO create(ProductCreateRequestDTO request, List<MultipartFile> images) {
-//
-//        // 1. CREATE PRODUCT
-//        Product product = new Product();
-//        product.setId(UUID.randomUUID().toString());
-//        product.setName(request.getName());
-//        product.setDescription(request.getDescription());
-//        product.setPrice(request.getPrice());
-//        product.setOldPrice(request.getOldPrice());
-//        product.setCreatedAt(LocalDateTime.now());
-//        product.setStatus(ProductStatus.ACTIVE);
-//
-//        Category category = categoryRepository.findById(request.getCategoryId())
-//                .orElseThrow(() -> new RuntimeException("Category not found"));
-//
-//        product.setCategory(category);
-//        productRepository.save(product);
-//
-//        // 2. SAVE PRODUCT IMAGES
-////        if (request.getImages() != null) {
-////            for (MultipartFile file : request.getImages()) {
-////                String url = saveFile(file);
-////
-////                ProductImage img = new ProductImage();
-////                img.setId(UUID.randomUUID().toString());
-////                img.setProduct(product);
-////                img.setImageUrl(url);
-////
-////                productImageRepository.save(img);
-////            }
-////        }
-//        // SAVE PRODUCT IMAGES
-//        if (images != null) {
-//            for (MultipartFile file : images) {
-//                String url = saveFile(file);
-//
-//                ProductImage img = new ProductImage();
-//                img.setId(UUID.randomUUID().toString());
-//                img.setProduct(product);
-//                img.setImageUrl(url);
-//
-//                productImageRepository.save(img);
-//            }
-//        }
-//
-//        // 3. CREATE VARIANTS
-//        if (request.getVariants() != null) {
-//            for (VariantRequestDTO vReq : request.getVariants()) {
-//
-//                ProductVariant variant = new ProductVariant();
-//                variant.setId(UUID.randomUUID().toString());
-//                variant.setProduct(product);
-//                variant.setSize(vReq.getSize());
-//                variant.setColor(vReq.getColor());
-//                variant.setQuantity(vReq.getQuantity());
-//
-//                productVariantRepository.save(variant);
-//
-//                // 4. SAVE VARIANT IMAGES
-//                if (vReq.getImages() != null) {
-//                    for (MultipartFile file : vReq.getImages()) {
-//
-//                        String url = saveFile(file);
-//
-//                        ProductImage img = new ProductImage();
-//                        img.setId(UUID.randomUUID().toString());
-//                        img.setProductVariant(variant);
-//                        img.setImageUrl(url);
-//
-//                        productImageRepository.save(img);
-//                    }
-//                }
-//            }
-//        }
-//
-//        // 5. RETURN DETAIL
-//        Product saved = productRepository.findById(product.getId()).get();
-//        return toDTO(saved);
-//    }
     @Override
     public ProductDTO create(ProductCreateRequestDTO request,
                              List<MultipartFile> images, HttpServletRequest httpRequest) {

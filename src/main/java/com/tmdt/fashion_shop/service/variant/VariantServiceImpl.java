@@ -5,6 +5,7 @@ import com.tmdt.fashion_shop.entity.Product;
 import com.tmdt.fashion_shop.entity.ProductImage;
 import com.tmdt.fashion_shop.entity.ProductVariant;
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.ProductStatus;
 import com.tmdt.fashion_shop.enums.VariantStatus;
 import com.tmdt.fashion_shop.repository.ProductImageRepository;
 import com.tmdt.fashion_shop.repository.ProductRepository;
@@ -26,7 +27,12 @@ public class VariantServiceImpl implements VariantService {
     private final ProductRepository productRepository;
     private final ProductVariantRepository  productVariantRepository;
     private final ProductImageRepository productImageRepository;
+    private void recalcProductStatus(Product product) {
 
+        boolean hasStock = product.getVariants().stream()
+                .anyMatch(v -> v.getStatus() == VariantStatus.ACTIVE && v.getQuantity() > 0);
+        product.setStatus(hasStock ? ProductStatus.ACTIVE : ProductStatus.OUT_OF_STOCK);
+    }
     @Override
     public void createVariant(String productId,
                               ProductSize size,
@@ -126,9 +132,15 @@ public class VariantServiceImpl implements VariantService {
                 throw new RuntimeException("Số lượng không hợp lệ");
             }
             variant.setQuantity(request.getQuantity());
+            if (request.getQuantity() == 0) {
+                variant.setStatus(VariantStatus.INACTIVE);
+            } else {
+                variant.setStatus(VariantStatus.ACTIVE);
+            }
         }
 
         productVariantRepository.save(variant);
+        recalcProductStatus(variant.getProduct());
     }
     @Override
     public void uploadImages(String variantId, List<MultipartFile> images) {

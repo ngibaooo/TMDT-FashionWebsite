@@ -1,7 +1,4 @@
-/**
- * EAZY VIBES - INDEX CSS MASTER VERSION
- * TỔNG HỢP TOÀN BỘ CÁC LẦN FIX GIAO DIỆN
- */
+
 
 :root {
     --black: #000000;
@@ -200,6 +197,46 @@ body {
 }
 .search-overlay.active { display: flex; }
 
+/* ===== OUT OF STOCK (INDEX - PREMIUM STYLE) ===== */
+
+.product-card.out-of-stock {
+    pointer-events: none;
+    opacity: 0.85;
+}
+
+/* KHÔNG grayscale -> chỉ làm tối nhẹ */
+.product-card.out-of-stock .img-box img {
+    filter: brightness(0.6);
+    transform: scale(1.02); /* nhẹ cho cảm giác blur */
+}
+
+/* overlay xịn hơn */
+.sold-out-overlay {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    padding: 6px 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* cần để overlay hoạt động */
+.img-box {
+    position: relative;
+}
+
+/* hover không nhảy */
+.product-card.out-of-stock:hover {
+    transform: none;
+}
 /* 9. RESPONSIVE */
 @media (max-width: 1024px) {
     .category-grid { height: 450px; }

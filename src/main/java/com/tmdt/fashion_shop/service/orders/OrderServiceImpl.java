@@ -147,6 +147,9 @@ public class OrderServiceImpl implements OrderService {
 
             // trừ kho
             variant.setQuantity(variant.getQuantity() - item.getQuantity());
+            if (variant.getQuantity() == 0) {
+                variant.setStatus(VariantStatus.INACTIVE);
+            }
             productVariantRepository.save(variant);
 
             // lưu product để update status sau
