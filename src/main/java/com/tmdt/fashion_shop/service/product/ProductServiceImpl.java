@@ -245,10 +245,12 @@ public class ProductServiceImpl implements ProductService {
         List<ProductDTO> dtoList = productIds.stream()
                 .map(map::get)
                 .filter(Objects::nonNull)
+                .filter(p -> p.getStatus() != ProductStatus.INACTIVE)
                 .map(this::toDTO)
                 .toList();
 
-        return new PageImpl<>(dtoList, pageable, result.getTotalElements());
+//        return new PageImpl<>(dtoList, pageable, result.getTotalElements());
+        return new PageImpl<>(dtoList, pageable, dtoList.size());
     }
     @Override
     public ProductDTO create(ProductCreateRequestDTO request,
@@ -404,11 +406,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // check sản phẩm đang nằm trong đơn chưa hoàn tất
-        boolean isUsed = orderItemRepository.existsByProductIdAndActiveOrders(productId);
-
-        if (isUsed) {
-            throw new RuntimeException("Không thể xóa sản phẩm đang có trong đơn hàng");
-        }
+//        boolean isUsed = orderItemRepository.existsByProductIdAndActiveOrders(productId);
+//
+//        if (isUsed) {
+//            throw new RuntimeException("Không thể xóa sản phẩm đang có trong đơn hàng");
+//        }
 
         // soft delete
         product.setStatus(ProductStatus.INACTIVE);

@@ -1,9 +1,14 @@
 package com.tmdt.fashion_shop.controller;
 
 import com.tmdt.fashion_shop.dto.variants.UpdateVariantRequestDTO;
+import com.tmdt.fashion_shop.dto.variants.VariantResponseDTO;
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.VariantStatus;
 import com.tmdt.fashion_shop.service.variant.VariantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +22,19 @@ import java.util.List;
 public class VariantController {
 
     private final VariantService variantService;
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<VariantResponseDTO>> getAllVariants(
+            @RequestParam(required = false) String productId,
+            @RequestParam(required = false) ProductSize productSize,
+            @RequestParam(required = false) VariantStatus status,
+            @PageableDefault(page = 0, size = 10) Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                variantService.getAllVariants(pageable, productId, productSize, status)
+        );
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
