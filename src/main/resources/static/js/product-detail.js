@@ -7,6 +7,16 @@ let selectedColor = null;
 let selectedSize = null;
 let selectedVariantId = null;
 
+const btn = document.getElementById("add-btn");
+
+if (!selectedColor || !selectedSize) {
+    btn.disabled = true;
+    btn.style.opacity = "0.5";
+} else {
+    btn.disabled = false;
+    btn.style.opacity = "1";
+}
+
 // Hàm xử lý ảnh (Đồng bộ với Header - Xử lý khoảng trắng)
 function getEzImageUrl(path) {
     if (!path || path === "" || path === "null") return "/images/default.jpg";
@@ -56,17 +66,23 @@ async function fetchProductDetail(id) {
         document.getElementById('product-name').innerText = "KHÔNG TÌM THẤY SẢN PHẨM";
     }
 }
-
 function renderVariantSelection() {
+
     const colors = [...new Set(productVariants.map(v => v.color))].filter(Boolean);
     const sizes = [...new Set(productVariants.map(v => v.size))].filter(Boolean);
 
     const colorContainer = document.getElementById('color-options');
     const sizeContainer = document.getElementById('size-options');
 
-    // COLOR
+    // ===== COLOR =====
     colorContainer.innerHTML = colors.map(c => {
-        const hasStock = productVariants.some(v => v.color === c && v.quantity > 0);
+
+        // nếu đã chọn size -> filter theo size
+        const hasStock = productVariants.some(v =>
+            v.color === c &&
+            (!selectedSize || v.size === selectedSize) &&
+            v.quantity > 0
+        );
 
         return `
             <div class="option-chip ${!hasStock ? 'disabled' : ''}"
@@ -77,9 +93,14 @@ function renderVariantSelection() {
         `;
     }).join('');
 
-    // SIZE
+    // ===== SIZE =====
     sizeContainer.innerHTML = sizes.map(s => {
-        const hasStock = productVariants.some(v => v.size === s && v.quantity > 0);
+
+        const hasStock = productVariants.some(v =>
+            v.size === s &&
+            (!selectedColor || v.color === selectedColor) &&
+            v.quantity > 0
+        );
 
         return `
             <div class="option-chip ${!hasStock ? 'disabled' : ''}"
@@ -89,30 +110,52 @@ function renderVariantSelection() {
             </div>
         `;
     }).join('');
-
-    // auto select nếu chỉ có 1 option và còn hàng
-    if (colors.length === 1) {
-        const el = colorContainer.querySelector('.option-chip:not(.disabled)');
-        if (el) el.click();
-    }
-
-    if (sizes.length === 1) {
-        const el = sizeContainer.querySelector('.option-chip:not(.disabled)');
-        if (el) el.click();
-    }
 }
 function selectChip(el, type) {
-    el.parentElement.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
+
+    const value = el.getAttribute('data-val');
+
+    // ===== TOGGLE (click lần 2 để bỏ chọn) =====
+    if (el.classList.contains('active')) {
+
+        // bỏ chọn
+        el.classList.remove('active');
+
+        if (type === 'color') selectedColor = null;
+        if (type === 'size') selectedSize = null;
+
+        selectedVariantId = null;
+
+        renderVariantSelection();
+        restoreSelection();
+
+        // reset stock info
+        const stockEl = document.getElementById("stock-info");
+        if (stockEl) stockEl.innerText = "";
+
+        return;
+    }
+
+    // ===== SELECT BÌNH THƯỜNG =====
+    el.parentElement.querySelectorAll('.option-chip')
+        .forEach(c => c.classList.remove('active'));
+
     el.classList.add('active');
 
-    if (type === 'color') selectedColor = el.getAttribute('data-val');
-    if (type === 'size') selectedSize = el.getAttribute('data-val');
+    if (type === 'color') selectedColor = value;
+    if (type === 'size') selectedSize = value;
 
-    const match = productVariants.find(v => v.color === selectedColor && v.size === selectedSize);
+    renderVariantSelection();
+    restoreSelection();
+
+    const match = productVariants.find(v =>
+        v.color === selectedColor &&
+        v.size === selectedSize
+    );
 
     selectedVariantId = match ? match.id : null;
 
-    //  HIỂN THỊ TỒN KHO
+    // stock info
     const stockEl = document.getElementById("stock-info");
     if (stockEl && match) {
         stockEl.innerText = match.quantity > 0
@@ -212,4 +255,16 @@ function changeQty(amt) {
     let val = parseInt(input.value) + amt;
     if (val < 1) val = 1;
     input.value = val;
+}
+function restoreSelection() {
+
+    if (selectedColor) {
+        const el = document.querySelector(`#color-options .option-chip[data-val="${selectedColor}"]:not(.disabled)`);
+        if (el) el.classList.add("active");
+    }
+
+    if (selectedSize) {
+        const el = document.querySelector(`#size-options .option-chip[data-val="${selectedSize}"]:not(.disabled)`);
+        if (el) el.classList.add("active");
+    }
 }

@@ -208,6 +208,7 @@ body {
 /* HẾT HÀNG */
 .option-chip.disabled {
     opacity: 0.35;
+    cursor: not-allowed;
     pointer-events: none;
     text-decoration: line-through;
     border-color: #444;

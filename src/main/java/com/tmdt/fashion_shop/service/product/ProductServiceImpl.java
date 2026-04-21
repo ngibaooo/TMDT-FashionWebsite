@@ -82,7 +82,8 @@ public class ProductServiceImpl implements ProductService {
         );
         dto.setVariants(
                 product.getVariants().stream()
-                        .filter(v -> v.getStatus() == VariantStatus.ACTIVE)
+//                        .filter(v -> v.getStatus() == VariantStatus.ACTIVE)
+//                        .filter(v -> v.getStatus())
                         .map(v -> {
 
                     ProductVariantDTO vd = new ProductVariantDTO();
