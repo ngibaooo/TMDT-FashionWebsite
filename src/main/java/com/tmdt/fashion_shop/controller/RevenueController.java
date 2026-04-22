@@ -22,11 +22,6 @@ public class RevenueController {
 
     private final RevenueService revenueService;
 
-//    @GetMapping("/summary")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public RevenueSummaryDTO getSummary() {
-//        return revenueService.getSummary();
-//    }
     @GetMapping("/summary")
     @PreAuthorize("hasRole('ADMIN')")
     public RevenueSummaryDTO getSummary(

@@ -6,153 +6,179 @@ let productVariants = [];
 let selectedColor = null;
 let selectedSize = null;
 let selectedVariantId = null;
+let defaultVariant = null;
 
-
-// Hàm xử lý ảnh (Đồng bộ với Header - Xử lý khoảng trắng)
+// ===== IMAGE URL =====
 function getEzImageUrl(path) {
     if (!path || path === "" || path === "null") return "/images/default.jpg";
     if (path.startsWith("http")) return path;
+
     let cleanPath = path.replace(/^\//, '');
-    if (cleanPath.startsWith('uploads/')) cleanPath = cleanPath.replace('uploads/', '');
+    if (cleanPath.startsWith('uploads/')) {
+        cleanPath = cleanPath.replace('uploads/', '');
+    }
+
     return `${window.BASE_URL}/uploads/${encodeURI(cleanPath)}`;
 }
 
+// ===== INIT =====
 document.addEventListener("DOMContentLoaded", () => {
     const pathSegments = window.location.pathname.split('/').filter(s => s !== "");
     const productId = pathSegments[pathSegments.length - 1];
     if (productId) fetchProductDetail(productId);
 });
 
+// ===== FETCH =====
 async function fetchProductDetail(id) {
     try {
         const res = await fetch(`${window.BASE_URL}/api/products/${id}`);
-        if (!res.ok) throw new Error("API_ERROR");
-
         const data = await res.json();
+
         productVariants = data.variants || [];
 
-        // 1. Thông tin cơ bản
+        // INFO
         document.getElementById('product-name').innerText = data.name;
-        document.getElementById('product-price').innerText = new Intl.NumberFormat('vi-VN').format(data.price) + 'đ';
-        document.getElementById('product-desc').innerText = data.description || "Mô tả sản phẩm.";
-        document.getElementById('breadcrumb-cat').innerText = data.categoryName || "Cửa hàng";
+        document.getElementById('product-price').innerText =
+            new Intl.NumberFormat('vi-VN').format(data.price) + 'đ';
+        document.getElementById('product-desc').innerText =
+        data.description || "Không có mô tả sản phẩm";
 
-        // 2. Hình ảnh
-        const mainImg = document.getElementById('main-product-img');
-        const thumbList = document.getElementById('thumbnail-list');
+        // ===== DEFAULT VARIANT =====
+        defaultVariant =
+            productVariants.find(v => v.images?.length > 0) ||
+            productVariants[0];
 
-        if (data.images && data.images.length > 0) {
-            mainImg.src = getEzImageUrl(data.images[0]);
-            thumbList.innerHTML = data.images.map((name, idx) => {
-                const url = getEzImageUrl(name);
-                return `<img src="${url}" class="${idx === 0 ? 'active' : ''}" onclick="changeSlide('${url}', this)">`;
-            }).join('');
+        if (defaultVariant) {
+            selectedColor = defaultVariant.color;
+            selectedSize = defaultVariant.size;
+            selectedVariantId = defaultVariant.id;
+            const stockEl = document.getElementById("stock-info");
+            if (stockEl) {
+                stockEl.innerText = defaultVariant.quantity > 0
+                    ? `Còn ${defaultVariant.quantity} sản phẩm`
+                    : "Hết hàng";
+            }
         }
 
-        // 3. Hiển thị Chips Màu/Size
-        renderVariantSelection();
+        // ===== RENDER THUMB (CHỈ 1 LẦN) =====
+        renderThumbnail(defaultVariant);
 
-    } catch (err) {
-        console.error("Lỗi:", err);
-        document.getElementById('product-name').innerText = "KHÔNG TÌM THẤY SẢN PHẨM";
+        // ===== MAIN IMAGE =====
+        updateMainImage(defaultVariant);
+
+        renderVariantSelection();
+        restoreSelection();
+
+    } catch (e) {
+        console.error(e);
     }
 }
+
+function renderThumbnail() {
+
+    const thumbList = document.getElementById('thumbnail-list');
+    const images = getAllVariantImages();
+
+    thumbList.innerHTML = images.map((img, idx) => {
+        const url = getEzImageUrl(img);
+        return `
+            <img src="${url}"
+                 class="${idx === 0 ? 'active' : ''}"
+                 onclick="changeSlide('${url}', this)">
+        `;
+    }).join('');
+}
+
+function updateMainImage(variant) {
+    if (!variant || !variant.images?.length) return;
+
+    const mainImg = document.getElementById('main-product-img');
+    const newUrl = getEzImageUrl(variant.images[0]);
+
+    mainImg.src = newUrl;
+
+    syncThumbnailActive(mainImg.src);
+}
+
+// ===== FIND VARIANT =====
+function findMatchingVariant() {
+
+    if (selectedColor && selectedSize) {
+        return productVariants.find(v =>
+            v.color === selectedColor &&
+            v.size === selectedSize
+        );
+    }
+
+    if (selectedColor) {
+        return productVariants.find(v =>
+            v.color === selectedColor &&
+            v.images?.length > 0
+        );
+    }
+
+    if (selectedSize) {
+        return productVariants.find(v =>
+            v.size === selectedSize &&
+            v.images?.length > 0
+        );
+    }
+
+    return defaultVariant;
+}
+
+// ===== RENDER CHIP (CÓ DISABLE) =====
 function renderVariantSelection() {
 
-    const colors = [...new Set(productVariants.map(v => v.color))].filter(Boolean);
-    const sizes = [...new Set(productVariants.map(v => v.size))].filter(Boolean);
+    const colors = [...new Set(productVariants.map(v => v.color))];
+    const sizes = [...new Set(productVariants.map(v => v.size))];
 
     const colorContainer = document.getElementById('color-options');
     const sizeContainer = document.getElementById('size-options');
 
-    // ===== COLOR =====
+    // COLOR
     colorContainer.innerHTML = colors.map(c => {
 
-        // nếu đã chọn size -> filter theo size
-        const hasStock = productVariants.some(v =>
+//        const valid = productVariants.some(v =>
+//            v.color === c &&
+//            (!selectedSize || v.size === selectedSize)
+//        );
+        const valid = productVariants.some(v =>
             v.color === c &&
             (!selectedSize || v.size === selectedSize) &&
             v.quantity > 0
         );
 
         return `
-            <div class="option-chip ${!hasStock ? 'disabled' : ''}"
+            <div class="option-chip ${!valid ? 'disabled' : ''}"
                  data-val="${c}"
-                 ${hasStock ? `onclick="selectChip(this, 'color')"` : ''}>
+                 ${valid ? `onclick="selectChip(this, 'color')"` : ''}>
                 ${c}
             </div>
         `;
     }).join('');
 
-    // ===== SIZE =====
+    // SIZE
     sizeContainer.innerHTML = sizes.map(s => {
 
-        const hasStock = productVariants.some(v =>
+//        const valid = productVariants.some(v =>
+//            v.size === s &&
+//            (!selectedColor || v.color === selectedColor)
+//        );
+        const valid = productVariants.some(v =>
             v.size === s &&
             (!selectedColor || v.color === selectedColor) &&
             v.quantity > 0
         );
 
         return `
-            <div class="option-chip ${!hasStock ? 'disabled' : ''}"
+            <div class="option-chip ${!valid ? 'disabled' : ''}"
                  data-val="${s}"
-                 ${hasStock ? `onclick="selectChip(this, 'size')"` : ''}>
+                 ${valid ? `onclick="selectChip(this, 'size')"` : ''}>
                 ${s}
             </div>
         `;
     }).join('');
-}
-function selectChip(el, type) {
-
-    const value = el.getAttribute('data-val');
-
-    // ===== TOGGLE (click lần 2 để bỏ chọn) =====
-    if (el.classList.contains('active')) {
-
-        // bỏ chọn
-        el.classList.remove('active');
-
-        if (type === 'color') selectedColor = null;
-        if (type === 'size') selectedSize = null;
-
-        selectedVariantId = null;
-
-        renderVariantSelection();
-        restoreSelection();
-
-        // reset stock info
-        const stockEl = document.getElementById("stock-info");
-        if (stockEl) stockEl.innerText = "";
-
-        return;
-    }
-
-    // ===== SELECT BÌNH THƯỜNG =====
-    el.parentElement.querySelectorAll('.option-chip')
-        .forEach(c => c.classList.remove('active'));
-
-    el.classList.add('active');
-
-    if (type === 'color') selectedColor = value;
-    if (type === 'size') selectedSize = value;
-
-    renderVariantSelection();
-    restoreSelection();
-
-    const match = productVariants.find(v =>
-        v.color === selectedColor &&
-        v.size === selectedSize
-    );
-
-    selectedVariantId = match ? match.id : null;
-
-    // stock info
-    const stockEl = document.getElementById("stock-info");
-    if (stockEl && match) {
-        stockEl.innerText = match.quantity > 0
-            ? `Còn ${match.quantity} sản phẩm`
-            : "Hết hàng";
-    }
 }
 async function handleAddToCart() {
 
@@ -186,76 +212,121 @@ async function handleAddToCart() {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             },
-            body: JSON.stringify({ variantId: selectedVariantId, quantity: qty })
+            body: JSON.stringify({
+                variantId: selectedVariantId,
+                quantity: qty
+            })
         });
 
         if (res.ok) {
-            runFlyAnimation();
-
-            let current = parseInt(localStorage.getItem('cartCount') || '0');
-            localStorage.setItem('cartCount', (current + qty).toString());
-
-            setTimeout(() => {
-                if (window.syncGlobalCartBadge) window.syncGlobalCartBadge();
-            }, 800);
+            alert("Đã thêm vào giỏ hàng!");
         } else {
-            alert("Lỗi khi thêm vào giỏ hàng!");
+            alert("Lỗi khi thêm vào giỏ!");
         }
-    } catch (err) {
-        console.error("Network Error:", err);
+
+    } catch (e) {
+        console.error(e);
     }
 }
+// ===== SELECT =====
+function selectChip(el, type) {
 
-function runFlyAnimation() {
-    const startImg = document.getElementById('main-product-img');
-    const badge = document.getElementById('cart-badge') || document.getElementById('cart-icon-target');
-    if (!startImg || !badge) return;
+    const value = el.getAttribute('data-val');
 
-    const flyer = startImg.cloneNode();
-    const startRect = startImg.getBoundingClientRect();
-    const targetRect = badge.getBoundingClientRect();
+    // TOGGLE OFF
+    if (el.classList.contains('active')) {
 
-    Object.assign(flyer.style, {
-        position: 'fixed', zIndex: '10000',
-        top: `${startRect.top}px`, left: `${startRect.left}px`,
-        width: `${startRect.width}px`, height: `${startRect.height}px`,
-        transition: 'all 0.8s ease-in-out', objectFit: 'cover',
-        borderRadius: '5px', pointerEvents: 'none', opacity: '0.7'
-    });
-    document.body.appendChild(flyer);
+        el.classList.remove('active');
 
-    setTimeout(() => {
-        Object.assign(flyer.style, {
-            top: `${targetRect.top}px`, left: `${targetRect.left}px`,
-            width: '20px', height: '20px', opacity: '0'
-        });
-    }, 50);
-    setTimeout(() => flyer.remove(), 800);
+        if (type === 'color') selectedColor = null;
+        if (type === 'size') selectedSize = null;
+
+    } else {
+
+        el.parentElement.querySelectorAll('.option-chip')
+            .forEach(c => c.classList.remove('active'));
+
+        el.classList.add('active');
+
+        if (type === 'color') selectedColor = value;
+        if (type === 'size') selectedSize = value;
+    }
+
+    renderVariantSelection();
+    restoreSelection();
+
+    const match = findMatchingVariant();
+    selectedVariantId = match?.id;
+    const stockEl = document.getElementById("stock-info");
+
+    if (stockEl) {
+        if (match && match.quantity > 0) {
+            stockEl.innerText = `Còn ${match.quantity} sản phẩm`;
+        } else {
+            stockEl.innerText = "Hết hàng";
+        }
+    }
+
+    updateMainImage(match);
 }
 
-function changeSlide(url, el) {
-    const main = document.getElementById('main-product-img');
-    if (main) main.src = url;
-    document.querySelectorAll('.thumb-list img').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
-}
-
-function changeQty(amt) {
-    const input = document.getElementById('buy-quantity');
-    if (!input) return;
-    let val = parseInt(input.value) + amt;
-    if (val < 1) val = 1;
-    input.value = val;
-}
+// ===== RESTORE =====
 function restoreSelection() {
 
     if (selectedColor) {
-        const el = document.querySelector(`#color-options .option-chip[data-val="${selectedColor}"]:not(.disabled)`);
+        const el = document.querySelector(`#color-options .option-chip[data-val="${selectedColor}"]`);
         if (el) el.classList.add("active");
     }
 
     if (selectedSize) {
-        const el = document.querySelector(`#size-options .option-chip[data-val="${selectedSize}"]:not(.disabled)`);
+        const el = document.querySelector(`#size-options .option-chip[data-val="${selectedSize}"]`);
         if (el) el.classList.add("active");
     }
+}
+
+function changeSlide(url, el) {
+
+    const main = document.getElementById('main-product-img');
+    main.src = url;
+
+    document.querySelectorAll('#thumbnail-list img')
+        .forEach(i => i.classList.remove('active'));
+
+    el.classList.add('active');
+
+    syncThumbnailActive(main.src);
+}
+// ===== QTY =====
+function changeQty(amt) {
+    const input = document.getElementById('buy-quantity');
+    let val = parseInt(input.value) + amt;
+    if (val < 1) val = 1;
+    input.value = val;
+}
+function getAllVariantImages() {
+    const allImages = [];
+
+    productVariants.forEach(v => {
+        if (v.images && v.images.length > 0) {
+            v.images.forEach(img => {
+                allImages.push(img);
+            });
+        }
+    });
+
+    // remove duplicate
+    return [...new Set(allImages)];
+}
+function syncThumbnailActive(imageUrl) {
+
+    const thumbs = document.querySelectorAll('#thumbnail-list img');
+
+    thumbs.forEach(img => {
+        img.classList.remove('active');
+
+        // so sánh URL
+        if (img.src === imageUrl) {
+            img.classList.add('active');
+        }
+    });
 }

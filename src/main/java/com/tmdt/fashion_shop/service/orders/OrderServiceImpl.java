@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
 
         double finalPrice = total - discount;
 
-        // 4. Tạo Order
+        // Tạo Order
         Order order = new Order();
         order.setId(UUID.randomUUID().toString());
         order.setUser(cart.getUser());

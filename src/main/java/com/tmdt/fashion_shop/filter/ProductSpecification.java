@@ -19,11 +19,8 @@ public class ProductSpecification {
         return (root, query, cb) -> {
 
             // tránh duplicate khi join
-//            root.fetch("variants", JoinType.LEFT);
             Join<Object, Object> variantJoin = (Join<Object, Object>) root.fetch("variants", JoinType.LEFT);
             query.distinct(true);
-
-//            Join<Object, Object> variantJoin = root.join("variants");
 
             var predicates = cb.conjunction();
 

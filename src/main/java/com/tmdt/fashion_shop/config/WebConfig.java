@@ -11,13 +11,12 @@ public class WebConfig implements WebMvcConfigurer {
 
    @Override
 public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    // Giữ nguyên phần uploads của bạn
     Path uploadDir = Paths.get("uploads");
     String uploadPath = uploadDir.toFile().getAbsolutePath();
     registry.addResourceHandler("/uploads/**")
             .addResourceLocations("file:/" + uploadPath + "/");
 
-    // THÊM DÒNG NÀY: Để đảm bảo thư mục static/images luôn hoạt động
+    // đảm bảo thư mục static/images luôn hoạt động
     registry.addResourceHandler("/images/**")
             .addResourceLocations("classpath:/static/images/");
 }

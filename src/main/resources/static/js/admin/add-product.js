@@ -321,7 +321,7 @@ async function submitProduct() {
         formData.append("images", file);
     }
 
-    // 🔥 VARIANT IMAGES
+    // VARIANT IMAGES
     variants.forEach((v, index) => {
         if (v.images && v.images.length > 0) {
             v.images.forEach(file => {

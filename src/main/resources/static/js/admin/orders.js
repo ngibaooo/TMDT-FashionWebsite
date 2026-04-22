@@ -1,10 +1,4 @@
-/**
- * EAZY VIBES - ORDERS CORE
- * Fix: Lỗi lặp lại /uploads/ trong đường dẫn ảnh
- */
-
 const API_ORDERS = "http://localhost:8080/api/orders";
-// Sử dụng ảnh placeholder từ dịch vụ ngoài để đảm bảo không bao giờ bị lỗi 404
 const FALLBACK_IMG = "https://placehold.co/100x100?text=No+Image";
 
 let currentStatus = "";
@@ -77,9 +71,7 @@ function renderOrders(orders) {
     `).join("");
 }
 
-/**
- * XEM CHI TIẾT ĐƠN HÀNG (FIX ẢNH THẬT)
- */
+
 async function viewOrderDetail(id) {
     const token = localStorage.getItem("token");
     const tbody = document.getElementById("detailTableBody");

@@ -29,7 +29,6 @@ public interface ProductService {
     );
     Page<ProductDTO> getNewProducts(Pageable pageable);
     //admin
-//    Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable);
     public Page<BestSellingProductDTO> getBestSellingProducts(
             LocalDateTime from,
             LocalDateTime to,
@@ -37,7 +36,6 @@ public interface ProductService {
     );
     //user
     Page<ProductDTO> getBestSellingProductsForUser(Pageable pageable);
-//    ProductDTO create(ProductCreateRequestDTO request, List<MultipartFile> images);
     public ProductDTO create(ProductCreateRequestDTO request,
                          List<MultipartFile> images,
                          HttpServletRequest httpRequest);

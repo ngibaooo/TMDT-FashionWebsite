@@ -6,7 +6,7 @@ body {
 
 /* ===== SIDEBAR ===== */
 .sidebar {
-    width: 270px; /* FIX đồng bộ */
+    width: 270px;
     height: 100vh;
     background: #fff;
     border-right: 1px solid #eee;

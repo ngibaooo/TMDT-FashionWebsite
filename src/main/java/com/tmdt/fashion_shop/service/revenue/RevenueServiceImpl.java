@@ -22,19 +22,6 @@ public class RevenueServiceImpl implements RevenueService{
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
-//    @Override
-//    public RevenueSummaryDTO getSummary() {
-//
-//        double totalRevenue = orderRepository.getTotalRevenue();
-//        long totalOrders = orderRepository.getTotalOrders();
-//        long totalProductsSold = orderItemRepository.getTotalProductsSold();
-//
-//        return new RevenueSummaryDTO(
-//                totalRevenue,
-//                totalOrders,
-//                totalProductsSold
-//        );
-//    }
     @Override
     public RevenueSummaryDTO getSummary(LocalDate from, LocalDate to) {
 

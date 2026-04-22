@@ -83,7 +83,6 @@ public class ProductServiceImpl implements ProductService {
         dto.setVariants(
                 product.getVariants().stream()
 //                        .filter(v -> v.getStatus() == VariantStatus.ACTIVE)
-//                        .filter(v -> v.getStatus())
                         .map(v -> {
 
                     ProductVariantDTO vd = new ProductVariantDTO();
@@ -145,11 +144,6 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::toDTO);
     }
 
-//    @Override
-//    public Page<ProductDTO> getByCategory(String categoryId, Pageable pageable) {
-//        return productRepository.findByCategory_Id(categoryId, pageable)
-//                .map(this::toDTO);
-//    }
     @Override
     public Page<ProductDTO> getByCategory(String categoryId, Pageable pageable) {
         return productRepository
@@ -200,17 +194,6 @@ public class ProductServiceImpl implements ProductService {
                 .findByStatusOrderByCreatedAtDesc(ProductStatus.ACTIVE, pageable)
                 .map(this::toDTO);
     }
-//    @Override
-//    public Page<BestSellingProductDTO> getBestSellingProducts(Pageable pageable) {
-//
-//        return orderItemRepository.findBestSellingProducts(pageable)
-//                .map(obj -> new BestSellingProductDTO(
-//                        (String) obj[0],   // id
-//                        (String) obj[1],   // name
-//                        (Double) obj[2],   // price
-//                        (Long) obj[3]      // totalSold
-//                ));
-//    }
 //    Admin get by month
     @Override
     public Page<BestSellingProductDTO> getBestSellingProducts(
@@ -272,7 +255,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         productRepository.save(product);
 
-        // ✅ PRODUCT IMAGES
+        // PRODUCT IMAGES
         if (images != null) {
             for (MultipartFile file : images) {
                 String url = saveFile(file);
@@ -286,19 +269,8 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        // ✅ VARIANTS
+        // VARIANTS
         if (request.getVariants() != null) {
-//            for (VariantRequestDTO vReq : request.getVariants()) {
-//
-//                ProductVariant variant = new ProductVariant();
-//                variant.setId(UUID.randomUUID().toString());
-//                variant.setProduct(product);
-//                variant.setSize(vReq.getSize());
-//                variant.setColor(vReq.getColor());
-//                variant.setQuantity(vReq.getQuantity());
-//
-//                productVariantRepository.save(variant);
-//            }
             for (int i = 0; i < request.getVariants().size(); i++) {
 
                 VariantRequestDTO vReq = request.getVariants().get(i);
@@ -312,7 +284,7 @@ public class ProductServiceImpl implements ProductService {
 
                 productVariantRepository.save(variant);
 
-                // 🔥 LẤY ẢNH THEO INDEX
+                // LẤY ẢNH THEO INDEX
                 List<MultipartFile> files =
                         ((MultipartHttpServletRequest) httpRequest)
                                 .getFiles("variantImages_" + i);
