@@ -49,8 +49,8 @@ async function fetchProductDetail(id) {
             productVariants[0];
 
         if (defaultVariant) {
-            selectedColor = defaultVariant.color;
-            selectedSize = defaultVariant.size;
+//            selectedColor = defaultVariant.color;
+//            selectedSize = defaultVariant.size;
             selectedVariantId = defaultVariant.id;
             const stockEl = document.getElementById("stock-info");
             if (stockEl) {
@@ -180,9 +180,62 @@ function renderVariantSelection() {
         `;
     }).join('');
 }
+//async function handleAddToCart() {
+//
+//    if (!selectedVariantId) {
+//        alert("Vui lòng chọn Màu sắc và Kích thước!");
+//        return;
+//    }
+//
+//    const selectedVariant = productVariants.find(v => v.id === selectedVariantId);
+//
+//    if (!selectedVariant || selectedVariant.quantity <= 0) {
+//        alert("Sản phẩm đã hết hàng!");
+//        return;
+//    }
+//
+//    const token = localStorage.getItem("token");
+//    if (!token) return window.location.href = "/login";
+//
+//    const qtyInput = document.getElementById('buy-quantity');
+//    const qty = qtyInput ? parseInt(qtyInput.value) : 1;
+//
+//    if (qty > selectedVariant.quantity) {
+//        alert(`Chỉ còn ${selectedVariant.quantity} sản phẩm`);
+//        return;
+//    }
+//
+//    try {
+//        const res = await fetch(`${window.BASE_URL}/api/cart/add`, {
+//            method: 'POST',
+//            headers: {
+//                'Content-Type': 'application/json',
+//                'Authorization': 'Bearer ' + token
+//            },
+//            body: JSON.stringify({
+//                variantId: selectedVariantId,
+//                quantity: qty
+//            })
+//        });
+//
+//        if (res.ok) {
+//            alert("Đã thêm vào giỏ hàng!");
+//        } else {
+//            alert("Lỗi khi thêm vào giỏ!");
+//        }
+//
+//    } catch (e) {
+//        console.error(e);
+//    }
+//}
 async function handleAddToCart() {
 
-    if (!selectedVariantId) {
+    // ❌ chưa chọn gì
+//    if (!isUserSelected || !selectedColor || !selectedSize) {
+//        alert("Vui lòng chọn Màu sắc và Kích thước!");
+//        return;
+//    }
+    if (!selectedColor || !selectedSize) {
         alert("Vui lòng chọn Màu sắc và Kích thước!");
         return;
     }
@@ -197,8 +250,7 @@ async function handleAddToCart() {
     const token = localStorage.getItem("token");
     if (!token) return window.location.href = "/login";
 
-    const qtyInput = document.getElementById('buy-quantity');
-    const qty = qtyInput ? parseInt(qtyInput.value) : 1;
+    const qty = parseInt(document.getElementById('buy-quantity').value) || 1;
 
     if (qty > selectedVariant.quantity) {
         alert(`Chỉ còn ${selectedVariant.quantity} sản phẩm`);
@@ -229,11 +281,52 @@ async function handleAddToCart() {
     }
 }
 // ===== SELECT =====
+//function selectChip(el, type) {
+//
+//    const value = el.getAttribute('data-val');
+//
+//    // TOGGLE OFF
+//    if (el.classList.contains('active')) {
+//
+//        el.classList.remove('active');
+//
+//        if (type === 'color') selectedColor = null;
+//        if (type === 'size') selectedSize = null;
+//
+//    } else {
+//
+//        el.parentElement.querySelectorAll('.option-chip')
+//            .forEach(c => c.classList.remove('active'));
+//
+//        el.classList.add('active');
+//
+//        if (type === 'color') selectedColor = value;
+//        if (type === 'size') selectedSize = value;
+//    }
+//
+//    renderVariantSelection();
+//    restoreSelection();
+//
+//    const match = findMatchingVariant();
+//    selectedVariantId = match?.id;
+//    const stockEl = document.getElementById("stock-info");
+//
+//    if (stockEl) {
+//        if (match && match.quantity > 0) {
+//            stockEl.innerText = `Còn ${match.quantity} sản phẩm`;
+//        } else {
+//            stockEl.innerText = "Hết hàng";
+//        }
+//    }
+//
+//    updateMainImage(match);
+//}
 function selectChip(el, type) {
+
+//    isUserSelected = true; // 🔥 user đã chọn
 
     const value = el.getAttribute('data-val');
 
-    // TOGGLE OFF
     if (el.classList.contains('active')) {
 
         el.classList.remove('active');
@@ -257,8 +350,9 @@ function selectChip(el, type) {
 
     const match = findMatchingVariant();
     selectedVariantId = match?.id;
-    const stockEl = document.getElementById("stock-info");
 
+    // stock
+    const stockEl = document.getElementById("stock-info");
     if (stockEl) {
         if (match && match.quantity > 0) {
             stockEl.innerText = `Còn ${match.quantity} sản phẩm`;
