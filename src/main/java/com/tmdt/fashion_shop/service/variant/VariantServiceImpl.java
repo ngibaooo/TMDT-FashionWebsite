@@ -47,10 +47,19 @@ public class VariantServiceImpl implements VariantService {
 
         Specification<ProductVariant> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-
+            // TÍCH HỢP: Tìm theo ID HOẶC Tên sản phẩm
             if (productId != null && !productId.isBlank()) {
-                predicates.add(cb.equal(root.get("product").get("id"), productId));
+                String keyword = "%" + productId.trim().toLowerCase() + "%";
+                Predicate matchId = cb.equal(root.get("product").get("id"), productId.trim());
+                Predicate matchName = cb.like(cb.lower(root.get("product").get("name")), keyword);
+                
+                // Kết hợp bằng điều kiện OR
+                predicates.add(cb.or(matchId, matchName));
             }
+
+            // if (productId != null && !productId.isBlank()) {
+            //     predicates.add(cb.equal(root.get("product").get("id"), productId));
+            // }
 
             if (productSize != null) {
                 predicates.add(cb.equal(root.get("size"), productSize));
@@ -67,8 +76,15 @@ public class VariantServiceImpl implements VariantService {
                 .map(v -> {
                     VariantResponseDTO dto = new VariantResponseDTO();
                     dto.setId(v.getId());
-                    dto.setProductId(v.getProduct().getId());
-                    dto.setProductName(v.getProduct().getName());
+                    if (v.getProduct() != null) {
+        dto.setProductId(v.getProduct().getId());
+        dto.setProductName(v.getProduct().getName());
+    } else {
+        dto.setProductId("N/A");
+        dto.setProductName("Sản phẩm không tồn tại");
+    }
+                    // dto.setProductId(v.getProduct().getId());
+                    // dto.setProductName(v.getProduct().getName());
                     dto.setColor(v.getColor());
                     dto.setSize(v.getSize());
                     dto.setQuantity(v.getQuantity());

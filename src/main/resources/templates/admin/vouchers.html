@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EAZY VIBES | VOUCHERS</title>
+    <link rel="stylesheet" href="/css/admin/vouchers.css">
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="admin-container">
+    <div th:replace="~{components/admin-sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <h1>QUẢN LÝ VOUCHER</h1>
+
+        <div class="action-bar">
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterBy('ALL', this)">TẤT CẢ</button>
+                <button class="filter-btn" onclick="filterBy('ACTIVE', this)">ĐANG HOẠT ĐỘNG</button>
+                <button class="filter-btn" onclick="filterBy('INACTIVE', this)">ĐÃ KHÓA</button>
+            </div>
+
+            <div class="right-actions">
+                <button class="btn-primary-add" onclick="openVoucherModal()">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    TẠO VOUCHER MỚI
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>MÃ CODE</th>
+                        <th>LOẠI</th>
+                        <th>GIÁ TRỊ</th>
+                        <th>ĐƠN TỐI THIỂU</th>
+                        <th>GIẢM TỐI ĐA</th>
+                        <th>SL</th>
+                        <th style="text-align: center;">TRẠNG THÁI</th>
+                        <th style="text-align: right;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody id="voucherTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 50px; color: #888;">Đang tải dữ liệu voucher...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="voucherModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">TẠO VOUCHER MỚI</h2>
+            <p>Điền đầy đủ thông tin mã giảm giá</p>
+        </div>
+        <form id="voucherForm">
+            <input type="hidden" id="voucherId">
+            
+            <div class="form-group">
+                <label>MÃ VOUCHER</label>
+                <input type="text" id="code" placeholder="VD: EAZYVIBES10" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>LOẠI GIẢM GIÁ</label>
+                    <select id="discountType" onchange="toggleMaxDiscount()">
+                        <option value="PERCENT">Phần trăm (%)</option>
+                        <option value="AMOUNT">Số tiền cố định (đ)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>GIÁ TRỊ GIẢM</label>
+                    <input type="number" id="discountValue" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ĐƠN TỐI THIỂU (đ)</label>
+                    <input type="number" id="minOrderValue" value="0">
+                </div>
+                <div class="form-group" id="maxDiscountGroup">
+                    <label>GIẢM TỐI ĐA (đ)</label>
+                    <input type="number" id="maxDiscount">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>NGÀY BẮT ĐẦU</label>
+                    <input type="datetime-local" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label>NGÀY KẾT THÚC</label>
+                    <input type="datetime-local" id="endDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>SỐ LƯỢNG</label>
+                <input type="number" id="quantity" required min="1">
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn-confirm">XÁC NHẬN LƯU</button>
+                <button type="button" class="btn-cancel" onclick="closeVoucherModal()">HỦY BỎ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/admin/vouchers.js"></script>
+</body>
+</html>
