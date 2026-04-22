@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAZY VIBES | STREETWEAR STUDIO</title>
+    <link rel="stylesheet" th:href="@{/css/components/header.css}">
+    <link rel="stylesheet" th:href="@{/css/components/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+<div th:replace="components/header :: header"></div>
+
+<main>
+    <section class="hero-section">
+        <img th:src="@{/images/hero_banner.jpg}" alt="Hero" class="hero-image">
+    </section>
+
+    <section class="category-showcase">
+        <div class="category-grid">
+            <a th:href="@{/tops}" class="category-card">
+                <img th:src="@{/images/cat_tops.jpg}" alt="Tops">
+                <div class="card-overlay">
+                    <span class="tag-l">2026</span>
+                    <h2 class="category-name">TOP</h2>
+                    <span class="tag-r">SPRING</span>
+                </div>
+            </a>
+
+            <a th:href="@{/bottoms}" class="category-card">
+                <img th:src="@{/images/cat_bottoms.jpg}" alt="Bottoms">
+                <div class="card-overlay">
+                    <span class="tag-l">2026</span>
+                    <h2 class="category-name">BOTTOM</h2>
+                    <span class="tag-r">SPRING</span>
+                </div>
+            </a>
+
+            <a th:href="@{/outerwear}" class="category-card">
+                <img th:src="@{/images/cat_outerwear.jpg}" alt="Outerwear">
+                <div class="card-overlay">
+                    <span class="tag-l">2026</span>
+                    <h2 class="category-name">OUTERWEAR</h2>
+                    <span class="tag-r">SPRING</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <div class="section-title">
+            <h2>SẢN PHẨM NỔI BẬT</h2>
+            <a th:href="@{/best-selling}" class="btn-all">XEM TẤT CẢ</a>
+        </div>
+        <div id="index-products-grid" class="product-grid"></div>
+    </section>
+</main>
+
+<div th:replace="components/footer :: footer"></div>
+
+<script src="/js/components/header.js"></script>
+<script src="/js/components/footer.js"></script>
+<script th:src="@{/js/index.js}"></script>
+</body>
+</html>

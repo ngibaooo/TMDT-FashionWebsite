@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Profile</title>
+
+    <link rel="stylesheet" href="/css/components/profile-header.css">
+    <link rel="stylesheet" href="/css/update-profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div th:replace="components/profile-header :: profile-header"></div>
+
+<main class="main">
+
+    <h1 class="title">UPDATE PROFILE</h1>
+
+    <div class="card">
+
+        <!-- AVATAR -->
+        <div class="profile-avatar-box">
+            <img id="previewAvatar" src="" alt="avatar">
+            <input type="file" id="avatarInput">
+        </div>
+        <!-- FORM -->
+        <div class="form">
+
+            <label>Name</label>
+            <input type="text" id="name">
+
+            <label>Phone</label>
+            <input type="text" id="phone">
+            <p id="phoneError" class="error"></p>
+
+            <label>Address</label>
+            <textarea id="address"></textarea>
+
+            <button id="btnUpdate">SAVE CHANGES</button>
+        </div>
+        <p id="errorMsg" class="error"></p>
+    </div>
+
+</main>
+
+<script src="/js/components/profile-header.js"></script>
+<script src="/js/update-profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link rel="stylesheet" href="/css/admin/add-product.css">
+</head>
+<body>
+
+<div class="admin-container">
+
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
+
+    <div class="main-content">
+
+        <h1>Thêm sản phẩm</h1>
+        <div class="form">
+
+            <div class="input-group">
+                <label>Tên sản phẩm</label>
+                <input id="name">
+            </div>
+
+            <div class="input-group">
+                <label>Mô tả</label>
+                <textarea id="description"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Giá</label>
+                <input id="price" type="number">
+            </div>
+
+            <div class="input-group">
+                <label>Danh mục</label>
+                <select id="category"></select>
+            </div>
+
+            <div class="input-group">
+                <label>Ảnh sản phẩm</label>
+
+                <div id="previewContainer"></div>
+
+                <input id="images" type="file" multiple>
+            </div>
+
+        </div>
+
+        <!-- VARIANT -->
+        <h3>Variants</h3>
+        <div id="variantContainer"></div>
+
+        <button class="btn btn-add" onclick="addVariant()">+ Thêm Variant</button>
+
+        <button class="btn btn-submit" onclick="submitProduct()">Lưu sản phẩm</button>
+
+    </div>
+</div>
+
+<script src="/js/admin/add-product.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #fbfbfb;
+    color: #333;
+}
+.admin-container { display: flex; }
+.main-content { margin-left: 260px; padding: 30px 40px; width: calc(100% - 260px); }
+.main-content h1 { font-size: 36px; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; }
+
+/* ACTION BAR */
+.action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.filter-bar { display: flex; gap: 12px; }
+.filter-btn { padding: 10px 20px; background: #fff; border: 1px solid #eee; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; color: #444; transition: 0.3s; }
+.filter-btn.active { background: #000; color: #fff; border-color: #000; }
+.sort-container { background: #fff; padding: 8px 15px; border-radius: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
+.sort-container span { color: #aaa; font-size: 20px; }
+.sort-container select { border: none; outline: none; font-family: 'Inter'; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+/* TABLE */
+.table-container { background: #fff; border-radius: 20px; padding: 10px; box-shadow: 0 2px 15px rgba(0,0,0,0.02); }
+table { width: 100%; border-collapse: collapse; }
+thead th { text-align: left; font-size: 11px; color: #aaa; padding: 20px; text-transform: uppercase; font-weight: 800; }
+tbody td { padding: 20px; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
+
+/* STATUS BADGES */
+.status { padding: 8px 18px; border-radius: 30px; font-size: 10px; font-weight: 800; text-transform: uppercase; display: inline-block; letter-spacing: 0.5px; }
+.status-pending { background: #FFF8E6; color: #FFA000; }
+.status-paid { background: #F3F4F6; color: #6B7280; }
+.status-shipping { background: #F3E6FF; color: #9C27B0; }
+.status-completed { background: #E6F9F0; color: #00A86B; }
+.status-cancelled { background: #FFECEC; color: #FF4D4F; }
+
+.btn-edit, .btn-view { background: none; border: none; color: #ddd; cursor: pointer; transition: 0.2s; margin-left: 10px; }
+.btn-edit:hover { color: #000; }
+.btn-view:hover { color: #3b82f6; }
+
+/* MODAL */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); }
+.modal-content { background: #fff; width: 450px; padding: 40px; border-radius: 35px; text-align: center; }
+.detail-modal { width: 700px; text-align: left; }
+
+/* DETAIL TABLE */
+.detail-container { max-height: 350px; overflow-y: auto; margin-bottom: 20px; border: 1px solid #f0f0f0; border-radius: 15px; padding: 10px; }
+.detail-table { width: 100%; border-collapse: collapse; }
+.detail-table th { padding: 12px; font-size: 10px; color: #bbb; border-bottom: 1px solid #f0f0f0; }
+.detail-table td { padding: 12px; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+
+.prod-info { display: flex; align-items: center; gap: 12px; }
+.prod-img { width: 55px; height: 55px; border-radius: 12px; object-fit: cover; background: #f0f0f0; border: 1px solid #eee; }
+.prod-name { font-weight: 800; font-size: 13px; text-transform: uppercase; color: #000; }
+
+.detail-summary { padding: 20px; background: #fafafa; border-radius: 15px; }
+.summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+.summary-line.total { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; font-size: 18px; }
+.summary-line.total b { color: #000; font-weight: 900; }
+
+.status-grid { display: flex; flex-direction: column; gap: 10px; }
+.btn-status { padding: 16px; border: none; border-radius: 15px; font-size: 14px; font-weight: 900; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+.btn-status.status-paid { background: #F3F4F6; color: #6B7280; }
+.btn-status.status-pending { background: #FFF8E6; color: #FFA000; }
+.btn-status.status-shipping { background: #F3E6FF; color: #9C27B0; }
+.btn-status.status-completed { background: #E6F9F0; color: #00A86B; }
+.btn-status.status-cancelled { background: #FFECEC; color: #FF4D4F; }
+
+.btn-cancel { background: none; border: none; color: #aaa; font-weight: 700; cursor: pointer; margin-top: 25px; width: 100%; text-align: center; }

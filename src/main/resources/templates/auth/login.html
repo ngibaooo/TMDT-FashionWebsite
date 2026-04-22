@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ĐĂNG NHẬP | EAZY VIBES</title>
+    <link rel="stylesheet" href="/css/auth/auth.css">
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <h1>CỔNG<br>ĐĂNG<br>NHẬP</h1>
+    </div>
+
+    <div class="right">
+        <h2>ĐĂNG NHẬP</h2>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Email hoặc SĐT" required>
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Mật khẩu" required>
+        </div>
+        
+        <button onclick="login()">ĐĂNG NHẬP</button>
+        
+        <p>Chưa có tài khoản?</p>
+        <a th:href="@{/register}">Tạo tài khoản</a>
+    </div>
+</div>
+
+<script src="/js/auth/login.js"></script>
+</body>
+</html>

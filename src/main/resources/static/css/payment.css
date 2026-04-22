@@ -1,0 +1,127 @@
+body {
+margin: 0;
+font-family: 'Inter', sans-serif;
+}
+
+/* MAIN */
+.main {
+padding: 30px 50px;
+}
+
+.title {
+font-size: 40px;
+font-weight: 900;
+margin-bottom: 30px;
+}
+
+/* LAYOUT */
+.checkout-container {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 30px;
+}
+
+/* FORM */
+.checkout-form {
+border: 1px solid #eee;
+padding: 25px;
+border-radius: 12px;
+}
+
+.checkout-form input,
+.checkout-form select {
+width: 100%;
+padding: 12px;
+margin-top: 10px;
+border: 1px solid #ddd;
+border-radius: 8px;
+}
+
+/* VOUCHER */
+.voucher-box {
+display: flex;
+gap: 10px;
+margin-top: 10px;
+}
+
+.voucher-box input {
+flex: 1;
+}
+
+.voucher-box button {
+padding: 10px;
+border: none;
+background: black;
+color: white;
+cursor: pointer;
+}
+
+/* BUTTON */
+.btn-order {
+margin-top: 20px;
+width: 100%;
+padding: 14px;
+background: black;
+color: white;
+border: none;
+cursor: pointer;
+}
+
+/* SUMMARY */
+.summary {
+border: 1px solid #eee;
+padding: 25px;
+border-radius: 12px;
+}
+
+.summary p {
+display: flex;
+justify-content: space-between;
+}
+
+/* ITEM */
+.item {
+display: flex;
+justify-content: space-between;
+margin-bottom: 10px;
+}
+
+.name {
+    font-weight: 600;
+}
+
+.meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.qty {
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.price {
+    font-weight: 500;
+}
+.thumb {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+#discountText {
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+/* thành công */
+.success {
+    color: green;
+}
+
+/* lỗi */
+.error {
+    color: red;
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+
+    <link rel="stylesheet" href="/css/components/profile-header.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="components/profile-header :: profile-header"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <a id="btnAccount" class="active">
+        👤 Account
+    </a>
+
+    <a id="btnOrders">
+        📦 Orders
+    </a>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- TITLE (góc trái) -->
+    <h1 class="title">USER PROFILE & ORDERS</h1>
+
+    <div class="container">
+
+
+        <div class="grid">
+
+            <!-- PROFILE -->
+            <section id="accountSection" class="section active-section">
+                <div class="card">
+
+                    <div class="user-top">
+                        <img id="avatar" class="avatar" src="" alt="avatar">
+                        <div>
+                            <p><span>Name</span> <b id="name"></b></p>
+                            <p><span>Member</span> <b id="memberSince"></b></p>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <p><span>ID</span> <b id="userId"></b></p>
+                    <p><span>Phone</span> <b id="phone"></b></p>
+
+                    <div class="divider"></div>
+
+                    <p><span>Address</span></p>
+                    <p id="address"></p>
+
+                    <button class="btn" onclick="goUpdate()">EDIT PROFILE</button>
+                </div>
+            </section>
+
+            <!-- ORDERS -->
+
+            <section id="ordersSection" class="section">
+                <div class="filter-bar">
+                    <select id="filterStatus">
+                        <option value="">Tất cả</option>
+                        <option value="PENDING">Chờ xác nhận</option>
+                        <option value="SHIPPING">Đang giao hàng</option>
+                        <option value="PAID">Đã thanh toán</option>
+                        <option value="FAILED">Thanh toán thất bại</option>
+                        <option value="COMPLETED">Hoàn thành</option>
+                        <option value="CANCELLED">Đã hủy</option>
+                    </select>
+
+                    <select id="sortOrder">
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                        <option value="price_desc">Giá cao</option>
+                        <option value="price_asc">Giá thấp</option>
+                    </select>
+                </div>
+                <div class="card orders">
+                    <h2>ORDER HISTORY</h2>
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DATE</th>
+                            <th>STATUS</th>
+                            <th>TOTAL</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="orderTable"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SUMMARY (NEW) -->
+            <section class="section active-section">
+                <div class="card summary">
+                    <h2>SUMMARY</h2>
+
+                    <p><span>Total Orders</span> <b id="totalOrders">0</b></p>
+                    <p><span>Total Spent</span> <b id="totalSpent">0 ₫</b></p>
+
+                    <div class="divider"></div>
+
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+</main>
+<script src="/js/components/profile-header.js"></script>
+<script src="/js/profile.js"></script>
+</body>
+</html>

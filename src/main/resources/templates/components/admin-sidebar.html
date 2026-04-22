@@ -1,0 +1,53 @@
+<div th:fragment="sidebar" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <!-- ICON LIB -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <div class="sidebar">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <h2>EAZY VIBES</h2>
+            <p>Admin Dashboard</p>
+        </div>
+
+        <!-- MENU -->
+        <ul class="menu">
+            <li><a href="/admin/dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+            <li><a href="/admin/products"><i data-lucide="box"></i> Products</a></li>
+            <li><a href="/admin/orders"><i data-lucide="shopping-cart"></i> Orders</a></li>
+            <li><a href="/admin/users"><i data-lucide="users"></i> Users</a></li>
+<!--            <li><a href="/admin/categories"><i data-lucide="folder"></i> Categories</a></li>-->
+            <li><a href="/admin/vouchers"><i data-lucide="ticket"></i> Vouchers</a></li>
+            <li><a href="/admin/variants"><i data-lucide="layers"></i> Variants</a></li>
+        </ul>
+
+        <!-- FOOTER -->
+        <div class="sidebar-footer">
+            <button onclick="logout()">Đăng xuất</button>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT NGAY TRONG FRAGMENT -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            const path = window.location.pathname;
+            document.querySelectorAll(".menu a").forEach(link => {
+                if (path.startsWith(link.getAttribute("href"))) {
+                    link.classList.add("active");
+                }
+            });
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "/login";
+        }
+    </script>
+
+</div>

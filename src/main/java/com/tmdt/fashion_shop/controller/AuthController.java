@@ -1,0 +1,33 @@
+package com.tmdt.fashion_shop.controller;
+
+import com.tmdt.fashion_shop.dto.auth.LoginRequestDTO;
+import com.tmdt.fashion_shop.dto.auth.RegisterRequestDTO;
+import com.tmdt.fashion_shop.service.auth.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
+public class AuthController {
+
+    private final AuthService authService;
+
+    @PostMapping(value = "/register", consumes = "multipart/form-data")
+    public ResponseEntity<?> register(@ModelAttribute @Valid RegisterRequestDTO request) {
+
+        authService.register(request);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Đăng ký thành công"
+        ));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+}

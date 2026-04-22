@@ -3,3 +3,5 @@ target/
 *.log
 *.class
 node_modules/
+# Upload images
+uploads/

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="header">
+
+    <div class="top-banner">
+        MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG
+    </div>
+
+    <header class="main-header">
+        <div class="header-content">
+
+            <div class="header-left"></div>
+
+            <div class="header-center">
+                <a th:href="@{/}" class="logo">EAZY VIBES</a>
+            </div>
+
+            <div class="header-right">
+                <div class="ez-search-wrapper" style="position: relative;">
+                    <span class="material-symbols-outlined icon" onclick="toggleEzSearch()">search</span>
+
+                    <div id="ezSearchBox" class="ez-search-box">
+                        <div class="ez-search-header">
+                            <input type="text" id="ez-search-input" placeholder="Tìm kiếm..." autocomplete="off">
+                            <span class="material-symbols-outlined ez-close" onclick="toggleEzSearch()">close</span>
+                        </div>
+
+                        <div id="ezSearchDropdown" class="ez-search-body">
+                            <div id="ezDefaultSection" class="ez-section">
+                                <div class="ez-label">DANH MỤC GỢI Ý</div>
+                                <div class="ez-category-grid">
+                                    <a href="/best-selling">Best Selling</a>
+                                    <a href="/tops">Áo</a>
+                                    <a href="/bottoms">Quần</a>
+                                    <a href="/outerwear">Áo Khoác</a>
+                                </div>
+                            </div>
+
+                            <div id="ezHistorySection" class="ez-section">
+                                <div class="ez-label">
+                                    LỊCH SỬ
+                                    <span class="ez-clear-all" onclick="clearAllEzHistory()">Xóa tất cả</span>
+                                </div>
+                                <div id="ezHistoryList"></div>
+                            </div>
+
+                            <div id="ezResultSection" class="ez-section" style="display: none;">
+                                <div class="ez-label">KẾT QUẢ TÌM KIẾM</div>
+                                <div id="ezResultList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="account-wrapper">
+                    <a th:href="@{/login}" id="loginBtn">
+                        <span class="material-symbols-outlined icon">person</span>
+                    </a>
+                    <div id="userAvatar" class="user-avatar-container"></div>
+
+                    <div id="headerDropdown" class="dropdown">
+                        <a th:href="@{/user/profile}" class="dropdown-item" id="headerProfile">Thông tin cá nhân</a>
+                        <div class="dropdown-item logout" id="headerLogout">Đăng xuất</div>
+                    </div>
+                </div>
+
+                <a th:href="@{/user/cart}" style="position: relative; display: inline-flex; align-items: center; text-decoration: none;">
+                    <span class="material-symbols-outlined icon">shopping_cart</span>
+                    <span id="cart-badge" style="
+                        position: absolute;
+                        top: -8px;
+                        right: -10px;
+                        background-color: #808080;
+                        color: #ffffff;
+                        font-size: 11px;
+                        font-weight: bold;
+                        padding: 2px 6px;
+                        border-radius: 50%;
+                        display: inline-block;">0</span>
+                </a>
+            </div>
+
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a th:href="@{/}" th:classappend="${activePage == 'home'} ? 'active'">TRANG CHỦ</a></li>
+                <li><a th:href="@{/all-products}" th:classappend="${activePage == 'all'} ? 'active'">TẤT CẢ SẢN PHẨM</a></li>
+                <li><a th:href="@{/best-selling}" th:classappend="${activePage == 'best'} ? 'active'">BEST SELLING</a></li>
+                <li><a th:href="@{/tops}" th:classappend="${activePage == 'tops'} ? 'active'">ÁO</a></li>
+                <li><a th:href="@{/bottoms}" th:classappend="${activePage == 'bottoms'} ? 'active'">QUẦN</a></li>
+                <li><a th:href="@{/outerwear}" th:classappend="${activePage == 'outerwear'} ? 'active'">ÁO KHOÁC</a></li>
+                <li><a th:href="@{/sale}" class="sale-link" th:classappend="${activePage == 'sale'} ? 'active'">KHUYẾN MÃI</a></li>
+            </ul>
+        </nav>
+    </header>
+</div>
+
+</body>
+</html>

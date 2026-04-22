@@ -1,0 +1,112 @@
+body {
+    font-family: 'Inter', Arial;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    margin: 0;
+}
+
+.container {
+    width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.order-info {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.order-info p {
+    margin: 6px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th {
+    background: #111827;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    text-align: center;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+img {
+    width: 60px;
+    border-radius: 8px;
+}
+
+.total {
+    text-align: right;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+/* ACTION BUTTONS */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* BACK */
+.btn-back {
+    background: #e5e7eb;
+}
+
+/* CANCEL */
+.btn-cancel {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #dc2626;
+}
+/* STATUS BADGE */
+#status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+
+    min-width: 140px;
+}
+
+#status.PENDING { background: #fff3cd; color: #856404; }
+#status.PAID { background: #d4edda; color: #155724; }
+#status.FAILED { background: #f8d7da; color: #721c24; }
+#status.SHIPPING { background: #cce5ff; color: #004085; }
+#status.COMPLETED { background: #e2e3e5; color: #383d41; }
+#status.CANCELLED { background: #f5c6cb; color: #721c24; }

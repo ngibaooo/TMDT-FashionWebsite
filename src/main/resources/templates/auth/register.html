@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ĐĂNG KÝ | EAZY VIBES</title>
+    <link rel="stylesheet" href="/css/auth/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="left">
+        <h1>THAM<br>GIA<br>NGAY</h1>
+    </div>
+
+    <div class="right">
+        <h2>ĐĂNG KÝ</h2>
+
+        <form onsubmit="handleRegister(event)">
+            <div class="form-grid">
+                <div class="input-group">
+                    <input id="name" type="text" placeholder="Họ và tên" required>
+                </div>
+                <div class="input-group">
+                    <input id="phone" type="text" placeholder="Số điện thoại" required>
+                </div>
+                <div class="input-group">
+                    <input id="email" type="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input id="address" type="text" placeholder="Địa chỉ nhận hàng" required>
+                </div>
+
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input id="password" type="password" placeholder="Mật khẩu" required>
+                        <span class="toggle-password" onclick="togglePassword('password', this)">👁</span>
+                    </div>
+                    <small id="passwordHint" class="hint">
+                        Ít nhất 8 ký tự bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt
+                    </small>
+                </div>
+
+                <div class="input-group">
+                    <div class="password-wrapper">
+                        <input id="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required>
+                        <span class="toggle-password" onclick="togglePassword('confirmPassword', this)">👁</span>
+                    </div>
+                    <small id="confirmHint" class="hint"></small>
+                </div>
+            </div>
+
+            <button type="submit">TẠO TÀI KHOẢN NGAY</button>
+        </form>
+
+        <p>Đã có tài khoản thành viên?</p>
+        <a th:href="@{/login}">Đăng nhập tại đây</a>
+    </div>
+</div>
+
+<script src="/js/auth/register.js"></script>
+</body>
+</html>

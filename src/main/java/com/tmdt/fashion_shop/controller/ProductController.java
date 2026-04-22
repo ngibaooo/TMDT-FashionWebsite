@@ -1,0 +1,154 @@
+package com.tmdt.fashion_shop.controller;
+
+import com.tmdt.fashion_shop.dto.product.*;
+import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.service.product.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+
+    @Autowired
+    private ProductService productService;
+
+    // lấy danh sách
+    @GetMapping
+    public ResponseEntity<?> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sort
+    ) {
+
+        Sort sortObj = Sort.unsorted();
+
+        if ("price_asc".equals(sort)) {
+            sortObj = Sort.by("price").ascending();
+        } else if ("price_desc".equals(sort)) {
+            sortObj = Sort.by("price").descending();
+        } else if ("newest".equals(sort)) {
+            sortObj = Sort.by("createdAt").descending();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sortObj);
+
+        return ResponseEntity.ok(productService.getAllForUser(pageable));
+    }
+    @GetMapping ("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllProducts(Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllForAdmin(pageable));
+    }
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> update(
+            @PathVariable String id,
+            @ModelAttribute ProductUpdateRequestDTO request
+    ) {
+        return ResponseEntity.ok(productService.update(id, request));
+    }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> deleteProduct(@PathVariable String id) {
+
+        productService.deleteProduct(id);
+
+        return ResponseEntity.ok("Xóa sản phẩm thành công");
+    }
+    @PutMapping("/{id}/restore")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> restoreProduct(@PathVariable("id") String id) {
+        productService.restoreProduct(id);
+        return ResponseEntity.ok("Khôi phục sản phẩm thành công");
+    }
+
+    // tìm kiếm
+    @GetMapping("/search")
+    public Page<ProductDTO> search(
+            @RequestParam String keyword,
+            Pageable pageable
+    ) {
+        return productService.search(keyword, pageable);
+    }
+
+    // theo category
+    @GetMapping("/category/{id}")
+    public Page<ProductDTO> getByCategory(
+            @PathVariable String id,
+            Pageable pageable
+    ) {
+        return productService.getByCategory(id, pageable);
+    }
+
+    // chi tiết
+    @GetMapping("/{id}")
+    public ProductDetailDTO getDetail(@PathVariable String id) {
+        return productService.getById(id);
+    }
+
+    //filter for user
+    @GetMapping("/filter")
+    public Page<ProductDetailDTO> filter(
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) ProductSize productSize,
+            @RequestParam(required = false) String color,
+            Pageable pageable
+    ) {
+        return productService.filter(minPrice, maxPrice, productSize, color, pageable);
+    }
+    @GetMapping("/admin/filter")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<ProductDetailDTO> filterAdmin(
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) ProductSize productSize,
+            @RequestParam(required = false) String color,
+            Pageable pageable
+    ) {
+        return productService.filterForAdmin(minPrice, maxPrice, productSize, color, pageable);
+    }
+    @GetMapping("/new")
+    public Page<ProductDTO> getNewProducts(Pageable pageable) {
+        return productService.getNewProducts(pageable);
+    }
+    @GetMapping("/admin/best-selling")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<BestSellingProductDTO> getBestSellingProducts(
+            @RequestParam String from,
+            @RequestParam String to,
+            Pageable pageable
+    ) {
+        return productService.getBestSellingProducts(
+                LocalDate.parse(from).atStartOfDay(),
+                LocalDate.parse(to).atTime(23, 59, 59),
+                pageable
+        );
+    }
+    // USER
+    @GetMapping("/best-selling")
+    public Page<ProductDTO> bestSelling(Pageable pageable) {
+        return productService.getBestSellingProductsForUser(pageable);
+    }
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ProductDTO create(
+            @RequestPart("data") ProductCreateRequestDTO request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest httpRequest
+    ) {
+        return productService.create(request, images, httpRequest);
+    }
+}

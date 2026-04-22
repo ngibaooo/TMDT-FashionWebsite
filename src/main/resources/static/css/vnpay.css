@@ -1,0 +1,113 @@
+body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    background: linear-gradient(135deg, #0a58ca, #1e88e5);
+    height: 100vh;
+}
+
+/* CONTAINER */
+.vnpay-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/* HEADER */
+.vnpay-header {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.vnpay-header h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.vnpay-header p {
+    margin-top: 5px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* BOX */
+.vnpay-box {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* TITLE */
+.vnpay-box h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+/* INFO */
+.vnpay-box p {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.vnpay-box span {
+    font-weight: 600;
+}
+
+/* QR BOX */
+.qr-box {
+    margin: 25px 0;
+}
+
+.qr {
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: auto;
+    font-weight: bold;
+    color: #999;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+/* SUCCESS */
+.btn-success {
+    background: #0a58ca;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #084298;
+}
+
+/* FAIL */
+.btn-fail {
+    background: #eee;
+    color: #333;
+}
+
+.btn-fail:hover {
+    background: #ddd;
+}

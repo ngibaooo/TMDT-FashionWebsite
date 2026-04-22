@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="footer">
+
+    <footer class="main-footer">
+
+        <div class="footer-top">
+            <h2 class="footer-logo">EAZY VIBES</h2>
+        </div>
+
+        <div class="footer-links">
+
+            <!-- MENU GIỐNG NAVBAR -->
+            <div class="footer-col">
+                <h4>Danh mục</h4>
+                <ul>
+                    <li><a th:href="@{/}">Sản phẩm mới</a></li>
+                    <li><a th:href="@{/best-selling}">Best Selling</a></li>
+                    <li><a th:href="@{/tops}">Áo</a></li>
+                    <li><a th:href="@{/bottoms}">Quần</a></li>
+                    <li><a th:href="@{/outerwear}">Áo khoác</a></li>
+                    <li><a th:href="@{/sale}">Khuyến mãi</a></li>
+                </ul>
+            </div>
+
+            <!-- CHÍNH SÁCH -->
+            <div class="footer-col">
+                <h4>Chính sách</h4>
+                <ul>
+                    <li><a th:href="@{/terms}">Điều khoản sử dụng</a></li>
+                    <li><a th:href="@{/privacy}">Chính sách bảo mật</a></li>
+                    <li><a th:href="@{/return-policy}">Chính sách đổi trả</a></li>
+                    <li><a th:href="@{/shipping}">Vận chuyển</a></li>
+                </ul>
+            </div>
+
+            <!-- PHÁP LÝ -->
+            <div class="footer-col">
+                <h4>Pháp lý</h4>
+                <ul>
+                    <li><a th:href="@{/license}">Giấy phép kinh doanh</a></li>
+                    <li><a th:href="@{/company-info}">Thông tin công ty</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 EAZY VIBES STUDIO. ALL RIGHTS RESERVED.</p>
+        </div>
+
+    </footer>
+
+</div>
+
+</body>
+</html>

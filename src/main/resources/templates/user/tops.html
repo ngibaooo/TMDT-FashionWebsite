@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOPS | EAZY VIBES</title>
+
+    <link rel="stylesheet" href="/css/components/header.css">
+    <link rel="stylesheet" href="/css/components/footer.css">
+    <link rel="stylesheet" href="/css/tops.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+
+<div th:replace="components/header :: header"></div>
+
+<main class="tops-container">
+
+    <div class="page-top-bar">
+        <h1 class="category-title">TOPS</h1>
+
+        <div class="sort-box">
+            <select id="sort-select" onchange="fetchTops()">
+                <option value="createdAt,desc">MỚI NHẤT</option>
+                <option value="price,asc">GIÁ: TĂNG DẦN</option>
+                <option value="price,desc">GIÁ: GIẢM DẦN</option>
+                <option value="createdAt,desc">BÁN CHẠY NHẤT</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="horizontal-filter">
+        <div class="filter-item label">
+            <span class="material-symbols-outlined">filter_list</span>
+            <span>BỘ LỌC</span>
+        </div>
+
+        <div class="filter-item">
+            <select id="filter-price" onchange="fetchTops()">
+                <option value="">GIÁ SẢN PHẨM</option>
+                <option value="0-200000">Dưới 200,000đ</option>
+                <option value="200000-500000">200,000đ - 500,000đ</option>
+                <option value="500000-2000000">Trên 500,000đ</option>
+            </select>
+        </div>
+
+        <div class="filter-item">
+            <select id="filter-size" onchange="fetchTops()">
+                <option value="">KÍCH THƯỚC</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="tops-grid" class="product-grid"></div>
+
+</main>
+
+<div th:replace="components/footer :: footer"></div>
+
+<script src="/js/components/header.js"></script>
+
+<script src="/js/tops.js"></script>
+
+</body>
+</html>

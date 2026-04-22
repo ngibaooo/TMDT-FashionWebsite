@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="profile-header">
+
+    <header class="navbar">
+        <div class="logo">EAZY VIBES</div>
+
+        <div class="icons">
+
+            <!-- CART -->
+            <span id="cartIcon" class="icon-btn">🛒</span>
+
+            <!-- ACCOUNT -->
+            <div class="account-wrapper">
+<!--                <span id="accountIcon" class="icon-btn">👤</span>-->
+                <div id="accountIcon" class="icon-btn avatar-box"></div>
+                <!-- DROPDOWN -->
+                <div id="accountDropdown" class="dropdown">
+                    <div class="dropdown-item" id="btnProfile">
+                        Thông tin cá nhân
+                    </div>
+                    <div class="dropdown-item logout" id="btnLogout">
+                        Đăng xuất
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+</div>
+
+</body>
+</html>
