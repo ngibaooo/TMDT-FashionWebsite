@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EAZY VIBES | BIẾN THỂ</title>
+    <link rel="stylesheet" href="/css/admin/variants.css">
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="admin-container">
+    <div th:replace="~{components/admin-sidebar :: sidebar}"></div>
+
+    <div class="main-content">
+        <h1>QUẢN LÝ BIẾN THỂ</h1>
+
+        <div class="action-bar">
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="updateStatus('ALL', this)">TẤT CẢ</button>
+                <button class="filter-btn" onclick="updateStatus('ACTIVE', this)">ĐANG BÁN</button>
+                <button class="filter-btn" onclick="updateStatus('INACTIVE', this)">ĐÃ KHÓA</button>
+                
+                <div style="width: 1px; height: 20px; background: #eee; margin: 0 10px;"></div>
+                
+                <div class="sort-container" style="padding: 2px 15px; min-width: 280px;">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="keywordInput" placeholder="Tìm tên hoặc mã sản phẩm..." 
+                           onkeyup="handleSearch(event)"
+                           style="border: none; outline: none; font-family: 'Inter'; font-weight: 700; font-size: 13px; width: 100%;">
+                </div>
+
+                <div class="sort-container">
+                    <span class="material-symbols-outlined">straighten</span>
+                    <select id="sizeFilter" onchange="updateSize(this.value)">
+                        <option value="">TẤT CẢ SIZE</option>
+                        <option value="S">SIZE S</option>
+                        <option value="M">SIZE M</option>
+                        <option value="L">SIZE L</option>
+                        <option value="XL">SIZE XL</option>
+                        <option value="XXL">SIZE XXL</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="right-actions">
+                <button class="btn-primary-add" onclick="openModal('addModal')">
+                    <span class="material-symbols-outlined">add_circle</span>
+                    TẠO BIẾN THỂ MỚI
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ẢNH</th>
+                        <th>SẢN PHẨM</th>
+                        <th>THÔNG TIN</th>
+                        <th>SỐ LƯỢNG</th>
+                        <th style="text-align: center;">TRẠNG THÁI</th>
+                        <th style="text-align: right;">THAO TÁC</th>
+                    </tr>
+                </thead>
+                <tbody id="variantTableBody">
+                    <tr><td colspan="6" style="text-align: center; padding: 50px; color: #888;">Đang tải dữ liệu biến thể...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="pagination" class="pagination-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;"></div>
+    </div>
+</div>
+
+<div id="addModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>TẠO BIẾN THỂ MỚI</h2>
+            <p>Liên kết phân loại với sản phẩm gốc</p>
+        </div>
+        <form id="addVariantForm">
+            <div class="form-group">
+                <label>SẢN PHẨM GỐC</label>
+                <select id="product-select" name="productId" required></select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>KÍCH CỠ (SIZE)</label>
+                    <select name="size" required>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>MÀU SẮC</label>
+                    <input type="text" name="color" placeholder="VD: BLACK" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>SỐ LƯỢNG TỒN KHO</label>
+                <input type="number" name="quantity" min="0" required>
+            </div>
+            <div class="form-group">
+                <label>HÌNH ẢNH BIẾN THỂ</label>
+                <input type="file" name="images" multiple accept="image/*">
+            </div>
+            <div class="modal-footer" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                <button type="submit" id="btnSubmitForm" class="btn-confirm">XÁC NHẬN LƯU</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('addModal')">HỦY BỎ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/admin/variants.js"></script>
+</body>
+</html>
