@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
-
+// encode băm mật khẩu thay vì mã hóa. Không thể giải mã được
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         user.setRole(UserRole.CUSTOMER);
@@ -68,15 +68,15 @@ public class AuthServiceImpl implements AuthService {
         // tìm theo email hoặc phone
         if (username.contains("@")) {
             user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
+                    .orElseThrow(() -> new RuntimeException("Tài khoản hoặc mật khẩu không tồn tại! Vui lòng kiểm tra lại"));
         } else {
             user = userRepository.findByPhone(username)
-                    .orElseThrow(() -> new RuntimeException("SĐT không tồn tại"));
+                    .orElseThrow(() -> new RuntimeException("Tài khoản hoặc mật khẩu không tồn tại! Vui lòng kiểm tra lại"));
         }
 
         // check password
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Sai mật khẩu");
+            throw new RuntimeException("Tài khoản hoặc mật khẩu không tồn tại! Vui lòng kiểm tra lại");
         }
 
         // tạo JWT

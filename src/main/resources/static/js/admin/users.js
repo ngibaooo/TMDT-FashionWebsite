@@ -7,6 +7,9 @@ const API_USERS = "http://localhost:8080/api/users";
 let allUsers = []; // Biến lưu trữ dữ liệu gốc từ Server
 let currentRole = "ALL";
 let currentSort = "neweast";
+let currentPage = 0;
+let pageSize = 5;
+let totalPages = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem("role");
@@ -67,7 +70,53 @@ function applyFilterAndSort() {
         }
     });
 
-    renderUsers(list);
+//    renderUsers(list);
+ // 👉 PAGINATION
+    totalPages = Math.ceil(list.length / pageSize);
+
+    const start = currentPage * pageSize;
+    const paginatedList = list.slice(start, start + pageSize);
+
+    renderUsers(paginatedList);
+    renderPagination();
+}
+function renderPagination() {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    let html = "";
+
+    // PREV
+    html += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    // PAGE
+    for (let i = 0; i < totalPages; i++) {
+        html += `
+            <button class="${i === currentPage ? 'active' : ''}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // NEXT
+    html += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+
+    container.innerHTML = html;
+}
+function changePage(page) {
+    currentPage = page;
+    applyFilterAndSort();
 }
 
 // 3. HIỂN THỊ DỮ LIỆU
@@ -122,23 +171,40 @@ function filterByRole(role, btn) {
     btn.classList.add('active');
     
     currentRole = role;
+    currentPage = 0;
     applyFilterAndSort(); // Lọc lại mảng hiện có
 }
 
 // 5. SỰ KIỆN SORT (LOCAL)
 function changeSort(sortValue) {
     currentSort = sortValue;
+    currentPage = 0;
     applyFilterAndSort(); // Sắp xếp lại mảng hiện có
 }
 
 // 6. TÌM KIẾM NHANH (LOCAL)
+//function searchUsers() {
+//    const keyword = document.getElementById("userSearch").value.toLowerCase();
+//    const filtered = allUsers.filter(u =>
+//        (u.name && u.name.toLowerCase().includes(keyword)) ||
+//        u.email.toLowerCase().includes(keyword)
+//    );
+//    renderUsers(filtered);
+//}
 function searchUsers() {
     const keyword = document.getElementById("userSearch").value.toLowerCase();
-    const filtered = allUsers.filter(u => 
-        (u.name && u.name.toLowerCase().includes(keyword)) || 
+
+    let filtered = allUsers.filter(u =>
+        (u.name && u.name.toLowerCase().includes(keyword)) ||
         u.email.toLowerCase().includes(keyword)
     );
-    renderUsers(filtered);
+
+    currentPage = 0;
+
+    totalPages = Math.ceil(filtered.length / pageSize);
+    const start = currentPage * pageSize;
+    renderUsers(filtered.slice(start, start + pageSize));
+    renderPagination();
 }
 
 // 7. MODAL & KHÓA TÀI KHOẢN

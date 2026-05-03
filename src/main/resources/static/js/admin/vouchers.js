@@ -7,6 +7,8 @@ const API_VOUCHERS = "/api/vouchers";
 
 let currentFilterStatus = "ALL";
 let allVouchers = [];
+let currentPage = 1;
+const pageSize = 5;
 
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem("role");
@@ -53,52 +55,149 @@ async function loadVouchers() {
     }
 }
 
+//function renderVouchers(vouchers) {
+//    const tbody = document.getElementById("voucherTableBody");
+//    if (!tbody) return;
+//
+//    let filtered = vouchers;
+//    if (currentFilterStatus !== "ALL") {
+//        filtered = vouchers.filter(v => v.status === currentFilterStatus);
+//    }
+//
+//    if (filtered.length === 0) {
+//        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 50px; color: #888;">Không có dữ liệu voucher</td></tr>`;
+//        return;
+//    }
+//
+//    tbody.innerHTML = filtered.map(v => `
+//        <tr>
+//            <td style="font-weight: 900; color: #000;">${v.code}</td>
+//            <td style="font-weight: 600; color: #666;">${v.discountType === 'PERCENT' ? 'Phần trăm' : 'Cố định'}</td>
+//            <td style="font-weight: 900; color: #000;">${v.discountType === 'PERCENT' ? v.discountValue + '%' : formatMoney(v.discountValue)}</td>
+//            <td style="font-weight: 600;">${formatMoney(v.minOrderValue || 0)}</td>
+//            <td style="font-weight: 600;">${v.maxDiscount ? formatMoney(v.maxDiscount) : '-'}</td>
+//            <td style="font-weight: 800;">${v.quantity}</td>
+//            <td style="text-align: center;">
+//                <span class="status status-${v.status.toLowerCase()}">${v.status}</span>
+//            </td>
+//            <td style="text-align: right;">
+//                <button class="btn-edit" onclick="editVoucher('${v.id}')" title="Chỉnh sửa">
+//                    <span class="material-symbols-outlined">edit_square</span>
+//                </button>
+//                ${v.status === 'ACTIVE' ?
+//                    `<button class="btn-toggle disable" onclick="toggleStatus('${v.id}', 'disable')" title="Khóa voucher">
+//                        <span class="material-symbols-outlined">block</span>
+//                    </button>` :
+//                    `<button class="btn-toggle enable" onclick="toggleStatus('${v.id}', 'enable')" title="Mở lại">
+//                        <span class="material-symbols-outlined">check_circle</span>
+//                    </button>`
+//                }
+//            </td>
+//        </tr>
+//    `).join("");
+//}
 function renderVouchers(vouchers) {
     const tbody = document.getElementById("voucherTableBody");
+    const pagination = document.getElementById("pagination");
     if (!tbody) return;
 
+    // FILTER
     let filtered = vouchers;
     if (currentFilterStatus !== "ALL") {
         filtered = vouchers.filter(v => v.status === currentFilterStatus);
     }
 
-    if (filtered.length === 0) {
+    // PAGINATION
+    const totalPages = Math.ceil(filtered.length / pageSize);
+    if (currentPage > totalPages) currentPage = 1;
+
+    const start = (currentPage - 1) * pageSize;
+    const paginated = filtered.slice(start, start + pageSize);
+
+    // EMPTY
+    if (paginated.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 50px; color: #888;">Không có dữ liệu voucher</td></tr>`;
+        pagination.innerHTML = "";
         return;
     }
 
-    tbody.innerHTML = filtered.map(v => `
+    // RENDER TABLE
+    tbody.innerHTML = paginated.map(v => `
         <tr>
-            <td style="font-weight: 900; color: #000;">${v.code}</td>
-            <td style="font-weight: 600; color: #666;">${v.discountType === 'PERCENT' ? 'Phần trăm' : 'Cố định'}</td>
-            <td style="font-weight: 900; color: #000;">${v.discountType === 'PERCENT' ? v.discountValue + '%' : formatMoney(v.discountValue)}</td>
-            <td style="font-weight: 600;">${formatMoney(v.minOrderValue || 0)}</td>
-            <td style="font-weight: 600;">${v.maxDiscount ? formatMoney(v.maxDiscount) : '-'}</td>
-            <td style="font-weight: 800;">${v.quantity}</td>
+            <td style="font-weight: 900;">${v.code}</td>
+            <td>${v.discountType === 'PERCENT' ? 'Phần trăm' : 'Cố định'}</td>
+            <td style="font-weight: 900;">
+                ${v.discountType === 'PERCENT' ? v.discountValue + '%' : formatMoney(v.discountValue)}
+            </td>
+            <td>${formatMoney(v.minOrderValue || 0)}</td>
+            <td>${v.maxDiscount ? formatMoney(v.maxDiscount) : '-'}</td>
+            <td>${v.quantity}</td>
             <td style="text-align: center;">
                 <span class="status status-${v.status.toLowerCase()}">${v.status}</span>
             </td>
             <td style="text-align: right;">
-                <button class="btn-edit" onclick="editVoucher('${v.id}')" title="Chỉnh sửa">
+                <button class="btn-edit" onclick="editVoucher('${v.id}')">
                     <span class="material-symbols-outlined">edit_square</span>
                 </button>
-                ${v.status === 'ACTIVE' ? 
-                    `<button class="btn-toggle disable" onclick="toggleStatus('${v.id}', 'disable')" title="Khóa voucher">
+                ${v.status === 'ACTIVE' ?
+                    `<button class="btn-toggle disable" onclick="toggleStatus('${v.id}', 'disable')">
                         <span class="material-symbols-outlined">block</span>
                     </button>` :
-                    `<button class="btn-toggle enable" onclick="toggleStatus('${v.id}', 'enable')" title="Mở lại">
+                    `<button class="btn-toggle enable" onclick="toggleStatus('${v.id}', 'enable')">
                         <span class="material-symbols-outlined">check_circle</span>
                     </button>`
                 }
             </td>
         </tr>
     `).join("");
+
+    renderPagination(totalPages);
+}
+function renderPagination(totalPages) {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    let html = "";
+
+    // Prev
+    html += `
+        <button ${currentPage === 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ‹
+        </button>
+    `;
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        html += `
+            <button class="${i === currentPage ? 'active' : ''}"
+                onclick="changePage(${i})">
+                ${i}
+            </button>
+        `;
+    }
+
+    // Next
+    html += `
+        <button ${currentPage === totalPages ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            ›
+        </button>
+    `;
+
+    container.innerHTML = html;
+}
+
+function changePage(page) {
+    currentPage = page;
+    renderVouchers(allVouchers);
 }
 
 function filterBy(status, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentFilterStatus = status;
+    currentPage = 1;
     renderVouchers(allVouchers);
 }
 

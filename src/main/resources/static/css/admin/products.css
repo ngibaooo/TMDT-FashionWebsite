@@ -24,8 +24,10 @@ body {
 }
 
 .top-bar h1 {
-    font-size: 30px;
-    font-weight: 800;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
 }
 
 /* BUTTON */
