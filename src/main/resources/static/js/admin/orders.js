@@ -157,7 +157,7 @@ function openStatusModal(id, currentStatus) {
     buttons.forEach(btn => btn.style.display = "none");
 
     if (currentStatus === "PAID") {
-        document.getElementById("btn-pending").style.display = "block";
+        // document.getElementById("btn-pending").style.display = "block";
         document.getElementById("btn-shipping").style.display = "block";
         document.getElementById("btn-cancelled").style.display = "block";
     } else if (currentStatus === "PENDING") {

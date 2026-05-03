@@ -4,12 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHI TIẾT | EAZY VIBES</title>
+    
+    <!-- LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- CSS -->
     <link rel="stylesheet" th:href="@{/css/components/header.css}">
     <link rel="stylesheet" th:href="@{/css/components/footer.css}">
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/product-detail.css}">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body class="dark-theme">
 
@@ -24,8 +29,7 @@
 <main class="product-detail-wrapper">
     <div class="detail-grid">
         <div class="gallery-side">
-            <div class="thumb-list" id="thumbnail-list">
-            </div>
+            <div class="thumb-list" id="thumbnail-list"></div>
             <div class="main-img-wrap" id="img-fly-origin">
                 <img id="main-product-img" src="" alt="Main Product Image">
             </div>
@@ -51,7 +55,8 @@
                 <div class="quantity-wrapper">
                     <div class="quantity-control">
                         <button type="button" onclick="changeQty(-1)">-</button>
-                        <input type="number" id="buy-quantity" value="1" min="1" readonly>
+                        <!-- FIX: Đã gỡ bỏ readonly và thêm sự kiện kiểm tra dữ liệu -->
+                        <input type="number" id="buy-quantity" value="1" min="1" oninput="validateQty(this)">
                         <button type="button" onclick="changeQty(1)">+</button>
                     </div>
                 </div>
