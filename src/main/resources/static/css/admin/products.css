@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: 'Inter', sans-serif;
     background: #f6f7fb;
+    color: #333;
 }
 
 /* LAYOUT */
@@ -11,9 +12,9 @@ body {
 
 /* FIX CHÍNH */
 .main-content {
-    margin-left: 270px;
+    margin-left: 260px;
     padding: 30px 40px;
-    width: calc(100% - 270px);
+    width: calc(100% - 260px);
 }
 
 /* HEADER */
@@ -24,8 +25,10 @@ body {
 }
 
 .top-bar h1 {
-    font-size: 30px;
-    font-weight: 800;
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 25px;
+    letter-spacing: -1px;
 }
 
 /* BUTTON */

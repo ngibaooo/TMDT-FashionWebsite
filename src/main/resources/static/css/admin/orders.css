@@ -64,3 +64,28 @@ tbody td { padding: 20px; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
 .btn-status.status-cancelled { background: #FFECEC; color: #FF4D4F; }
 
 .btn-cancel { background: none; border: none; color: #aaa; font-weight: 700; cursor: pointer; margin-top: 25px; width: 100%; text-align: center; }
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.pagination button.active {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

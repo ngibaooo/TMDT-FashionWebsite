@@ -20,6 +20,7 @@ async function loadOrders() {
     try {
         const token = localStorage.getItem("token");
         let url = `${API_ORDERS}/admin?sort=${currentSort}`;
+        let url = `${API_ORDERS}/admin?page=${currentPage}&size=5&sort=${currentSort}`;
         if (currentStatus && currentStatus !== "ALL") {
             url += `&status=${currentStatus}`;
         }
@@ -29,9 +30,10 @@ async function loadOrders() {
         });
 
         if (!res.ok) throw new Error("API ERROR");
-        const data = await res.json();
-        const orders = data.content || data;
-        renderOrders(orders);
+            const data = await res.json();
+            totalPages = data.totalPages || 0;
+            const orders = data.content || [];
+            renderPagination();
     } catch (e) {
         console.error(e);
         if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 50px; color: red; font-weight: 700;">LỖI KẾT NỐI API</td></tr>`;
@@ -157,7 +159,7 @@ function openStatusModal(id, currentStatus) {
     buttons.forEach(btn => btn.style.display = "none");
 
     if (currentStatus === "PAID") {
-        // document.getElementById("btn-pending").style.display = "block";
+//        document.getElementById("btn-pending").style.display = "block";
         document.getElementById("btn-shipping").style.display = "block";
         document.getElementById("btn-cancelled").style.display = "block";
     } else if (currentStatus === "PENDING") {
@@ -187,4 +189,42 @@ function formatMoney(amount) {
     const number = Number(amount);
     if (isNaN(number)) return "0 ₫";
     return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(number);
+}
+function renderPagination() {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    let html = "";
+
+    // PREV
+    html += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    // PAGE NUMBER
+    for (let i = 0; i < totalPages; i++) {
+        html += `
+            <button class="${i === currentPage ? 'active' : ''}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // NEXT
+    html += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+
+    container.innerHTML = html;
+}
+function changePage(page) {
+    currentPage = page;
+    loadOrders();
 }

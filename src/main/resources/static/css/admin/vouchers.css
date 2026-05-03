@@ -235,3 +235,28 @@ tbody td {
     width: 100%;
     text-align: center;
 }
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+}
+
+.pagination button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #f3f3f3;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.pagination button.active {
+    background: #000;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
