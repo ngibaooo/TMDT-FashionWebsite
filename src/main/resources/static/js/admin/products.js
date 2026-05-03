@@ -3,6 +3,10 @@ const API_DETAIL = "http://localhost:8080/api/products/";
 
 let currentPage = 0;
 let totalPages = 0;
+let currentSort = "newest";
+let currentPrice = "";
+let currentKeyword = "";
+let currentStatus = "";
 document.addEventListener("DOMContentLoaded", () => {
 
     const role = localStorage.getItem("role");
@@ -12,43 +16,89 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    loadProducts();
+    // BẮT EVENT CHANGE (KHÔNG CẦN NÚT)
+    document.getElementById("sort").addEventListener("change", (e) => {
+        currentSort = e.target.value;
+        currentPage = 0;
+        loadProducts();
+    });
 
-    document.getElementById("search").addEventListener("input", filterProducts);
+    document.getElementById("price").addEventListener("change", (e) => {
+        currentPrice = e.target.value;
+        currentPage = 0;
+        loadProducts();
+    });
+
+//    document.getElementById("search").addEventListener("input", filterProducts);
+    document.getElementById("search").addEventListener("input", (e) => {
+        currentKeyword = e.target.value;
+        currentPage = 0;
+        loadProducts();
+    });
+    loadProducts();
 });
 
 let allProducts = [];
-
 function buildUrl() {
-    const sort = document.getElementById("sort").value;
-    const price = document.getElementById("price").value;
 
     let params = new URLSearchParams();
     params.append("page", currentPage);
     params.append("size", 5);
 
-    if (price) {
-        const [min, max] = price.split("-");
+    const hasFilter = currentKeyword || currentPrice || currentStatus;
+
+    // SEARCH
+    if (currentKeyword) {
+        params.append("keyword", currentKeyword);
+    }
+
+    // PRICE
+    if (currentPrice) {
+        const [min, max] = currentPrice.split("-");
         params.append("minPrice", min);
         params.append("maxPrice", max);
     }
 
-    // FIX SORT
-    if (sort === "newest") {
-        params.append("sort", "createdAt,desc");
-    } else if (sort === "oldest") {
-        params.append("sort", "createdAt,asc");
-    } else if (sort === "price_desc") {
-        params.append("sort", "price,desc");
-    } else if (sort === "price_asc") {
-        params.append("sort", "price,asc");
+    // STATUS
+    if (currentStatus) {
+        params.append("status", currentStatus);
     }
 
-    let url = price
-        ? API_PRODUCTS + "/filter?" + params.toString()
-        : API_PRODUCTS + "?" + params.toString();
+    // SORT
+    switch (currentSort) {
+        case "price_asc":
+            params.append("sort", "price,asc");
+            break;
+        case "price_desc":
+            params.append("sort", "price,desc");
+            break;
+        case "oldest":
+            params.append("sort", "createdAt,asc");
+            break;
+        default:
+            params.append("sort", "createdAt,desc");
+    }
 
-    return url;
+    // chọn endpoint
+    if (hasFilter) {
+        return API_PRODUCTS + "/filter?" + params.toString();
+    } else {
+        return API_PRODUCTS + "?" + params.toString();
+    }
+}
+function filterStatus(status, btn) {
+
+    // UI active
+    document.querySelectorAll('.filter-btn')
+        .forEach(b => b.classList.remove('active'));
+
+    btn.classList.add('active');
+
+    // logic
+    currentStatus = status;
+    currentPage = 0;
+
+    loadProducts();
 }
 async function loadProducts() {
     try {
@@ -150,9 +200,9 @@ function changePage(page) {
     currentPage = page;
     loadProducts();
 }
-function applyFilter() {
-    loadProducts();
-}
+//function applyFilter() {
+//    loadProducts();
+//}
 function renderProducts(products) {
     const table = document.getElementById("productTable");
 
@@ -204,15 +254,15 @@ function renderProducts(products) {
     }).join("");
 }
 // ===== SEARCH =====
-function filterProducts() {
-    const keyword = document.getElementById("search").value.toLowerCase();
-
-    const filtered = allProducts.filter(p =>
-        p.name.toLowerCase().includes(keyword)
-    );
-
-    renderProducts(filtered);
-}
+//function filterProducts() {
+//    const keyword = document.getElementById("search").value.toLowerCase();
+//
+//    const filtered = allProducts.filter(p =>
+//        p.name.toLowerCase().includes(keyword)
+//    );
+//
+//    renderProducts(filtered);
+//}
 
 // ===== ACTION =====
 function goAddProduct() {

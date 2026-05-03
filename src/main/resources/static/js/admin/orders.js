@@ -2,8 +2,11 @@ const API_ORDERS = "http://localhost:8080/api/orders";
 const FALLBACK_IMG = "https://placehold.co/100x100?text=No+Image";
 
 let currentStatus = "";
-let currentSort = "neweast";
+let currentSort = "newest";
 let currentEditingOrderId = null;
+let currentPage = 0;
+let pageSize = 5;
+let totalPages = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem("role");
@@ -19,7 +22,7 @@ async function loadOrders() {
     const tbody = document.getElementById("orderTableBody");
     try {
         const token = localStorage.getItem("token");
-        let url = `${API_ORDERS}/admin?sort=${currentSort}`;
+//        let url = `${API_ORDERS}/admin?sort=${currentSort}`;
         let url = `${API_ORDERS}/admin?page=${currentPage}&size=5&sort=${currentSort}`;
         if (currentStatus && currentStatus !== "ALL") {
             url += `&status=${currentStatus}`;
@@ -33,6 +36,7 @@ async function loadOrders() {
             const data = await res.json();
             totalPages = data.totalPages || 0;
             const orders = data.content || [];
+            renderOrders(orders);
             renderPagination();
     } catch (e) {
         console.error(e);

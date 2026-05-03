@@ -17,7 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, String>, JpaSpecif
     List<Order> findByUserIdAndStatus(String userId, OrderStatus status);
     List<Order> findByStatus(OrderStatus status);
     Page<Order> findByStatus(OrderStatus status, Pageable pageable);
-
+    Page<Order> findAll(Pageable pageable);
     @Query("""
         SELECT SUM(o.totalPrice)
         FROM Order o

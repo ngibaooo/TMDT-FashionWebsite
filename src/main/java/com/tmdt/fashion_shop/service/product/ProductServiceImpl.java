@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -174,20 +175,51 @@ public class ProductServiceImpl implements ProductService {
                 pageable
         ).map(this::toDetailDTO);
     }
-    @Override
-    public Page<ProductDetailDTO> filterForAdmin(
-            Double minPrice,
-            Double maxPrice,
-            ProductSize productSize,
-            String color,
-            Pageable pageable
-    ) {
-        return productRepository.findAll(
-                ProductSpecification.filter(minPrice, maxPrice, productSize, color)
-                        .and(ProductSpecification.hasStatus(ProductStatus.ACTIVE)),
-                pageable
-        ).map(this::toDetailDTO);
+//    @Override
+//    public Page<ProductDetailDTO> filterForAdmin(
+//            Double minPrice,
+//            Double maxPrice,
+//            ProductSize productSize,
+//            String color,
+//            String keyword,
+//            ProductStatus status,   // 👈 thêm
+//            Pageable pageable
+//    ) {
+//        return productRepository.findAll(
+//                ProductSpecification.filter(minPrice, maxPrice, productSize, color)
+//                        .and(ProductSpecification.hasKeyword(keyword))
+//                        .and(ProductSpecification.hasStatus(status)),
+//                pageable
+//        ).map(this::toDetailDTO);
+//    }
+@Override
+public Page<ProductDetailDTO> filterForAdmin(
+        Double minPrice,
+        Double maxPrice,
+        ProductSize productSize,
+        String color,
+        String keyword,
+        ProductStatus status,
+        Pageable pageable
+) {
+
+    Specification<Product> spec = Specification.where(
+            ProductSpecification.filter(minPrice, maxPrice, productSize, color)
+    );
+
+    // keyword
+    if (keyword != null && !keyword.isBlank()) {
+        spec = spec.and(ProductSpecification.hasKeyword(keyword));
     }
+
+    // status (CHỈ thêm khi có)
+    if (status != null) {
+        spec = spec.and(ProductSpecification.hasStatus(status));
+    }
+
+    return productRepository.findAll(spec, pageable)
+            .map(this::toDetailDTO);
+}
     @Override
     public Page<ProductDTO> getNewProducts(Pageable pageable) {
         return productRepository

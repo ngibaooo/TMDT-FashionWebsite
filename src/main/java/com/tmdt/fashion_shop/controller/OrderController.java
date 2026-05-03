@@ -4,6 +4,10 @@ import com.tmdt.fashion_shop.dto.orders.*;
 import com.tmdt.fashion_shop.security.JWTService;
 import com.tmdt.fashion_shop.service.orders.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -44,13 +48,33 @@ public class OrderController {
 
         return orderService.getOrders(userId, status, sort);
     }
+//    @GetMapping("/admin")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public List<OrderDTO> getOrdersByStatusForAdmin(
+//            @RequestParam(required = false) String status,
+//            @RequestParam(required = false, defaultValue = "newest") String sort
+//    ) {
+//        return orderService.getOrdersForAdmin(status, sort);
+//    }
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<OrderDTO> getOrdersByStatusForAdmin(
+    public Page<OrderDTO> getOrdersByStatusForAdmin(
             @RequestParam(required = false) String status,
-            @RequestParam(required = false, defaultValue = "newest") String sort
+            @RequestParam(defaultValue = "newest") String sort,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
     ) {
-        return orderService.getOrdersForAdmin(status, sort);
+
+        Sort sorting = switch (sort) {
+            case "price_asc" -> Sort.by("totalPrice").ascending();
+            case "price_desc" -> Sort.by("totalPrice").descending();
+            case "oldest" -> Sort.by("createdAt").ascending();
+            default -> Sort.by("createdAt").descending(); // newest
+        };
+
+        Pageable pageable = PageRequest.of(page, size, sorting);
+
+        return orderService.getOrdersForAdmin(status, sort, pageable);
     }
 
     // Admin

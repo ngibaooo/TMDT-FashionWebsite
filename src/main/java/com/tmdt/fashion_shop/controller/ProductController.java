@@ -2,6 +2,7 @@ package com.tmdt.fashion_shop.controller;
 
 import com.tmdt.fashion_shop.dto.product.*;
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.ProductStatus;
 import com.tmdt.fashion_shop.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,9 +118,11 @@ public class ProductController {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) ProductSize productSize,
             @RequestParam(required = false) String color,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) ProductStatus status,
             Pageable pageable
     ) {
-        return productService.filterForAdmin(minPrice, maxPrice, productSize, color, pageable);
+        return productService.filterForAdmin(minPrice, maxPrice, productSize, color, keyword, status, pageable);
     }
     @GetMapping("/new")
     public Page<ProductDTO> getNewProducts(Pageable pageable) {
