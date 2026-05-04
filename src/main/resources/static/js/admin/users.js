@@ -6,6 +6,7 @@
 const API_USERS = "http://localhost:8080/api/users";
 let allUsers = []; // Biến lưu trữ dữ liệu gốc từ Server
 let currentRole = "ALL";
+let currentKeyword = "";
 let currentSort = "newest";
 let currentPage = 0;
 let pageSize = 5;
@@ -56,6 +57,12 @@ function applyFilterAndSort() {
     // Bước A: Lọc theo Vai trò
     if (currentRole !== "ALL") {
         list = list.filter(u => u.role === currentRole);
+    }
+    if (currentKeyword) {
+            list = list.filter(u =>
+                (u.name && u.name.toLowerCase().includes(currentKeyword)) ||
+                (u.email && u.email.toLowerCase().includes(currentKeyword))
+            );
     }
 
     // Bước B: Sắp xếp theo ngày (Local Sorting)
@@ -192,14 +199,15 @@ function changeSort(sortValue) {
 //    renderUsers(filtered);
 //}
 function searchUsers() {
-    const keyword = document.getElementById("userSearch").value.toLowerCase();
+//    const keyword = document.getElementById("userSearch").value.toLowerCase();
 
-    let filtered = allUsers.filter(u =>
-        (u.name && u.name.toLowerCase().includes(keyword)) ||
-        u.email.toLowerCase().includes(keyword)
-    );
-
+//    let filtered = allUsers.filter(u =>
+//        (u.name && u.name.toLowerCase().includes(keyword)) ||
+//        u.email.toLowerCase().includes(keyword)
+//    );
+    currentKeyword = document.getElementById("userSearch").value.toLowerCase();
     currentPage = 0;
+    applyFilterAndSort();
 
     totalPages = Math.ceil(filtered.length / pageSize);
     const start = currentPage * pageSize;
