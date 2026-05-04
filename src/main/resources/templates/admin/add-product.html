@@ -2,10 +2,42 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm sản phẩm</title>
+    <title>Thêm sản phẩm | EAZY VIBES Admin</title>
 
+    <!-- LIBRARIES (THÊM SWEETALERT2 & FONT) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@700;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/components/admin-sidebar.css">
     <link rel="stylesheet" href="/css/admin/add-product.css">
+
+    <style>
+        /* --- STREETWEAR SWAL STYLE --- */
+        .ez-swal-popup {
+            border-radius: 0px !important;
+            border: 1px solid #333 !important;
+            background-color: #000 !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        .ez-swal-title {
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-weight: 900 !important;
+            color: #fff !important;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        .ez-swal-content {
+            color: #bbb !important;
+        }
+        .ez-swal-confirm {
+            background-color: #fff !important;
+            color: #000 !important;
+            border-radius: 0px !important;
+            font-weight: 900 !important;
+            padding: 12px 30px !important;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
 
@@ -15,7 +47,7 @@
 
     <div class="main-content">
 
-        <h1>Thêm sản phẩm</h1>
+        <h1 style="font-family: 'Space Grotesk'; font-weight: 900; text-transform: uppercase;">Thêm sản phẩm</h1>
         <div class="form">
 
             <div class="input-group">
@@ -40,21 +72,21 @@
 
             <div class="input-group">
                 <label>Ảnh sản phẩm</label>
-
                 <div id="previewContainer"></div>
-
                 <input id="images" type="file" multiple>
             </div>
 
         </div>
 
         <!-- VARIANT -->
-        <h3>Variants</h3>
+        <h3 style="font-family: 'Space Grotesk'; font-weight: 900; text-transform: uppercase;">Variants</h3>
         <div id="variantContainer"></div>
 
         <button class="btn btn-add" onclick="addVariant()">+ Thêm Variant</button>
 
-        <button class="btn btn-submit" onclick="submitProduct()">Lưu sản phẩm</button>
+        <button class="btn btn-submit" onclick="submitProduct()" style="font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">
+            Lưu sản phẩm
+        </button>
 
     </div>
 </div>
