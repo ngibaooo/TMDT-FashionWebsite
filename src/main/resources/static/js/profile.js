@@ -28,9 +28,12 @@ function switchTab(tab) {
     localStorage.setItem("activeTab", tab);
 }
 
-btnAccount.onclick = () => switchTab("account");
-btnOrders.onclick = () => switchTab("orders");
-
+//btnAccount.onclick = () => switchTab("account");
+//btnOrders.onclick = () => switchTab("orders");
+if (btnAccount && btnOrders) {
+    btnAccount.onclick = () => switchTab("account");
+    btnOrders.onclick = () => switchTab("orders");
+}
 function restoreTab() {
     switchTab(localStorage.getItem("activeTab") || "account");
 }
@@ -169,29 +172,69 @@ function goUpdate() {
 filterStatus.onchange = loadOrders;
 sortOrder.onchange = loadOrders;
 
-// ===== NAVBAR =====
-document.getElementById("cartIcon").onclick = () => {
-    window.location.href = "/user/cart";
-};
+//// ===== NAVBAR =====
+//document.getElementById("cartIcon").onclick = () => {
+//    window.location.href = "/user/cart";
+//};
+//
+//const accountIcon = document.getElementById("accountIcon");
+//const dropdown = document.getElementById("accountDropdown");
+//
+//accountIcon.onclick = () => {
+//    dropdown.classList.toggle("show");
+//};
+//
+//document.addEventListener("click", (e) => {
+//    if (!e.target.closest(".account-wrapper")) {
+//        dropdown.classList.remove("show");
+//    }
+//});
+//
+//document.getElementById("btnProfile").onclick = () => {
+//    window.location.href = "http://localhost:8080/user/profile";
+//};
+//
+//document.getElementById("btnLogout").onclick = logout;
+// ===== NAVBAR (SAFE VERSION) =====
 
+// CART (ID mới)
+const cartLink = document.getElementById("cart-link");
+if (cartLink) {
+    cartLink.onclick = () => {
+        window.location.href = "/user/cart";
+    };
+}
+
+// ACCOUNT
 const accountIcon = document.getElementById("accountIcon");
 const dropdown = document.getElementById("accountDropdown");
 
-accountIcon.onclick = () => {
-    dropdown.classList.toggle("show");
-};
+if (accountIcon && dropdown) {
+    accountIcon.onclick = (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+    };
 
-document.addEventListener("click", (e) => {
-    if (!e.target.closest(".account-wrapper")) {
-        dropdown.classList.remove("show");
-    }
-});
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".account-wrapper")) {
+            dropdown.classList.remove("show");
+        }
+    });
+}
 
-document.getElementById("btnProfile").onclick = () => {
-    window.location.href = "http://localhost:8080/user/profile";
-};
+// PROFILE
+const btnProfile = document.getElementById("btnProfile");
+if (btnProfile) {
+    btnProfile.onclick = () => {
+        window.location.href = "/user/profile";
+    };
+}
 
-document.getElementById("btnLogout").onclick = logout;
+// LOGOUT
+const btnLogout = document.getElementById("btnLogout");
+if (btnLogout) {
+    btnLogout.onclick = logout;
+}
 
 // UTIL
 function formatDate(dateStr) {

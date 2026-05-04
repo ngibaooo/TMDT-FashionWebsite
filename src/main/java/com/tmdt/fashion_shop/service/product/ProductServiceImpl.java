@@ -167,13 +167,25 @@ public class ProductServiceImpl implements ProductService {
                                    Double maxPrice,
                                    ProductSize productSize,
                                    String color,
+                                    String categoryId,
                                    Pageable pageable) {
 
-        return productRepository.findAll(
-                ProductSpecification.filter(minPrice, maxPrice, productSize, color)
-                        .and(ProductSpecification.hasStatus(ProductStatus.ACTIVE)),
-                pageable
-        ).map(this::toDetailDTO);
+//        return productRepository.findAll(
+//                ProductSpecification.filter(minPrice, maxPrice, productSize, color)
+//                        .and(ProductSpecification.hasStatus(ProductStatus.ACTIVE)),
+//                pageable
+//        ).map(this::toDetailDTO);
+        Specification<Product> spec = ProductSpecification.filter(minPrice, maxPrice, productSize, color)
+                .and(ProductSpecification.hasStatus(ProductStatus.ACTIVE));
+
+        if (categoryId != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("category").get("id"), categoryId)
+            );
+        }
+
+        return productRepository.findAll(spec, pageable)
+                .map(this::toDetailDTO);
     }
 //    @Override
 //    public Page<ProductDetailDTO> filterForAdmin(
@@ -266,7 +278,8 @@ public Page<ProductDetailDTO> filterForAdmin(
                 .toList();
 
 //        return new PageImpl<>(dtoList, pageable, result.getTotalElements());
-        return new PageImpl<>(dtoList, pageable, dtoList.size());
+//        return new PageImpl<>(dtoList, pageable, dtoList.size());
+        return new PageImpl<>(dtoList, pageable, result.getTotalElements());
     }
     @Override
     public ProductDTO create(ProductCreateRequestDTO request,

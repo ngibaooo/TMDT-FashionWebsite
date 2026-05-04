@@ -3,6 +3,7 @@
 <body>
 
 <div th:fragment="profile-header">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <header class="navbar">
         <div class="logo">EAZY VIBES</div>
@@ -10,8 +11,21 @@
         <div class="icons">
 
             <!-- CART -->
-            <span id="cartIcon" class="icon-btn">🛒</span>
-
+<!--            <span id="cartIcon" class="icon-btn">🛒</span>-->
+            <a href="/user/cart" id="cart-link" style="position: relative; display: inline-flex; align-items: center; text-decoration: none;">
+                <span class="material-symbols-outlined icon">shopping_cart</span>
+                <span id="cart-badge" style="
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background-color: #808080;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 50%;
+        display: inline-block;">0</span>
+            </a>
             <!-- ACCOUNT -->
             <div class="account-wrapper">
 <!--                <span id="accountIcon" class="icon-btn">👤</span>-->

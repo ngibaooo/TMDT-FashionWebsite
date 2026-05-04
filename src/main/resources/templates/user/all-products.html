@@ -28,7 +28,7 @@
         <h1 class="category-title">ALL PRODUCTS</h1>
 
         <div class="sort-box">
-            <select id="sort-select" onchange="fetchProducts()">
+            <select id="sort-select" onchange="fetchProducts(true)">
                 <option value="newest">MỚI NHẤT</option>
                 <option value="price_asc">GIÁ: TĂNG DẦN</option>
                 <option value="price_desc">GIÁ: GIẢM DẦN</option>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="filter-item">
-            <select id="filter-price" onchange="fetchProducts()">
+            <select id="filter-price" onchange="fetchProducts(true)">
                 <option value="">GIÁ SẢN PHẨM</option>
                 <option value="0-200000">Dưới 200,000đ</option>
                 <option value="200000-500000">200,000đ - 500000đ</option>
@@ -52,7 +52,7 @@
         </div>
 
         <div class="filter-item">
-            <select id="filter-size" onchange="fetchProducts()">
+            <select id="filter-size" onchange="fetchProducts(true)">
                 <option value="">KÍCH THƯỚC</option>
                 <option value="S">S</option>
                 <option value="M">M</option>
@@ -63,6 +63,7 @@
     </div>
 
     <div id="products-grid" class="product-grid"></div>
+    <div id="pagination" class="pagination"></div>
 
 </main>
 

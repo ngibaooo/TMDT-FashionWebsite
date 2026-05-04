@@ -26,6 +26,7 @@ public interface ProductService {
             Double maxPrice,
             ProductSize productSize,
             String color,
+            String categoryId,
             Pageable pageable
     );
     Page<ProductDTO> getNewProducts(Pageable pageable);

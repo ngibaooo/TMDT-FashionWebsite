@@ -1,96 +1,113 @@
-// FIX ROOT CAUSE: Đảm bảo không khai báo lại BASE_URL
+// ===== GLOBAL =====
+let currentPage = 0;
+let totalPages = 0;
+
 if (typeof window.BASE_URL === 'undefined') {
     window.BASE_URL = "http://localhost:8080";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    fetchProducts();
+    fetchProducts(true);
 });
 
-async function fetchProducts() {
+// ===== FETCH PRODUCTS =====
+async function fetchProducts(reset = false) {
     const grid = document.getElementById("products-grid");
     if (!grid) return;
-    
-    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">ĐANG TẢI DỮ LIỆU...</p>';
+
+    // reset page khi filter/sort
+    if (reset) currentPage = 0;
+
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">ĐANG TẢI DỮ LIỆU...</p>`;
 
     try {
         const sort = document.getElementById("sort-select")?.value;
         const price = document.getElementById("filter-price")?.value;
         const size = document.getElementById("filter-size")?.value;
 
-        /**
-         * TRACE DATA FLOW:
-         * Xây dựng tham số để gửi lên Backend. 
-         * Chúng ta sẽ gửi cả Price và Size lên API /filter.
-         */
         let params = new URLSearchParams();
-        params.append("page", 0);
-        params.append("size", 20);
+        params.append("page", currentPage);
+        params.append("size", 4);
 
-        // 1. Gửi lọc Giá lên Server
+        // ===== FILTER PRICE =====
         if (price) {
             const [min, max] = price.split("-");
             params.append("minPrice", min);
-            if (max && max !== '2000000' && max !== '5000000') {
-                params.append("maxPrice", max);
-            }
+            if (max) params.append("maxPrice", max);
         }
 
-        // 2. Gửi lọc Size lên Server (Thay vì lọc tại JS)
+        // ===== FILTER SIZE =====
         if (size) {
             params.append("productSize", size.toUpperCase().trim());
         }
 
-        // 3. Quyết định Endpoint
-        let url = (price || size) 
+        // ===== SORT (QUAN TRỌNG) =====
+//        if (sort) {
+//            params.append("sort", sort);
+//        }
+if (sort === "price_asc") {
+    params.append("sort", "price,asc");
+} else if (sort === "price_desc") {
+    params.append("sort", "price,desc");
+} else if (sort === "newest") {
+    params.append("sort", "createdAt,desc");
+}
+
+        // ===== API =====
+        let url = (price || size)
             ? `${window.BASE_URL}/api/products/filter?${params.toString()}`
             : `${window.BASE_URL}/api/products?${params.toString()}`;
 
-        console.log("ĐANG GỌI API VỚI SIZE:", url);
+        console.log("CALL API:", url);
 
         const res = await fetch(url);
         if (!res.ok) throw new Error("API_ERROR");
 
         const data = await res.json();
-        let products = data.content || data || [];
 
-        // 4. Sắp xếp tại Client (Giữ nguyên logic bạn muốn)
-        if (sort && Array.isArray(products)) {
-            if (sort === "price_asc") products.sort((a, b) => a.price - b.price);
-            else if (sort === "price_desc") products.sort((a, b) => b.price - a.price);
-            else if (sort === "newest") products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        }
+        const products = data.content || [];
 
+        // ===== PAGINATION DATA =====
+        totalPages = data.totalPages || 1;
+        currentPage = data.number || 0;
+
+        // ===== RENDER =====
         renderProducts(products);
+        renderPagination();
 
     } catch (err) {
-        console.error("Lỗi fetch products:", err);
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: red;">KHÔNG THỂ TẢI DỮ LIỆU TỪ SERVER.</p>';
+        console.error(err);
+        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:red;">LỖI LOAD DATA</p>`;
     }
 }
 
-/**
- * RENDER PRODUCTS
- * Bây giờ hàm này cực kỳ đơn giản: Chỉ việc hiển thị những gì Server đã lọc.
- */
+// ===== RENDER PRODUCTS =====
 function renderProducts(products) {
     const grid = document.getElementById("products-grid");
     grid.innerHTML = "";
 
-    if (!Array.isArray(products) || products.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 100px; color: #555;">KHÔNG CÓ SẢN PHẨM NÀO KHỚP VỚI BỘ LỌC.</p>';
+    if (!products || products.length === 0) {
+        grid.innerHTML = `
+            <p style="grid-column:1/-1;text-align:center;padding:100px;color:#555;">
+                KHÔNG CÓ SẢN PHẨM
+            </p>`;
         return;
     }
 
     products.forEach(p => {
-        // Xử lý ảnh đồng bộ với localhost:8080
-        const img = (p.images && p.images.length > 0) ? p.images[0] : "/images/default-product.png";
-        const finalImgUrl = img.startsWith('http') ? img : `${window.BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
+        const img = (p.images && p.images.length > 0)
+            ? p.images[0]
+            : "/images/default-product.png";
+
+        const finalImgUrl = img.startsWith('http')
+            ? img
+            : `${window.BASE_URL}${img.startsWith('/') ? '' : '/'}${img}`;
 
         grid.innerHTML += `
             <a href="/products/${p.id}" class="product-card">
                 <div class="img-box">
-                    <img src="${finalImgUrl}" alt="${p.name}" onerror="this.src='/images/default-product.png'">
+                    <img src="${finalImgUrl}"
+                         onerror="this.src='/images/default-product.png'">
                 </div>
                 <div class="product-info">
                     <h3>${p.name}</h3>
@@ -101,6 +118,58 @@ function renderProducts(products) {
     });
 }
 
+// ===== PAGINATION =====
+function renderPagination() {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    // PREV
+    container.innerHTML += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    // PAGE NUMBERS (giới hạn hiển thị cho đẹp)
+    let start = Math.max(0, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 3);
+
+    for (let i = start; i < end; i++) {
+        container.innerHTML += `
+            <button class="${i === currentPage ? "active" : ""}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // NEXT
+    container.innerHTML += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+}
+
+// ===== CHANGE PAGE =====
+function changePage(page) {
+    if (page < 0 || page >= totalPages) return;
+    currentPage = page;
+    fetchProducts();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// ===== FORMAT MONEY =====
 function formatMoney(amount) {
     return new Intl.NumberFormat("vi-VN", {
         style: "currency",

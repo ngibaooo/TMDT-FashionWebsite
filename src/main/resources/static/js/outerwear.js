@@ -1,98 +1,170 @@
-/**
- * EAZY VIBES - OUTERWEAR LOGIC (FIXED)
- * Giải quyết lỗi hiện sai sản phẩm danh mục khác khi dùng bộ lọc.
- * ID DANH MỤC TRONG DB: c3 (Áo khoác)
- */
+// ===== GLOBAL =====
 const OUTERWEAR_ID = "c3";
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchOuterwear();
+let currentPage = 0;
+let totalPages = 0;
+
+if (typeof window.BASE_URL === 'undefined') {
+    window.BASE_URL = "http://localhost:8080";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchOuterwear(true);
 });
 
-async function fetchOuterwear() {
-    const grid = document.getElementById('outerwear-grid');
-    const sort = document.getElementById('sort-select').value;
-    const priceRange = document.getElementById('filter-price').value;
-    const size = document.getElementById('filter-size').value;
+// ===== FETCH =====
+async function fetchOuterwear(reset = false) {
+    const grid = document.getElementById("outerwear-grid");
 
     if (!grid) return;
 
-    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444;">ĐANG TẢI DỮ LIỆU ÁO KHOÁC...</p>';
+    if (reset) currentPage = 0;
 
-    // TRACE FLOW: Xác định trạng thái người dùng có đang lọc hay không
-    let isFiltering = (priceRange || size);
-    let url = `/api/products/category/${OUTERWEAR_ID}?page=0&size=12&sort=${sort}`;
-
-    if (isFiltering) {
-        // CẢNH BÁO: API filter này hiện trả về hỗn hợp tất cả danh mục
-        url = `/api/products/filter?page=0&size=12&sort=${sort}`;
-        
-        if (size) url += `&productSize=${size.toUpperCase().trim()}`;
-        if (priceRange) {
-            const [min, max] = priceRange.split('-');
-            url += `&minPrice=${min}`;
-            // Ngưỡng lọc giá tối đa đồng bộ 2.000.000đ
-            if (max !== '2000000' && max !== '5000000') url += `&maxPrice=${max}`;
-        }
-    }
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">ĐANG TẢI...</p>`;
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("API_ERROR");
+        const sort = document.getElementById("sort-select")?.value;
+        const price = document.getElementById("filter-price")?.value;
+        const size = document.getElementById("filter-size")?.value;
 
-        const data = await response.json();
-        
-        // Trích xuất mảng sản phẩm từ Page object
-        let products = data.content || data || [];
+        let params = new URLSearchParams();
+        params.append("page", currentPage);
+        params.append("size", 4);
 
-        // DEBUG: Kiểm tra cấu trúc dữ liệu thực tế tại F12 Console
-        console.log("Dữ liệu Áo khoác từ Server:", products);
+        // ===== SORT =====
+        if (sort) params.append("sort", sort);
 
-        /**
-         * GIẢI PHÁP ROOT CAUSE: Lọc lại tại Frontend
-         * Mục đích: Chỉ giữ lại đúng sản phẩm thuộc c3
-         */
-        if (isFiltering) {
-            products = products.filter(p => {
-                const catIdFromObject = p.category ? p.category.id : null;
-                const catIdDirect = p.categoryId;
-                const catName = p.categoryName; 
-
-                // Kiểm tra khớp mã c3 hoặc tên Áo khoác (đề phòng dữ liệu DB)
-                return (catIdFromObject === OUTERWEAR_ID || catIdDirect === OUTERWEAR_ID || catName === "Áo khoác");
-            });
+        // ===== FILTER PRICE =====
+        if (price) {
+            const [min, max] = price.split("-");
+            params.append("minPrice", min);
+            if (max) params.append("maxPrice", max);
         }
 
-        if (products.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 100px; color: #555;">HIỆN KHÔNG CÓ MẪU ÁO KHOÁC NÀO KHỚP VỚI BỘ LỌC.</p>';
-            return;
+        // ===== FILTER SIZE =====
+        if (size) {
+            params.append("productSize", size.toUpperCase().trim());
         }
 
-        grid.innerHTML = products.map(p => {
-            // Xử lý logic hiển thị ảnh: http://localhost:8080 + path
-            let displayImg = '/images/default.jpg';
-            if (p.images && p.images.length > 0) {
-                const imgPath = p.images[0];
-                displayImg = imgPath.startsWith('http') ? imgPath : `http://localhost:8080${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
-            }
+        // ===== CATEGORY (QUAN TRỌNG NHẤT) =====
+        params.append("categoryId", OUTERWEAR_ID);
 
-            return `
-                <a href="/products/${p.id}" class="product-card">
-                    <div class="img-box">
-                        <img src="${displayImg}"
-                             alt="${p.name}"
-                             onerror="this.onerror=null; this.src='/images/default.jpg'">
-                    </div>
-                    <div class="product-info">
-                        <h3>${p.name}</h3>
-                        <div class="price">${new Intl.NumberFormat('vi-VN').format(p.price)}đ</div>
-                    </div>
-                </a>
-            `;
-        }).join('');
+        const url = `${window.BASE_URL}/api/products/filter?${params.toString()}`;
 
-    } catch (error) {
-        console.error("Lỗi fetch OUTERWEAR:", error);
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ff4d4d; padding: 50px;">KHÔNG THỂ TẢI DỮ LIỆU. VUI LÒNG THỬ LẠI.</p>';
+        console.log("CALL API:", url);
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API_ERROR");
+
+        const data = await res.json();
+
+        const products = data.content || [];
+
+        // ===== PAGINATION =====
+        totalPages = data.totalPages || 1;
+        currentPage = data.number || 0;
+
+        renderProducts(products);
+        renderPagination();
+
+    } catch (err) {
+        console.error(err);
+        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:red;">LỖI LOAD DATA</p>`;
     }
+}
+
+// ===== RENDER =====
+function renderProducts(products) {
+    const grid = document.getElementById("outerwear-grid");
+    grid.innerHTML = "";
+
+    if (!products || products.length === 0) {
+        grid.innerHTML = `
+            <p style="grid-column:1/-1;text-align:center;padding:100px;color:#555;">
+                KHÔNG CÓ SẢN PHẨM
+            </p>`;
+        return;
+    }
+
+    grid.innerHTML = products.map(p => {
+        const img = (p.images && p.images.length > 0)
+            ? p.images[0]
+            : "/images/default.jpg";
+
+        const finalImg = img.startsWith("http")
+            ? img
+            : `${window.BASE_URL}${img.startsWith("/") ? "" : "/"}${img}`;
+
+        return `
+            <a href="/products/${p.id}" class="product-card">
+                <div class="img-box">
+                    <img src="${finalImg}"
+                         onerror="this.src='/images/default.jpg'">
+                </div>
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <p class="price">${formatMoney(p.price)}</p>
+                </div>
+            </a>
+        `;
+    }).join("");
+}
+
+// ===== PAGINATION =====
+function renderPagination() {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    // PREV
+    container.innerHTML += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    let start = Math.max(0, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 3);
+
+    for (let i = start; i < end; i++) {
+        container.innerHTML += `
+            <button class="${i === currentPage ? "active" : ""}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // NEXT
+    container.innerHTML += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+}
+
+// ===== CHANGE PAGE =====
+function changePage(page) {
+    if (page < 0 || page >= totalPages) return;
+
+    currentPage = page;
+    fetchOuterwear();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// ===== FORMAT =====
+function formatMoney(amount) {
+    return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND"
+    }).format(amount || 0);
 }
