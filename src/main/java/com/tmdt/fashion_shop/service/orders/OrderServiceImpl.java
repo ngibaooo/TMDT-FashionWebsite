@@ -121,7 +121,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // LUÔN PENDING (COD & VNPAY)
-        order.setStatus(OrderStatus.PENDING);
+//        order.setStatus(OrderStatus.PENDING);
+        if (order.getPaymentMethod() == PaymentMethod.VNPAY) {
+            order.setStatus(OrderStatus.PAID);
+        } else {
+            order.setStatus(OrderStatus.PENDING);
+        }
         order.setTotalPrice(finalPrice);
         order.setCreatedAt(LocalDateTime.now());
 
@@ -195,7 +200,9 @@ public class OrderServiceImpl implements OrderService {
                 order.getPhone(),
                 order.getDeliveryAddress(),
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
-                order.getCreatedAt()
+                order.getCreatedAt(),
+                order.getUser() != null ? order.getUser().getId() : null,
+                order.getUser() != null ? order.getUser().getName() : null
         )).toList();
     }
 
@@ -212,7 +219,9 @@ public class OrderServiceImpl implements OrderService {
                 order.getPhone(),
                 order.getDeliveryAddress(),
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
-                order.getCreatedAt()
+                order.getCreatedAt(),
+                order.getUser() != null ? order.getUser().getId() : null,
+                order.getUser() != null ? order.getUser().getName() : null
         )).toList();
     }
 
@@ -324,52 +333,11 @@ public class OrderServiceImpl implements OrderService {
                 order.getPhone(),
                 order.getDeliveryAddress(),
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
-                order.getCreatedAt()
+                order.getCreatedAt(),
+                order.getUser() != null ? order.getUser().getId() : null,
+                order.getUser() != null ? order.getUser().getName() : null
         )).toList();
     }
-//    @Override
-//    public List<OrderDTO> getOrdersForAdmin(String status, String sort) {
-//
-//        List<Order> orders;
-//
-//        // ===== FILTER STATUS =====
-//        if (status != null && !status.isEmpty()) {
-//
-//            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-//
-//            orders = orderRepository.findByStatus(orderStatus);
-//
-//        } else {
-//            orders = orderRepository.findAll();
-//        }
-//
-//        // ===== SORT =====
-//        if (sort != null) {
-//            switch (sort) {
-//                case "price_asc":
-//                    orders.sort(Comparator.comparing(Order::getTotalPrice));
-//                    break;
-//                case "price_desc":
-//                    orders.sort(Comparator.comparing(Order::getTotalPrice).reversed());
-//                    break;
-//                case "oldest":
-//                    orders.sort(Comparator.comparing(Order::getCreatedAt));
-//                    break;
-//                default: // newest
-//                    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
-//            }
-//        }
-//
-//        return orders.stream().map(order -> new OrderDTO(
-//                order.getId(),
-//                order.getTotalPrice(),
-//                order.getStatus() != null ? order.getStatus().name() : null,
-//                order.getPhone(),
-//                order.getDeliveryAddress(),
-//                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
-//                order.getCreatedAt()
-//        )).toList();
-//    }
     @Override
     public Page<OrderDTO> getOrdersForAdmin(String status, String sort, Pageable pageable) {
 
@@ -389,7 +357,9 @@ public class OrderServiceImpl implements OrderService {
                 order.getPhone(),
                 order.getDeliveryAddress(),
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
-                order.getCreatedAt()
+                order.getCreatedAt(),
+                order.getUser() != null ? order.getUser().getId() : null,
+                order.getUser() != null ? order.getUser().getName() : null
         ));
     }
     @Override
@@ -411,23 +381,44 @@ public class OrderServiceImpl implements OrderService {
         // VALIDATE FLOW
         PaymentMethod paymentMethod = order.getPaymentMethod();
 
+//        boolean isValid = switch (currentStatus) {
+//
+//            case PENDING -> {
+//                if (paymentMethod == PaymentMethod.COD) {
+//                    yield (newStatus == OrderStatus.SHIPPING ||
+//                            newStatus == OrderStatus.CANCELLED);
+//                } else { // VNPAY
+//                    yield (newStatus == OrderStatus.PAID ||
+//                            newStatus == OrderStatus.FAILED ||
+//                            newStatus == OrderStatus.CANCELLED);
+//                }
+//            }
+//
+//            case PAID -> (newStatus == OrderStatus.SHIPPING ||
+//                    newStatus == OrderStatus.CANCELLED);
+//
+//            case SHIPPING -> (newStatus == OrderStatus.COMPLETED);
+//
+//            default -> false;
+//        };
         boolean isValid = switch (currentStatus) {
 
-            case PENDING -> {
-                if (paymentMethod == PaymentMethod.COD) {
-                    yield (newStatus == OrderStatus.SHIPPING ||
-                            newStatus == OrderStatus.CANCELLED);
-                } else { // VNPAY
-                    yield (newStatus == OrderStatus.PAID ||
+            // ===== COD FLOW =====
+            case PENDING -> (
+                    newStatus == OrderStatus.SHIPPING ||
+                            newStatus == OrderStatus.CANCELLED
+            );
+
+            // ===== VNPAY FLOW =====
+            case PAID -> (
+                    newStatus == OrderStatus.SHIPPING ||
                             newStatus == OrderStatus.FAILED ||
-                            newStatus == OrderStatus.CANCELLED);
-                }
-            }
+                            newStatus == OrderStatus.CANCELLED
+            );
 
-            case PAID -> (newStatus == OrderStatus.SHIPPING ||
-                    newStatus == OrderStatus.CANCELLED);
-
-            case SHIPPING -> (newStatus == OrderStatus.COMPLETED);
+            case SHIPPING -> (
+                    newStatus == OrderStatus.COMPLETED
+            );
 
             default -> false;
         };

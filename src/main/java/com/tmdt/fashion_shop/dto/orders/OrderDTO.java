@@ -15,4 +15,6 @@ public class OrderDTO {
     private String deliveryAddress;
     private String paymentMethod;
     private LocalDateTime createdAt;
+    private String userId;
+    private String username;
 }
