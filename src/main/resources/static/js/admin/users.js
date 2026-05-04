@@ -6,7 +6,7 @@
 const API_USERS = "http://localhost:8080/api/users";
 let allUsers = []; // Biến lưu trữ dữ liệu gốc từ Server
 let currentRole = "ALL";
-let currentSort = "neweast";
+let currentSort = "newest";
 let currentPage = 0;
 let pageSize = 5;
 let totalPages = 0;
@@ -63,7 +63,7 @@ function applyFilterAndSort() {
         const dateA = new Date(a.createdAt || 0);
         const dateB = new Date(b.createdAt || 0);
 
-        if (currentSort === "neweast") {
+        if (currentSort === "newest") {
             return dateB - dateA; // Mới nhất lên đầu
         } else {
             return dateA - dateB; // Cũ nhất lên đầu
@@ -218,12 +218,54 @@ function openUserModal(id, name, status) {
 
 function closeUserModal() { document.getElementById("userModal").style.display = "none"; }
 
+//async function toggleUserStatus(id, targetStatus) {
+//    try {
+//        const token = localStorage.getItem("token");
+//        let url = (targetStatus === 'LOCKED') ? `${API_USERS}/${id}` : `${API_USERS}/${id}/unlock`;
+//        let method = (targetStatus === 'LOCKED') ? "DELETE" : "PUT";
+//        const res = await fetch(url, { method: method, headers: { "Authorization": "Bearer " + token } });
+//        if (res.ok) { closeUserModal(); loadUsers(); }
+//    } catch (e) { console.error(e); }
+//}
 async function toggleUserStatus(id, targetStatus) {
     try {
         const token = localStorage.getItem("token");
-        let url = (targetStatus === 'LOCKED') ? `${API_USERS}/${id}` : `${API_USERS}/${id}/unlock`;
-        let method = (targetStatus === 'LOCKED') ? "DELETE" : "PUT";
-        const res = await fetch(url, { method: method, headers: { "Authorization": "Bearer " + token } });
-        if (res.ok) { closeUserModal(); loadUsers(); }
-    } catch (e) { console.error(e); }
+
+        let url = (targetStatus === 'LOCKED')
+            ? `${API_USERS}/${id}`
+            : `${API_USERS}/${id}/unlock`;
+
+        let method = (targetStatus === 'LOCKED')
+            ? "DELETE"
+            : "PUT";
+
+        const res = await fetch(url, {
+            method: method,
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        // 🔥 FIX QUAN TRỌNG
+        if (!res.ok) {
+            let errorMsg = "Có lỗi xảy ra";
+
+            try {
+                const data = await res.json();
+                errorMsg = data.message || JSON.stringify(data);
+            } catch {
+                errorMsg = await res.text();
+            }
+
+            alert(errorMsg); // 👈 HIỂN THỊ LỖI THẬT
+            return;
+        }
+
+        closeUserModal();
+        loadUsers();
+
+    } catch (e) {
+        console.error(e);
+        alert("Lỗi kết nối server");
+    }
 }

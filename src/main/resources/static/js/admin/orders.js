@@ -56,8 +56,8 @@ function renderOrders(orders) {
             <td style="font-weight: 700; color: #000;">#${o.id.substring(0, 8)}</td>
             <td>
                 <div style="display: flex; flex-direction: column;">
-                    <span style="font-weight: 900; color: #000; text-transform: uppercase; font-size: 13px;">KHÁCH HÀNG</span>
-                    <span style="font-size: 11px; color: #999; font-weight: 600;">${o.phone || 'N/A'}</span>
+                    <span style="font-weight: 900; color: #000; text-transform: uppercase; font-size: 13px;">${o.username || 'KHÁCH HÀNG'}</span>
+                    <span style="font-size: 11px; color: #999; font-weight: 600;">${o.userId || 'N/A'}</span>
                 </div>
             </td>
             <td style="color: #888; font-weight: 600;">${o.createdAt ? new Date(o.createdAt).toLocaleDateString('vi-VN') : '---'}</td>

@@ -48,14 +48,6 @@ public class OrderController {
 
         return orderService.getOrders(userId, status, sort);
     }
-//    @GetMapping("/admin")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public List<OrderDTO> getOrdersByStatusForAdmin(
-//            @RequestParam(required = false) String status,
-//            @RequestParam(required = false, defaultValue = "newest") String sort
-//    ) {
-//        return orderService.getOrdersForAdmin(status, sort);
-//    }
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     public Page<OrderDTO> getOrdersByStatusForAdmin(

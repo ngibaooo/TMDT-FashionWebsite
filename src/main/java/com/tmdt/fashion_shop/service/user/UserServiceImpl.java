@@ -12,8 +12,10 @@ import com.tmdt.fashion_shop.service.auth.PasswordValidatorService;
 import com.tmdt.fashion_shop.service.file.FileService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -138,48 +140,93 @@ public class UserServiceImpl implements UserService {
                 ))
                 .toList();
     }
-    @Override
-    @Transactional
-    public void disableUser(String adminId, String targetUserId) {
+//    @Override
+//    @Transactional
+//    public void disableUser(String adminId, String targetUserId) {
+//
+//        // lấy admin
+//        User admin = userRepository.findById(adminId)
+//                .orElseThrow(() -> new RuntimeException("Admin không tồn tại"));
+//
+//        // check quyền
+//        if (!admin.getRole().name().equals("ADMIN")) {
+//            throw new RuntimeException("Không có quyền");
+//        }
+//
+//        // lấy user cần lock
+//        User user = userRepository.findById(targetUserId)
+//                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+//
+//        // không cho tự khóa chính mình
+//        if (adminId.equals(targetUserId)) {
+//            throw new RuntimeException("Không thể tự khóa tài khoản của mình");
+//        }
+//
+//        // đã bị khóa rồi
+//        if (user.getStatus() == UserStatus.LOCKED) {
+//            throw new RuntimeException("Tài khoản đã bị khóa trước đó");
+//        }
+//
+//        // không cho lock ADMIN khác (optional nhưng nên có)
+//        if (user.getRole().name().equals("ADMIN")) {
+//            throw new RuntimeException("Không thể khóa tài khoản ADMIN");
+//        }
+//        // đang có đơn hàng chưa hoàn tất
+//        boolean hasActiveOrders = orderRepository.existsActiveOrdersByUserId(targetUserId);
+//
+//        if (hasActiveOrders) {
+//            throw new RuntimeException("Không thể khóa tài khoản đang có đơn hàng đang xử lý");
+//        }
+//        // lock
+//        user.setStatus(UserStatus.LOCKED);
+//
+//        userRepository.save(user);
+//    }
+@Override
+@Transactional
+public void disableUser(String adminId, String targetUserId) {
 
-        // lấy admin
-        User admin = userRepository.findById(adminId)
-                .orElseThrow(() -> new RuntimeException("Admin không tồn tại"));
+    User admin = userRepository.findById(adminId)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Admin không tồn tại"));
 
-        // check quyền
-        if (!admin.getRole().name().equals("ADMIN")) {
-            throw new RuntimeException("Không có quyền");
-        }
-
-        // lấy user cần lock
-        User user = userRepository.findById(targetUserId)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
-
-        // không cho tự khóa chính mình
-        if (adminId.equals(targetUserId)) {
-            throw new RuntimeException("Không thể tự khóa tài khoản của mình");
-        }
-
-        // đã bị khóa rồi
-        if (user.getStatus() == UserStatus.LOCKED) {
-            throw new RuntimeException("Tài khoản đã bị khóa trước đó");
-        }
-
-        // không cho lock ADMIN khác (optional nhưng nên có)
-        if (user.getRole().name().equals("ADMIN")) {
-            throw new RuntimeException("Không thể khóa tài khoản ADMIN");
-        }
-        // đang có đơn hàng chưa hoàn tất
-        boolean hasActiveOrders = orderRepository.existsActiveOrdersByUserId(targetUserId);
-
-        if (hasActiveOrders) {
-            throw new RuntimeException("Không thể khóa tài khoản đang có đơn hàng đang xử lý");
-        }
-        // lock
-        user.setStatus(UserStatus.LOCKED);
-
-        userRepository.save(user);
+    if (!admin.getRole().name().equals("ADMIN")) {
+        throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Không có quyền");
     }
+
+    User user = userRepository.findById(targetUserId)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User không tồn tại"));
+
+    if (adminId.equals(targetUserId)) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Không thể tự khóa tài khoản của mình");
+    }
+
+    if (user.getStatus() == UserStatus.LOCKED) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Tài khoản đã bị khóa trước đó");
+    }
+
+    if (user.getRole().name().equals("ADMIN")) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Không thể khóa tài khoản ADMIN");
+    }
+
+    // 🔥 chỉ chặn khi đơn đang xử lý thật sự
+    boolean hasActiveOrders = orderRepository.existsActiveOrdersByUserId(targetUserId);
+
+    if (hasActiveOrders) {
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "User đang có đơn hàng chưa hoàn tất (PENDING / SHIPPING / PAID)"
+        );
+    }
+
+    user.setStatus(UserStatus.LOCKED);
+    userRepository.save(user);
+}
     @Override
     @Transactional
     public void enableUser(String adminId, String targetUserId) {
