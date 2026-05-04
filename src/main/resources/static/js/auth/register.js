@@ -51,7 +51,7 @@ passwordInput.addEventListener("input", () => {
 
     if (isValid) {
         passwordHint.style.color = "#4CAF50";
-        passwordHint.innerText = "Mật khẩu hợp lệ ✔";
+        passwordHint.innerText = "Mật khẩu hợp lệ";
     } else {
         passwordHint.style.color = "#ff4d4f";
         passwordHint.innerText = "Yêu cầu: 8+ ký tự, có hoa, thường, số, ký tự đặc biệt.";
@@ -62,7 +62,7 @@ passwordInput.addEventListener("input", () => {
 confirmInput.addEventListener("input", () => {
     if (confirmInput.value === passwordInput.value && confirmInput.value !== "") {
         confirmHint.style.color = "#4CAF50";
-        confirmHint.innerText = "Mật khẩu đã khớp ✔";
+        confirmHint.innerText = "Mật khẩu đã khớp";
     } else {
         confirmHint.style.color = "#ff4d4f";
         confirmHint.innerText = "Mật khẩu không khớp";

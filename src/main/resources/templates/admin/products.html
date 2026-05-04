@@ -20,32 +20,67 @@
     <div class="main-content">
 
         <div class="top-bar">
-            <h1>Products</h1>
+            <h1>QUẢN LÝ SẢN PHẨM</h1>
 
             <button class="btn-add" onclick="goAddProduct()">
                 + Thêm sản phẩm
             </button>
         </div>
 
-        <div class="filter-bar">
-            <input type="text" id="search" placeholder="Tìm sản phẩm...">
-            <select id="sort">
-                <option value="">Sắp xếp</option>
-                <option value="newest">Mới nhất</option>
-                <option value="price_asc">Giá tăng</option>
-                <option value="price_desc">Giá giảm</option>
-            </select>
+<!--        <div class="filter-bar">-->
+<!--            <input type="text" id="search" placeholder="Tìm sản phẩm...">-->
+<!--            <select id="sort">-->
+<!--&lt;!&ndash;                <option value="">Sắp xếp</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                <option value="newest">Mới nhất</option>&ndash;&gt;-->
+<!--                <option value="newest">Mới nhất</option>-->
+<!--                <option value="oldest">Cũ nhất</option>-->
+<!--                <option value="price_asc">Giá tăng</option>-->
+<!--                <option value="price_desc">Giá giảm</option>-->
+<!--            </select>-->
 
-            <select id="price">
-                <option value="">Giá</option>
-                <option value="0-200000">Dưới 200k</option>
-                <option value="200000-500000">200k - 500k</option>
-                <option value="500000-99999999">Trên 500k</option>
-            </select>
+<!--            <select id="price">-->
+<!--                <option value="">Tất cả</option>-->
+<!--                <option value="0-200000">Dưới 200.000đ</option>-->
+<!--                <option value="200000-500000">200.000đ - 500.000đ</option>-->
+<!--                <option value="500001-99999999">Trên 500.000đ</option>-->
+<!--            </select>-->
+<!--        </div>-->
+<!--        <div class="filter-group">-->
+<!--            <button class="filter-btn active" onclick="filterStatus('', this)">Tất cả</button>-->
+<!--            <button class="filter-btn" onclick="filterStatus('ACTIVE', this)">Active</button>-->
+<!--            <button class="filter-btn" onclick="filterStatus('INACTIVE', this)">Inactive</button>-->
+<!--            <button class="filter-btn" onclick="filterStatus('OUT_OF_STOCK', this)">Hết hàng</button>-->
+<!--        </div>-->
+        <div class="action-bar">
 
-            <button class="btn-filter" onclick="applyFilter()">
-                Lọc
-            </button>
+            <!-- LEFT: FILTER -->
+            <div class="filter-bar">
+                <input type="text" id="search" placeholder="Tìm sản phẩm...">
+
+                <button class="filter-btn active" onclick="filterStatus('', this)">TẤT CẢ</button>
+                <button class="filter-btn" onclick="filterStatus('ACTIVE', this)">ACTIVE</button>
+                <button class="filter-btn" onclick="filterStatus('INACTIVE', this)">INACTIVE</button>
+                <button class="filter-btn" onclick="filterStatus('OUT_OF_STOCK', this)">HẾT HÀNG</button>
+
+                <select id="price">
+                    <option value="">Tất cả giá</option>
+                    <option value="0-200000">Dưới 200.000đ</option>
+                    <option value="200000-500000">200.000đ - 500.000đ</option>
+                    <option value="500001-99999999">Trên 500.000đ</option>
+                </select>
+            </div>
+
+            <!-- RIGHT: SORT -->
+            <div class="sort-container">
+<!--                <span class="material-symbols-outlined">sort</span>-->
+                <select id="sort">
+                    <option value="newest">Mới nhất</option>
+                    <option value="oldest">Cũ nhất</option>
+                    <option value="price_asc">Giá tăng</option>
+                    <option value="price_desc">Giá giảm</option>
+                </select>
+            </div>
+
         </div>
 
         <div class="table-container">

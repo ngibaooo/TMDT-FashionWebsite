@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setAddress(request.getAddress());
-
+// encode băm mật khẩu thay vì mã hóa. Không thể giải mã được
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         user.setRole(UserRole.CUSTOMER);

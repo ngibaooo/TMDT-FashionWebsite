@@ -22,6 +22,7 @@ public class Product {
     private String id;
 
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private double price;
     private Double oldPrice;

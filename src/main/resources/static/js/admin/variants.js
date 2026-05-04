@@ -38,7 +38,7 @@ async function loadVariants(page = 0) {
     try {
         const query = new URLSearchParams();
         query.append("page", page);
-        query.append("size", 10);
+        query.append("size", 5);
         if (statusF !== "ALL") query.append("status", statusF);
         if (sizeF !== "") query.append("productSize", sizeF);
         if (keywordF.trim() !== "") query.append("productId", keywordF.trim());
@@ -162,13 +162,53 @@ function updateSize(size) { sizeF = size; loadVariants(0); }
 function openModal(id) { document.getElementById(id).style.display = "flex"; }
 function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
+//function renderPagination(data) {
+//    const container = document.getElementById("pagination");
+//    if (!container) return;
+//    let html = "";
+//    for (let i = 0; i < data.totalPages; i++) {
+////        html += `<button class="page-btn ${i === currentP ? 'active' : ''}" onclick="loadVariants(${i})">${i + 1}</button>`;
+//        html += `
+//            <button class="${i === currentP ? 'active' : ''}"
+//                onclick="loadVariants(${i})">
+//                ${i + 1}
+//            </button>
+//        `;
+//    }
+//    container.innerHTML = html;
+//}
 function renderPagination(data) {
     const container = document.getElementById("pagination");
     if (!container) return;
+
     let html = "";
+
+    // PREV
+    html += `
+        <button ${currentP === 0 ? "disabled" : ""}
+            onclick="loadVariants(${currentP - 1})">
+            ←
+        </button>
+    `;
+
+    // PAGE
     for (let i = 0; i < data.totalPages; i++) {
-        html += `<button class="page-btn ${i === currentP ? 'active' : ''}" onclick="loadVariants(${i})">${i + 1}</button>`;
+        html += `
+            <button class="${i === currentP ? 'active' : ''}"
+                onclick="loadVariants(${i})">
+                ${i + 1}
+            </button>
+        `;
     }
+
+    // NEXT
+    html += `
+        <button ${currentP === data.totalPages - 1 ? "disabled" : ""}
+            onclick="loadVariants(${currentP + 1})">
+            →
+        </button>
+    `;
+
     container.innerHTML = html;
 }
 

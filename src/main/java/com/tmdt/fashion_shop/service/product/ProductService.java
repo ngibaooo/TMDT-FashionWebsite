@@ -1,6 +1,7 @@
 package com.tmdt.fashion_shop.service.product;
 import com.tmdt.fashion_shop.dto.product.*;
 import com.tmdt.fashion_shop.enums.ProductSize;
+import com.tmdt.fashion_shop.enums.ProductStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,8 @@ public interface ProductService {
             Double maxPrice,
             ProductSize productSize,
             String color,
+            String keyword,
+            ProductStatus status,
             Pageable pageable
     );
 }

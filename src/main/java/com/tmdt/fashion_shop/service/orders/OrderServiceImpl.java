@@ -7,6 +7,10 @@ import com.tmdt.fashion_shop.enums.*;
 import com.tmdt.fashion_shop.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -323,40 +327,62 @@ public class OrderServiceImpl implements OrderService {
                 order.getCreatedAt()
         )).toList();
     }
+//    @Override
+//    public List<OrderDTO> getOrdersForAdmin(String status, String sort) {
+//
+//        List<Order> orders;
+//
+//        // ===== FILTER STATUS =====
+//        if (status != null && !status.isEmpty()) {
+//
+//            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
+//
+//            orders = orderRepository.findByStatus(orderStatus);
+//
+//        } else {
+//            orders = orderRepository.findAll();
+//        }
+//
+//        // ===== SORT =====
+//        if (sort != null) {
+//            switch (sort) {
+//                case "price_asc":
+//                    orders.sort(Comparator.comparing(Order::getTotalPrice));
+//                    break;
+//                case "price_desc":
+//                    orders.sort(Comparator.comparing(Order::getTotalPrice).reversed());
+//                    break;
+//                case "oldest":
+//                    orders.sort(Comparator.comparing(Order::getCreatedAt));
+//                    break;
+//                default: // newest
+//                    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
+//            }
+//        }
+//
+//        return orders.stream().map(order -> new OrderDTO(
+//                order.getId(),
+//                order.getTotalPrice(),
+//                order.getStatus() != null ? order.getStatus().name() : null,
+//                order.getPhone(),
+//                order.getDeliveryAddress(),
+//                order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
+//                order.getCreatedAt()
+//        )).toList();
+//    }
     @Override
-    public List<OrderDTO> getOrdersForAdmin(String status, String sort) {
+    public Page<OrderDTO> getOrdersForAdmin(String status, String sort, Pageable pageable) {
 
-        List<Order> orders;
+        Page<Order> orders;
 
-        // ===== FILTER STATUS =====
         if (status != null && !status.isEmpty()) {
-
             OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-
-            orders = orderRepository.findByStatus(orderStatus);
-
+            orders = orderRepository.findByStatus(orderStatus, pageable);
         } else {
-            orders = orderRepository.findAll();
+            orders = orderRepository.findAll(pageable);
         }
 
-        // ===== SORT =====
-        if (sort != null) {
-            switch (sort) {
-                case "price_asc":
-                    orders.sort(Comparator.comparing(Order::getTotalPrice));
-                    break;
-                case "price_desc":
-                    orders.sort(Comparator.comparing(Order::getTotalPrice).reversed());
-                    break;
-                case "oldest":
-                    orders.sort(Comparator.comparing(Order::getCreatedAt));
-                    break;
-                default: // newest
-                    orders.sort(Comparator.comparing(Order::getCreatedAt).reversed());
-            }
-        }
-
-        return orders.stream().map(order -> new OrderDTO(
+        return orders.map(order -> new OrderDTO(
                 order.getId(),
                 order.getTotalPrice(),
                 order.getStatus() != null ? order.getStatus().name() : null,
@@ -364,7 +390,7 @@ public class OrderServiceImpl implements OrderService {
                 order.getDeliveryAddress(),
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : null,
                 order.getCreatedAt()
-        )).toList();
+        ));
     }
     @Override
     @Transactional

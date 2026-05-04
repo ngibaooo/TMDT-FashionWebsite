@@ -19,7 +19,7 @@ public class ProductSpecification {
         return (root, query, cb) -> {
 
             // tránh duplicate khi join
-            Join<Object, Object> variantJoin = (Join<Object, Object>) root.fetch("variants", JoinType.LEFT);
+            Join<Object, Object> variantJoin = (Join<Object, Object>) root.join("variants", JoinType.LEFT);
             query.distinct(true);
 
             var predicates = cb.conjunction();
@@ -53,5 +53,16 @@ public class ProductSpecification {
     }
     public static Specification<Product> hasStatus(ProductStatus status) {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
+    }
+    public static Specification<Product> hasKeyword(String keyword) {
+        return (root, query, cb) -> {
+            if (keyword == null || keyword.isEmpty()) {
+                return cb.conjunction();
+            }
+            return cb.like(
+                    cb.lower(root.get("name")),
+                    "%" + keyword.toLowerCase() + "%"
+            );
+        };
     }
 }
