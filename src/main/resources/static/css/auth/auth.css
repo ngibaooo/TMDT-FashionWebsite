@@ -144,6 +144,12 @@ button:hover {
     background: #ccc;
 }
 
+button:disabled {
+    background: #555;
+    color: #888;
+    cursor: not-allowed;
+}
+
 /* TEXT & LINK */
 p {
     margin-top: 25px;
@@ -172,4 +178,17 @@ a:hover {
     .left { display: none; }
     .right { width: 100%; padding: 40px; }
     .form-grid { grid-template-columns: 1fr; }
+}
+
+/* --- CUSTOM SWEETALERT2 STYLING CHO AUTH --- */
+.ez-swal-popup {
+    border-radius: 0px !important;
+    border: 1px solid #333;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.ez-swal-title {
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-weight: 900 !important;
+    letter-spacing: -1px;
 }

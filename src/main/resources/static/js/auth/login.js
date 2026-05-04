@@ -1,18 +1,56 @@
 // Đường dẫn API đăng nhập của hệ thống
 const API = "http://localhost:8080/api/auth/login";
 
+// ===== HELPER: THÔNG BÁO CHUYÊN NGHIỆP =====
+const notify = {
+    toast: (msg, icon = 'success') => {
+        if (typeof Swal === 'undefined') { alert(msg); return; }
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#111',
+            color: '#fff'
+        });
+        Toast.fire({ icon: icon, title: msg });
+    },
+    popup: (title, msg, icon = 'warning') => {
+        if (typeof Swal === 'undefined') { alert(title + ": " + msg); return; }
+        Swal.fire({
+            title: title.toUpperCase(),
+            text: msg,
+            icon: icon,
+            background: '#000',
+            color: '#fff',
+            confirmButtonColor: '#fff',
+            confirmButtonText: '<span style="color:#000; font-weight:900;">ĐÃ HIỂU</span>',
+            customClass: {
+                popup: 'ez-swal-popup',
+                title: 'ez-swal-title'
+            }
+        });
+    }
+};
+
 async function login() {
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
+    const btnLogin = document.getElementById("btn-login");
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
     // Kiểm tra dữ liệu đầu vào cơ bản
     if (!username || !password) {
-        alert("Vui lòng nhập đầy đủ Email/SĐT và Mật khẩu!");
+        notify.toast("Vui lòng nhập đầy đủ Email/SĐT và Mật khẩu!", "warning");
         return;
     }
+
+    // Đổi trạng thái nút bấm
+    btnLogin.innerText = "ĐANG XÁC THỰC...";
+    btnLogin.disabled = true;
 
     try {
         const res = await fetch(API, {
@@ -26,26 +64,42 @@ async function login() {
             })
         });
 
-        // Đọc dữ liệu phản hồi từ Server
         const data = await res.json();
 
-       if (res.ok) {
-           localStorage.setItem("token", data.token);
-           localStorage.setItem("role", data.role);
-           localStorage.setItem("userName", data.name || username);
-           if (data.role === "ADMIN") {
-               window.location.href = "/admin/dashboard";
-           } else {
-               window.location.href = "/";
-           }
-       } else {
-            // Hiển thị lỗi từ server (ví dụ: sai mật khẩu, tài khoản bị khóa)
-            alert(data.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại!");
+        if (res.ok) {
+            // Thông báo thành công
+            notify.toast("Đăng nhập thành công!", "success");
+            
+            // Lưu thông tin
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+            localStorage.setItem("userName", data.name || username);
+            
+            // Chuyển hướng sau 1 giây để người dùng kịp nhìn thấy thông báo
+            setTimeout(() => {
+                if (data.role === "ADMIN") {
+                    window.location.href = "/admin/dashboard";
+                } else {
+                    window.location.href = "/";
+                }
+            }, 1000);
+            
+        } else {
+            // Hiển thị lỗi từ server bằng Popup
+            notify.popup("Đăng nhập thất bại", data.message || "Tài khoản hoặc mật khẩu không chính xác!", "error");
+            
+            // Reset nút bấm
+            btnLogin.innerText = "ĐĂNG NHẬP";
+            btnLogin.disabled = false;
         }
 
     } catch (err) {
         console.error("Login Error:", err);
-        alert("Lỗi kết nối đến máy chủ. Vui lòng thử lại sau!");
+        notify.toast("Lỗi kết nối đến máy chủ. Vui lòng thử lại sau!", "error");
+        
+        // Reset nút bấm
+        btnLogin.innerText = "ĐĂNG NHẬP";
+        btnLogin.disabled = false;
     }
 }
 

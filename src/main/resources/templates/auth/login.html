@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ĐĂNG NHẬP | EAZY VIBES</title>
+    
+    <!-- LIBRARIES (Luôn để trên cùng) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="/css/auth/auth.css">
 </head>
 <body>
@@ -21,7 +27,8 @@
             <input type="password" id="password" placeholder="Mật khẩu" required>
         </div>
         
-        <button onclick="login()">ĐĂNG NHẬP</button>
+        <!-- FIX: Thêm ID để xử lý disabled bằng JS -->
+        <button id="btn-login" onclick="login()">ĐĂNG NHẬP</button>
         
         <p>Chưa có tài khoản?</p>
         <a th:href="@{/register}">Tạo tài khoản</a>
