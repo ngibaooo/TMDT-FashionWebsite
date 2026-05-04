@@ -80,6 +80,9 @@ function applyFilterAndSort() {
 //    renderUsers(list);
  // 👉 PAGINATION
     totalPages = Math.ceil(list.length / pageSize);
+    if (currentPage >= totalPages) {
+        currentPage = 0;
+    }
 
     const start = currentPage * pageSize;
     const paginatedList = list.slice(start, start + pageSize);
@@ -209,10 +212,10 @@ function searchUsers() {
     currentPage = 0;
     applyFilterAndSort();
 
-    totalPages = Math.ceil(filtered.length / pageSize);
-    const start = currentPage * pageSize;
-    renderUsers(filtered.slice(start, start + pageSize));
-    renderPagination();
+//    totalPages = Math.ceil(filtered.length / pageSize);
+//    const start = currentPage * pageSize;
+//    renderUsers(filtered.slice(start, start + pageSize));
+//    renderPagination();
 }
 
 // 7. MODAL & KHÓA TÀI KHOẢN
