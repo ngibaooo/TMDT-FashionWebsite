@@ -1,140 +1,133 @@
 body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #fff;
+margin: 0;
+font-family: 'Inter', sans-serif;
 }
 
 /* MAIN */
 .main {
-    padding: 30px 50px;
-    max-width: 1400px;
-    margin: 0 auto;
+padding: 30px 50px;
 }
 
 .title {
-    font-size: 40px;
-    font-weight: 900;
-    margin-bottom: 30px;
-    letter-spacing: -1.5px;
+font-size: 40px;
+font-weight: 900;
+margin-bottom: 30px;
 }
 
 /* LAYOUT */
 .checkout-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 50px;
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 30px;
 }
 
 /* FORM */
 .checkout-form {
-    padding: 0;
-}
-
-.checkout-form h2, .summary h2 {
-    font-size: 14px;
-    font-weight: 900;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    letter-spacing: 1px;
+border: 1px solid #eee;
+padding: 25px;
+border-radius: 12px;
 }
 
 .checkout-form input,
 .checkout-form select {
-    width: 100%;
-    padding: 15px;
-    margin-top: 15px;
-    border: 1px solid #000; /* Style Bold */
-    border-radius: 0; 
-    font-family: 'Inter';
-    font-weight: 600;
-    outline: none;
+width: 100%;
+padding: 12px;
+margin-top: 10px;
+border: 1px solid #ddd;
+border-radius: 8px;
 }
 
 /* VOUCHER */
 .voucher-box {
-    display: flex;
-    gap: 0;
-    margin-top: 15px;
+display: flex;
+gap: 10px;
+margin-top: 10px;
 }
 
 .voucher-box input {
-    margin-top: 0;
-    flex: 1;
+flex: 1;
 }
 
 .voucher-box button {
-    padding: 0 25px;
-    border: 1px solid #000;
-    border-left: none;
-    background: black;
-    color: white;
-    cursor: pointer;
-    font-weight: 900;
-    text-transform: uppercase;
-    font-size: 12px;
+padding: 10px;
+border: none;
+background: black;
+color: white;
+cursor: pointer;
 }
 
-/* BUTTON ORDER */
+/* BUTTON */
 .btn-order {
-    margin-top: 30px;
-    width: 100%;
-    padding: 20px;
-    background: black;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: 900;
-    font-size: 16px;
-    letter-spacing: 2px;
-    transition: 0.3s;
-}
-
-.btn-order:hover {
-    background: #333;
+margin-top: 20px;
+width: 100%;
+padding: 14px;
+background: black;
+color: white;
+border: none;
+cursor: pointer;
 }
 
 /* SUMMARY */
 .summary {
-    background: #f9f9f9;
-    padding: 30px;
-    border-radius: 0;
-    height: fit-content;
+border: 1px solid #eee;
+padding: 25px;
+border-radius: 12px;
 }
 
 .summary p {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    font-weight: 600;
-    margin: 10px 0;
+display: flex;
+justify-content: space-between;
 }
 
 /* ITEM */
 .item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+display: flex;
+justify-content: space-between;
+margin-bottom: 10px;
 }
 
-.name { font-weight: 800; font-size: 13px; text-transform: uppercase; }
-.meta { font-size: 11px; color: #888; margin-top: 2px; font-weight: 600; }
-.qty { font-size: 12px; margin-top: 4px; font-weight: 700; }
-.price { font-weight: 800; font-size: 13px; }
+.name {
+    font-weight: 600;
+}
 
+.meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.qty {
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.price {
+    font-weight: 500;
+}
 .thumb {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
+    border-radius: 8px;
     border: 1px solid #eee;
 }
+#discountText {
+    margin-top: 8px;
+    font-size: 13px;
+}
 
-#discountText { margin-top: 10px; font-size: 12px; font-weight: 700; }
-.success { color: #00a86b; }
-.error { color: #ff4d4f; }
+/* thành công */
+.success {
+    color: green;
+}
 
-/* CUSTOM SWEETALERT2 STYLING */
+/* lỗi */
+.error {
+    color: red;
+}
+
+/* --- Tùy chỉnh thông báo để đồng bộ với Shop --- */
 .ez-swal-popup {
-    border-radius: 0px !important;
-    border: 2px solid #000;
+    border-radius: 12px !important;
     font-family: 'Inter', sans-serif !important;
 }

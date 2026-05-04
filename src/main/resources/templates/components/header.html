@@ -3,6 +3,24 @@
 <body>
 
 <div th:fragment="header">
+    <!-- LIBRARIES (Đảm bảo thông báo luôn hoạt động) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Đồng bộ giao diện thông báo với phong cách EAZY VIBES */
+        .ez-swal-popup {
+            border-radius: 0px !important;
+            border: 1px solid #333;
+            font-family: 'Inter', sans-serif !important;
+        }
+        .ez-swal-title {
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-weight: 900 !important;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+    </style>
 
     <div class="top-banner">
         MIỄN PHÍ VẬN CHUYỂN VỚI MỌI ĐƠN HÀNG
@@ -10,7 +28,6 @@
 
     <header class="main-header">
         <div class="header-content">
-
             <div class="header-left"></div>
 
             <div class="header-center">
@@ -18,34 +35,28 @@
             </div>
 
             <div class="header-right">
+                <!-- SEARCH -->
                 <div class="ez-search-wrapper" style="position: relative;">
                     <span class="material-symbols-outlined icon" onclick="toggleEzSearch()">search</span>
-
                     <div id="ezSearchBox" class="ez-search-box">
                         <div class="ez-search-header">
                             <input type="text" id="ez-search-input" placeholder="Tìm kiếm..." autocomplete="off">
                             <span class="material-symbols-outlined ez-close" onclick="toggleEzSearch()">close</span>
                         </div>
-
                         <div id="ezSearchDropdown" class="ez-search-body">
                             <div id="ezDefaultSection" class="ez-section">
                                 <div class="ez-label">DANH MỤC GỢI Ý</div>
                                 <div class="ez-category-grid">
                                     <a href="/best-selling">Best Selling</a>
-                                    <a href="/tops">Áo</a>
-                                    <a href="/bottoms">Quần</a>
-                                    <a href="/outerwear">Áo Khoác</a>
+                                    <a href="/tops">ÁO</a>
+                                    <a href="/bottoms">QUẦN</a>
+                                    <a href="/outerwear">ÁO KHOÁC</a>
                                 </div>
                             </div>
-
                             <div id="ezHistorySection" class="ez-section">
-                                <div class="ez-label">
-                                    LỊCH SỬ
-                                    <span class="ez-clear-all" onclick="clearAllEzHistory()">Xóa tất cả</span>
-                                </div>
+                                <div class="ez-label">LỊCH SỬ <span class="ez-clear-all" onclick="clearAllEzHistory()">Xóa tất cả</span></div>
                                 <div id="ezHistoryList"></div>
                             </div>
-
                             <div id="ezResultSection" class="ez-section" style="display: none;">
                                 <div class="ez-label">KẾT QUẢ TÌM KIẾM</div>
                                 <div id="ezResultList"></div>
@@ -54,19 +65,20 @@
                     </div>
                 </div>
 
+                <!-- ACCOUNT -->
                 <div class="account-wrapper">
                     <a th:href="@{/login}" id="loginBtn">
                         <span class="material-symbols-outlined icon">person</span>
                     </a>
                     <div id="userAvatar" class="user-avatar-container"></div>
-
                     <div id="headerDropdown" class="dropdown">
-                        <a th:href="@{/user/profile}" class="dropdown-item" id="headerProfile">Thông tin cá nhân</a>
+                        <a th:href="@{/user/profile}" class="dropdown-item">Thông tin cá nhân</a>
                         <div class="dropdown-item logout" id="headerLogout">Đăng xuất</div>
                     </div>
                 </div>
 
-                <a th:href="@{/user/cart}" style="position: relative; display: inline-flex; align-items: center; text-decoration: none;">
+                <!-- CART (ID: cart-link để JS bắt sự kiện) -->
+                <a th:href="@{/user/cart}" id="cart-link" style="position: relative; display: inline-flex; align-items: center; text-decoration: none;">
                     <span class="material-symbols-outlined icon">shopping_cart</span>
                     <span id="cart-badge" style="
                         position: absolute;
@@ -81,7 +93,6 @@
                         display: inline-block;">0</span>
                 </a>
             </div>
-
         </div>
 
         <nav class="main-nav">

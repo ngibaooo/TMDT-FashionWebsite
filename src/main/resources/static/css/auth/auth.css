@@ -18,14 +18,14 @@ body {
     min-height: 100vh;
 }
 
-/* PHẦN BÊN TRÁI (DECOR) */
+/* PHẦN BÊN TRÁI (HERO LOGO SECTION) */
 .left {
     width: 45%;
-    background: linear-gradient(120deg, #ff6a00, #7b2ff7);
+    /* background: linear-gradient(120deg, #ff6a00, #7b2ff7); */
+    background: linear-gradient(120deg, #ff0000, #f1f112);
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
     position: sticky;
     top: 0;
     height: 100vh;
@@ -39,6 +39,18 @@ body {
     background: rgba(0,0,0,0.3);
 }
 
+/* BIG LOGO LINK STYLE */
+.big-logo-link {
+    text-decoration: none;
+    position: relative;
+    z-index: 2;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.big-logo-link:hover {
+    transform: scale(1.05);
+}
+
 .left h1 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(60px, 8vw, 100px);
@@ -47,10 +59,14 @@ body {
     letter-spacing: 4px;
     line-height: 0.85;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
-    position: relative;
-    z-index: 2;
+    -webkit-text-stroke: 1.5px rgba(255,255,255,0.4); /* Chữ rỗng đặc trưng */
     text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.big-logo-link:hover h1 {
+    -webkit-text-stroke: 1.5px rgba(255, 204, 0, 0.8); /* Đổi sang vàng neon khi hover */
+    filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.3));
 }
 
 /* PHẦN BÊN PHẢI (FORM) */
@@ -141,7 +157,7 @@ button {
 }
 
 button:hover {
-    background: #ccc;
+    background: #ffcc00;
 }
 
 button:disabled {
@@ -165,7 +181,7 @@ a {
 }
 
 a:hover {
-    color: #ff6a00;
+    color: #ffcc00;
 }
 
 /* RESPONSIVE */

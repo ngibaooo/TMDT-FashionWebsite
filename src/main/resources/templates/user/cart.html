@@ -1,50 +1,179 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIỎ HÀNG | EAZY VIBES</title>
 
-    <link rel="stylesheet" href="/css/components/profile-header.css">
-    <link rel="stylesheet" href="/css/cart.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/components/header.css}">
+    <link rel="stylesheet" th:href="@{/css/components/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+
+    <style>
+        /* --- FIX MÀU NỀN TRẮNG TOÀN TRANG --- */
+        body {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .cart-container {
+            display: grid;
+            grid-template-columns: 1fr 380px; /* Cột trái sản phẩm, cột phải tóm tắt */
+            gap: 50px;
+            padding: 60px 8%;
+            align-items: start;
+            background-color: #ffffff;
+        }
+
+        .cart-title {
+            grid-column: 1 / -1;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        /* --- DANH SÁCH SẢN PHẨM --- */
+        #cartItems {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #eee;
+        }
+
+        /* --- KHUNG TỔNG TIỀN (SUMMARY) --- */
+        .cart-summary-box {
+            background: #fbfbfb; /* Màu nền xám cực nhẹ để tách biệt với nền trắng */
+            border: 1px solid #eee;
+            padding: 35px;
+            position: sticky;
+            top: 120px;
+            border-radius: 0px; /* Style vuông vức streetwear */
+        }
+
+        .summary-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #000;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .summary-line.total {
+            font-size: 20px;
+            font-weight: 900;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+            color: #000;
+        }
+
+        /* --- NÚT THANH TOÁN (KHỐI ĐEN NỔI BẬT) --- */
+        .btn-checkout {
+            width: 100%;
+            padding: 22px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            text-transform: uppercase;
+        }
+
+        .btn-checkout:hover {
+            background: #333;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cart-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .cart-summary-box {
+                position: static;
+            }
+        }
+
+        /* --- ĐỒNG BỘ STYLE THÔNG BÁO --- */
+        .ez-swal-popup { border-radius: 0px !important; border: 2px solid #000; }
+    </style>
 </head>
-<body>
+<body> <!-- Đã gỡ bỏ class dark-theme -->
 
-<div th:replace="components/profile-header :: profile-header"></div>
+<div th:replace="components/header :: header"></div>
 
-<main class="main">
-
-    <h1 class="title">YOUR CART</h1>
-
-    <div class="cart-container">
-
-        <!-- CART ITEMS -->
-        <div class="cart-items" id="cartItems"></div>
-
-        <!-- SUMMARY -->
-        <div class="summary">
-            <h2>SUMMARY</h2>
-
-            <p><span>Total Items</span> <b id="totalItems">0</b></p>
-            <p><span>Total Price</span> <b id="totalPrice">0 ₫</b></p>
-
-<!--            <button class="btn-checkout">CHECKOUT</button>-->
-            <button class="btn-checkout" onclick="goCheckout()">CHECKOUT</button>
-        </div>
-
+<main class="cart-container">
+    <h1 class="cart-title">YOUR CART</h1>
+    
+    <!-- BÊN TRÁI: SẢN PHẨM -->
+    <div id="cartItems">
+        <!-- Render bởi cart.js -->
     </div>
 
+    <!-- BÊN PHẢI: TÓM TẮT ĐƠN HÀNG -->
+    <aside class="cart-summary-box">
+        <h2 class="summary-title">ĐƠN HÀNG</h2>
+        
+        <div class="summary-line">
+            <span>Số lượng sản phẩm:</span>
+            <span id="totalItems">0</span>
+        </div>
+        
+        <div class="summary-line total">
+            <span>TỔNG CỘNG:</span>
+            <span id="totalPrice">0₫</span>
+        </div>
+
+        <button class="btn-checkout" onclick="goCheckout()">
+            THANH TOÁN NGAY
+        </button>
+    </aside>
 </main>
-<div id="confirmModal" class="modal">
-    <div class="modal-content">
-        <p>Bạn có chắc muốn xóa sản phẩm này?</p>
-        <div class="modal-actions">
-            <button id="confirmYes">Xóa</button>
-            <button id="confirmNo">Hủy</button>
+
+<div id="confirmModal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:40px; border-radius:0; text-align:center; max-width:400px; width:90%;">
+        <h3 style="font-family:'Space Grotesk'; color:#000; margin-bottom:20px; font-weight:900;">XÓA KHỎI GIỎ HÀNG?</h3>
+        <p style="color:#666; margin-bottom:30px; font-size:14px;">Hành động này không thể hoàn tác.</p>
+        <div style="display:flex; gap:10px;">
+            <button id="confirmYes" style="flex:1; background:#000; color:#fff; border:none; padding:15px; cursor:pointer; font-weight:900; text-transform:uppercase;">CÓ, XÓA</button>
+            <button id="confirmNo" style="flex:1; background:#eee; color:#000; border:none; padding:15px; cursor:pointer; font-weight:900; text-transform:uppercase;">HỦY</button>
         </div>
     </div>
 </div>
-<script src="/js/components/profile-header.js"></script>
-<script src="/js/cart.js"></script>
+
+<div th:replace="components/footer :: footer"></div>
+
+<script th:src="@{/js/components/header.js}"></script>
+<script th:src="@{/js/cart.js}"></script>
 </body>
 </html>
