@@ -22,7 +22,6 @@ async function loadOrders() {
     const tbody = document.getElementById("orderTableBody");
     try {
         const token = localStorage.getItem("token");
-//        let url = `${API_ORDERS}/admin?sort=${currentSort}`;
         let url = `${API_ORDERS}/admin?page=${currentPage}&size=5&sort=${currentSort}`;
         if (currentStatus && currentStatus !== "ALL") {
             url += `&status=${currentStatus}`;
@@ -77,7 +76,6 @@ function renderOrders(orders) {
     `).join("");
 }
 
-
 async function viewOrderDetail(id) {
     const token = localStorage.getItem("token");
     const tbody = document.getElementById("detailTableBody");
@@ -95,7 +93,21 @@ async function viewOrderDetail(id) {
         const order = await res.json();
 
         document.getElementById("detailOrderId").innerText = `Mã đơn: #${order.id}`;
-        document.getElementById("detailDiscount").innerText = formatMoney(order.voucher ? order.voucher.discountValue : 0);
+        
+        // --- FIX LỖI HIỂN THỊ VOUCHER TẠI ĐÂY ---
+        if (order.voucher) {
+            const v = order.voucher;
+            // Kiểm tra loại giảm giá là PERCENT hay AMOUNT
+            if (v.discountType === "PERCENT") {
+                document.getElementById("detailDiscount").innerText = v.discountValue + "%";
+            } else {
+                document.getElementById("detailDiscount").innerText = formatMoney(v.discountValue);
+            }
+        } else {
+            document.getElementById("detailDiscount").innerText = "0 ₫";
+        }
+        // --- KẾT THÚC FIX ---
+
         document.getElementById("detailTotal").innerText = formatMoney(order.totalPrice);
 
         if (order.items && order.items.length > 0) {
@@ -104,11 +116,9 @@ async function viewOrderDetail(id) {
                 // LOGIC FIX ẢNH THẬT:
                 let imgUrl = FALLBACK_IMG;
                 if (item.image) {
-                    // Nếu Backend đã trả về "/uploads/filename.jpg" -> Không nối thêm /uploads/
                     if (item.image.startsWith('/uploads/') || item.image.startsWith('http')) {
                         imgUrl = item.image; 
                     } else {
-                        // Nếu chỉ có tên file -> Nối thêm /uploads/
                         imgUrl = "/uploads/" + item.image;
                     }
                 }
@@ -163,7 +173,6 @@ function openStatusModal(id, currentStatus) {
     buttons.forEach(btn => btn.style.display = "none");
 
     if (currentStatus === "PAID") {
-//        document.getElementById("btn-pending").style.display = "block";
         document.getElementById("btn-shipping").style.display = "block";
         document.getElementById("btn-cancelled").style.display = "block";
     } else if (currentStatus === "PENDING") {
@@ -194,6 +203,7 @@ function formatMoney(amount) {
     if (isNaN(number)) return "0 ₫";
     return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(number);
 }
+
 function renderPagination() {
     const container = document.getElementById("pagination");
     if (!container) return;
@@ -228,6 +238,7 @@ function renderPagination() {
 
     container.innerHTML = html;
 }
+
 function changePage(page) {
     currentPage = page;
     loadOrders();
