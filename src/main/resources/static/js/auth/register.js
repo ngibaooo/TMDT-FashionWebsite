@@ -69,15 +69,15 @@ confirmInput.addEventListener("input", () => {
     }
 });
 
-// 3. ẨN/HIỆN MẬT KHẨU
+// 3. ẨN/HIỆN MẬT KHẨU (FIX: XÓA BỎ CON KHỈ)
 function togglePassword(id, el) {
     const input = document.getElementById(id);
     if (input.type === "password") {
         input.type = "text";
-        el.innerText = "🙈";
+        el.innerText = "visibility_off"; // Sử dụng icon mắt gạch chéo thay cho con khỉ
     } else {
         input.type = "password";
-        el.innerText = "👁";
+        el.innerText = "visibility"; // Sử dụng icon mắt thường
     }
 }
 

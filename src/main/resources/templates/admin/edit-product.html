@@ -2,58 +2,80 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chi tiết đơn hàng</title>
-    <!-- Thêm thư viện để chạy thông báo -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="/css/order-detail.css">
+    <title>Edit Product</title>
+
+    <link rel="stylesheet" href="/css/components/admin-sidebar.css">
+    <link rel="stylesheet" href="/css/admin/edit-product.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
+<div class="admin-container">
 
-    <h1>CHI TIẾT ĐƠN HÀNG</h1>
+    <!-- SIDEBAR -->
+    <div th:replace="components/admin-sidebar :: sidebar"></div>
 
-    <div class="order-info">
-        <p><b>Mã đơn:</b> <span id="orderId"></span></p>
-        <p><b>Trạng thái:</b> <span id="status"></span></p>
-        <p><b>Người đặt:</b> <span id="userName"></span></p>
-        <p><b>Số điện thoại:</b> <span id="phone"></span></p>
-        <p><b>Địa chỉ:</b> <span id="address"></span></p>
-        <p><b>Phương thức:</b> <span id="payment"></span></p>
-        <p><b>Ngày tạo:</b> <span id="createdAt"></span></p>
-    </div>
+    <!-- MAIN -->
+    <div class="main-content">
 
-    <h2>Sản phẩm</h2>
+        <div class="page-wrapper">
+            <h2 class="form-title">Chỉnh sửa sản phẩm</h2>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Ảnh</th>
-            <th>Tên</th>
-            <th>Size</th>
-            <th>Màu</th>
-            <th>Số lượng</th>
-            <th>Giá</th>
-        </tr>
-        </thead>
-        <tbody id="orderItems"></tbody>
-    </table>
-    <p><b>Voucher:</b> <span id="voucher"></span></p>
-    <div class="total">
-        Tổng tiền: <b id="totalPrice"></b>
-    </div>
+            <div class="form-container">
 
-    <div class="actions">
-        <button class="btn-back" onclick="goBack()">Quay lại</button>
+                <div class="form-group">
+                    <label>Tên sản phẩm</label>
+                    <input type="text" id="name">
+                </div>
 
-        <button id="cancelBtn" class="btn-cancel" onclick="cancelOrder()" style="display:none;">
-            Hủy đơn
-        </button>
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea id="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Giá</label>
+                    <input type="number" id="price">
+                </div>
+
+                <div class="form-group">
+                    <label>Giá cũ</label>
+                    <input type="number" id="oldPrice">
+                </div>
+
+                <div class="form-group">
+                    <label>Danh mục</label>
+                    <select id="category"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Hình ảnh</label>
+
+                    <div class="image-row">
+
+                        <!-- ẢNH CŨ -->
+                        <img id="preview" class="preview-img">
+
+                        <!-- UPLOAD -->
+                        <label class="upload-box">
+                            <p>Click để chọn ảnh mới</p>
+                            <input type="file" id="images" multiple>
+                        </label>
+
+                    </div>
+                </div>
+
+                <button class="btn-save" onclick="updateProduct()">
+                    Lưu thay đổi
+                </button>
+            </div>
+        </div>
+
     </div>
 
 </div>
 
-<script src="/js/order-detail.js"></script>
-
+<script src="/js/admin/edit-product.js"></script>
 </body>
 </html>

@@ -142,7 +142,21 @@ const notify = {
         });
     }
 };
-
+/**
+ * HÀM ẨN/HIỆN MẬT KHẨU
+ */
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById("password");
+    const toggleIcon = document.querySelector(".toggle-password");
+    
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.innerText = "visibility_off"; // Đổi icon sang mắt gạch chéo
+    } else {
+        passwordInput.type = "password";
+        toggleIcon.innerText = "visibility"; // Đổi icon về mắt thường
+    }
+}
 async function login() {
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
