@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Admin - Products</title>
 
+    <!-- Thêm thư viện để chạy thông báo -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/css/components/admin-sidebar.css">
     <link rel="stylesheet" href="/css/admin/products.css">
 
@@ -27,30 +29,6 @@
             </button>
         </div>
 
-<!--        <div class="filter-bar">-->
-<!--            <input type="text" id="search" placeholder="Tìm sản phẩm...">-->
-<!--            <select id="sort">-->
-<!--&lt;!&ndash;                <option value="">Sắp xếp</option>&ndash;&gt;-->
-<!--&lt;!&ndash;                <option value="newest">Mới nhất</option>&ndash;&gt;-->
-<!--                <option value="newest">Mới nhất</option>-->
-<!--                <option value="oldest">Cũ nhất</option>-->
-<!--                <option value="price_asc">Giá tăng</option>-->
-<!--                <option value="price_desc">Giá giảm</option>-->
-<!--            </select>-->
-
-<!--            <select id="price">-->
-<!--                <option value="">Tất cả</option>-->
-<!--                <option value="0-200000">Dưới 200.000đ</option>-->
-<!--                <option value="200000-500000">200.000đ - 500.000đ</option>-->
-<!--                <option value="500001-99999999">Trên 500.000đ</option>-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <div class="filter-group">-->
-<!--            <button class="filter-btn active" onclick="filterStatus('', this)">Tất cả</button>-->
-<!--            <button class="filter-btn" onclick="filterStatus('ACTIVE', this)">Active</button>-->
-<!--            <button class="filter-btn" onclick="filterStatus('INACTIVE', this)">Inactive</button>-->
-<!--            <button class="filter-btn" onclick="filterStatus('OUT_OF_STOCK', this)">Hết hàng</button>-->
-<!--        </div>-->
         <div class="action-bar">
 
             <!-- LEFT: FILTER -->
@@ -72,7 +50,6 @@
 
             <!-- RIGHT: SORT -->
             <div class="sort-container">
-<!--                <span class="material-symbols-outlined">sort</span>-->
                 <select id="sort">
                     <option value="newest">Mới nhất</option>
                     <option value="oldest">Cũ nhất</option>

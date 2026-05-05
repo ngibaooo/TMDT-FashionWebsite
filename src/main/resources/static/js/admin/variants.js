@@ -1,6 +1,6 @@
 /**
  * EAZY VIBES - VARIANTS CORE ENGINE
- * FIX: Bổ sung thông báo thành công và trạng thái "Đang lưu" cho Form
+ * FIX: Tích hợp SweetAlert2 thay thế alert/confirm mặc định
  */
 
 const API_VARIANTS = "/api/variants";
@@ -11,6 +11,41 @@ let currentP = 0;
 let statusF = "ALL";
 let sizeF = "";
 let keywordF = "";
+
+// Helper thông báo đồng bộ
+const notify = {
+    toast: (msg, icon = 'success') => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            icon: icon,
+            title: msg
+        });
+    },
+    popup: (title, msg, icon = 'warning') => {
+        return Swal.fire({
+            title: title,
+            text: msg,
+            icon: icon,
+            confirmButtonColor: '#000'
+        });
+    },
+    confirm: async (title, text) => {
+        const result = await Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: '#000',
+            cancelButtonColor: '#d33'
+        });
+        return result.isConfirmed;
+    }
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
@@ -85,9 +120,6 @@ function renderTable(list) {
     `).join("");
 }
 
-/**
- * FIX: Logic thông báo khi tạo mới
- */
 const addForm = document.getElementById("addVariantForm");
 const btnSubmit = document.getElementById("btnSubmitForm");
 
@@ -97,7 +129,6 @@ if (addForm) {
         const token = localStorage.getItem("token");
         const formData = new FormData(e.target);
 
-        // 1. Chuyển trạng thái nút bấm
         btnSubmit.disabled = true;
         btnSubmit.innerText = "ĐANG XỬ LÝ...";
 
@@ -109,21 +140,17 @@ if (addForm) {
             });
 
             if (res.ok) {
-                // 2. Thông báo thành công
-                alert("CHÚC MỪNG! Biến thể mới đã được tạo thành công.");
-                
-                // 3. Dọn dẹp form và UI
+                notify.toast("Tạo biến thể thành công!");
                 addForm.reset();
                 closeModal('addModal');
                 loadVariants(0); 
             } else {
                 const errMsg = await res.text();
-                alert("LỖI: " + errMsg);
+                notify.popup("Thất bại", errMsg || "Không thể tạo biến thể", "error");
             }
         } catch (err) {
-            alert("LỖI KẾT NỐI: Không thể liên lạc với máy chủ.");
+            notify.popup("Lỗi kết nối", "Không thể liên lạc với máy chủ.", "error");
         } finally {
-            // 4. Khôi phục nút bấm
             btnSubmit.disabled = false;
             btnSubmit.innerText = "XÁC NHẬN LƯU";
         }
@@ -132,16 +159,29 @@ if (addForm) {
 
 async function toggleStatus(id, action) {
     const isEnable = action === 'enable';
-    if (!confirm(isEnable ? "Khôi phục biến thể này?" : "Khóa biến thể này?")) return;
+    const confirmed = await notify.confirm(
+        "Xác nhận", 
+        isEnable ? "Bạn có chắc muốn khôi phục biến thể này?" : "Bạn có chắc muốn khóa biến thể này?"
+    );
+    
+    if (!confirmed) return;
+
     const token = localStorage.getItem("token");
     const url = isEnable ? `${API_VARIANTS}/${id}/restore` : `${API_VARIANTS}/${id}`;
-    const res = await fetch(url, {
-        method: isEnable ? "PUT" : "DELETE",
-        headers: { "Authorization": `Bearer ${token.trim()}` }
-    });
-    if (res.ok) {
-        alert(isEnable ? "Đã mở khóa biến thể!" : "Đã khóa biến thể!");
-        loadVariants(currentP);
+    
+    try {
+        const res = await fetch(url, {
+            method: isEnable ? "PUT" : "DELETE",
+            headers: { "Authorization": `Bearer ${token.trim()}` }
+        });
+        if (res.ok) {
+            notify.toast(isEnable ? "Đã khôi phục biến thể!" : "Đã khóa biến thể!");
+            loadVariants(currentP);
+        } else {
+            notify.popup("Lỗi", "Không thể thực hiện thay đổi.", "error");
+        }
+    } catch (e) {
+        notify.popup("Lỗi hệ thống", "Đã xảy ra lỗi khi gọi API.", "error");
     }
 }
 
@@ -162,28 +202,11 @@ function updateSize(size) { sizeF = size; loadVariants(0); }
 function openModal(id) { document.getElementById(id).style.display = "flex"; }
 function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
-//function renderPagination(data) {
-//    const container = document.getElementById("pagination");
-//    if (!container) return;
-//    let html = "";
-//    for (let i = 0; i < data.totalPages; i++) {
-////        html += `<button class="page-btn ${i === currentP ? 'active' : ''}" onclick="loadVariants(${i})">${i + 1}</button>`;
-//        html += `
-//            <button class="${i === currentP ? 'active' : ''}"
-//                onclick="loadVariants(${i})">
-//                ${i + 1}
-//            </button>
-//        `;
-//    }
-//    container.innerHTML = html;
-//}
 function renderPagination(data) {
     const container = document.getElementById("pagination");
     if (!container) return;
 
     let html = "";
-
-    // PREV
     html += `
         <button ${currentP === 0 ? "disabled" : ""}
             onclick="loadVariants(${currentP - 1})">
@@ -191,7 +214,6 @@ function renderPagination(data) {
         </button>
     `;
 
-    // PAGE
     for (let i = 0; i < data.totalPages; i++) {
         html += `
             <button class="${i === currentP ? 'active' : ''}"
@@ -201,7 +223,6 @@ function renderPagination(data) {
         `;
     }
 
-    // NEXT
     html += `
         <button ${currentP === data.totalPages - 1 ? "disabled" : ""}
             onclick="loadVariants(${currentP + 1})">

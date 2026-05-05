@@ -6,6 +6,31 @@ function getQuery(param) {
 
 const orderId = getQuery("id");
 
+// Helper thông báo
+const notify = {
+    toast: (msg, icon = 'success') => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            icon: icon,
+            title: msg
+        });
+    },
+    confirm: async (title, text) => {
+        const result = await Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        });
+        return result.isConfirmed;
+    }
+};
+
 async function loadOrderDetail() {
     const token = localStorage.getItem("token");
 
@@ -17,15 +42,12 @@ async function loadOrderDetail() {
         });
 
         const data = await res.json();
-const statusEl = document.getElementById("status");
+        const statusEl = document.getElementById("status");
 
-statusEl.innerText = formatStatus(data.status);
+        statusEl.innerText = formatStatus(data.status);
+        statusEl.className = "";
+        statusEl.classList.add(data.status);
 
-// reset class cũ
-statusEl.className = "";
-
-// add class mới
-statusEl.classList.add(data.status);
         // INFO
         document.getElementById("orderId").innerText = data.id;
         document.getElementById("status").innerText = formatStatus(data.status);
@@ -37,27 +59,24 @@ statusEl.classList.add(data.status);
 
         document.getElementById("totalPrice").innerText =
             formatMoney(data.totalPrice);
-        // NEW: USER
+        
         document.getElementById("userName").innerText =
             data.userName || "N/A";
 
-        // NEW: VOUCHER
+        // VOUCHER
         if (data.voucher) {
             const v = data.voucher;
-
             let discountText = "";
-
             if (v.discountType === "PERCENT") {
                 discountText = `-${v.discountValue}% (${v.code})`;
             } else {
                 discountText = `-${formatMoney(v.discountValue)} (${v.code})`;
             }
-
             document.getElementById("voucher").innerText = discountText;
-
         } else {
             document.getElementById("voucher").innerText = "Không áp dụng";
         }
+
         // ITEMS
         const table = document.getElementById("orderItems");
         table.innerHTML = "";
@@ -74,9 +93,9 @@ statusEl.classList.add(data.status);
                 </tr>
             `;
         });
+
         // SHOW CANCEL BUTTON
         const cancelBtn = document.getElementById("cancelBtn");
-
         if (data.status === "PENDING" || data.status === "PAID") {
             cancelBtn.style.display = "inline-block";
         } else {
@@ -85,13 +104,15 @@ statusEl.classList.add(data.status);
 
     } catch (err) {
         console.error(err);
-        alert("Không tải được chi tiết đơn");
+        Swal.fire("Lỗi", "Không tải được chi tiết đơn", "error");
     }
 }
+
 async function cancelOrder() {
     const token = localStorage.getItem("token");
 
-    if (!confirm("Bạn có chắc muốn hủy đơn này?")) return;
+    const confirmed = await notify.confirm("Xác nhận", "Bạn có chắc muốn hủy đơn này?");
+    if (!confirmed) return;
 
     try {
         const res = await fetch(`${API_ORDER_DETAIL}/${orderId}/status`, {
@@ -107,18 +128,19 @@ async function cancelOrder() {
 
         if (!res.ok) {
             const err = await res.json();
-            alert(err.message || "Hủy đơn thất bại");
+            Swal.fire("Thất bại", err.message || "Hủy đơn thất bại", "error");
             return;
         }
 
-        alert("Hủy đơn thành công!");
-        loadOrderDetail(); // reload lại UI
+        notify.toast("Hủy đơn thành công!");
+        loadOrderDetail(); 
 
     } catch (err) {
         console.error(err);
-        alert("Lỗi khi hủy đơn");
+        Swal.fire("Lỗi", "Lỗi khi hủy đơn", "error");
     }
 }
+
 function formatMoney(amount) {
     return new Intl.NumberFormat("vi-VN", {
         style: "currency",

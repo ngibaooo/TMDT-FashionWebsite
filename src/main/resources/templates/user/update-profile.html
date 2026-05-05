@@ -1,12 +1,40 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Update Profile</title>
+    <title>Update Profile | EAZY VIBES</title>
 
+    <!-- LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/components/profile-header.css">
     <link rel="stylesheet" href="/css/update-profile.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CUSTOM NOTIFICATION STYLE --- */
+        .ez-swal-popup {
+            border-radius: 0px !important;
+            border: 1px solid #000 !important;
+            background-color: #fff !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        .ez-swal-title {
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-weight: 900 !important;
+            color: #000 !important;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        .ez-swal-confirm {
+            background-color: #000 !important;
+            color: #fff !important;
+            border-radius: 0px !important;
+            font-weight: 900 !important;
+            padding: 12px 30px !important;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
 
@@ -20,25 +48,30 @@
 
         <!-- AVATAR -->
         <div class="profile-avatar-box">
-            <img id="previewAvatar" src="" alt="avatar">
-            <input type="file" id="avatarInput">
+            <div class="img-wrapper">
+                <img id="previewAvatar" src="/images/default-avatar.png" alt="avatar">
+            </div>
+            <div class="upload-info">
+                <label for="avatarInput" class="custom-file-upload">Thay đổi ảnh đại diện</label>
+                <input type="file" id="avatarInput" accept="image/*">
+            </div>
         </div>
+
         <!-- FORM -->
         <div class="form">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Nhập họ tên mới">
 
-            <label>Name</label>
-            <input type="text" id="name">
-
-            <label>Phone</label>
-            <input type="text" id="phone">
+            <label>Phone Number</label>
+            <input type="text" id="phone" placeholder="Số điện thoại của bạn">
             <p id="phoneError" class="error"></p>
 
-            <label>Address</label>
-            <textarea id="address"></textarea>
+            <label>Delivery Address</label>
+            <textarea id="address" placeholder="Địa chỉ nhận hàng mặc định"></textarea>
 
             <button id="btnUpdate">SAVE CHANGES</button>
         </div>
-        <p id="errorMsg" class="error"></p>
+        <p id="errorMsg" class="error" style="text-align: center; margin-top: 15px;"></p>
     </div>
 
 </main>

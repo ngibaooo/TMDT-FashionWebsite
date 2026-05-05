@@ -1,6 +1,6 @@
 /**
  * EAZY VIBES - VOUCHERS CORE
- * Chỉnh sửa: Khớp Enum AMOUNT và xử lý lỗi Header 400
+ * Chỉnh sửa: Thay thế alert/confirm bằng SweetAlert2
  */
 
 const API_VOUCHERS = "/api/vouchers";
@@ -10,11 +10,45 @@ let allVouchers = [];
 let currentPage = 1;
 const pageSize = 5;
 
+// Helper thông báo đồng bộ
+const notify = {
+    toast: (msg, icon = 'success') => {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            icon: icon,
+            title: msg
+        });
+    },
+    popup: (title, msg, icon = 'warning') => {
+        return Swal.fire({
+            title: title,
+            text: msg,
+            icon: icon,
+            confirmButtonColor: '#000'
+        });
+    },
+    confirm: async (title, text) => {
+        const result = await Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: '#000',
+            cancelButtonColor: '#d33'
+        });
+        return result.isConfirmed;
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem("role");
     const token = localStorage.getItem("token");
 
-    // Nếu không có token hoặc không phải admin, đá về trang login ngay lập tức
     if (!token || !role || role.toUpperCase() !== "ADMIN") {
         window.location.href = "/login";
         return;
@@ -22,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadVouchers();
 });
 
-// Hàm lấy Header an toàn
 function getAuthHeaders() {
     const token = localStorage.getItem("token");
     if (!token) return {};
@@ -32,7 +65,6 @@ function getAuthHeaders() {
     };
 }
 
-// LOAD DANH SÁCH VOUCHER
 async function loadVouchers() {
     const tbody = document.getElementById("voucherTableBody");
     try {
@@ -40,7 +72,6 @@ async function loadVouchers() {
             headers: getAuthHeaders()
         });
 
-        // Nếu backend trả về 400, 401 hoặc 403
         if (!res.ok) {
             if (res.status === 400) throw new Error("Lỗi yêu cầu (400): Header hoặc tham số không hợp lệ.");
             if (res.status === 401 || res.status === 403) window.location.href = "/login";
@@ -55,73 +86,28 @@ async function loadVouchers() {
     }
 }
 
-//function renderVouchers(vouchers) {
-//    const tbody = document.getElementById("voucherTableBody");
-//    if (!tbody) return;
-//
-//    let filtered = vouchers;
-//    if (currentFilterStatus !== "ALL") {
-//        filtered = vouchers.filter(v => v.status === currentFilterStatus);
-//    }
-//
-//    if (filtered.length === 0) {
-//        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 50px; color: #888;">Không có dữ liệu voucher</td></tr>`;
-//        return;
-//    }
-//
-//    tbody.innerHTML = filtered.map(v => `
-//        <tr>
-//            <td style="font-weight: 900; color: #000;">${v.code}</td>
-//            <td style="font-weight: 600; color: #666;">${v.discountType === 'PERCENT' ? 'Phần trăm' : 'Cố định'}</td>
-//            <td style="font-weight: 900; color: #000;">${v.discountType === 'PERCENT' ? v.discountValue + '%' : formatMoney(v.discountValue)}</td>
-//            <td style="font-weight: 600;">${formatMoney(v.minOrderValue || 0)}</td>
-//            <td style="font-weight: 600;">${v.maxDiscount ? formatMoney(v.maxDiscount) : '-'}</td>
-//            <td style="font-weight: 800;">${v.quantity}</td>
-//            <td style="text-align: center;">
-//                <span class="status status-${v.status.toLowerCase()}">${v.status}</span>
-//            </td>
-//            <td style="text-align: right;">
-//                <button class="btn-edit" onclick="editVoucher('${v.id}')" title="Chỉnh sửa">
-//                    <span class="material-symbols-outlined">edit_square</span>
-//                </button>
-//                ${v.status === 'ACTIVE' ?
-//                    `<button class="btn-toggle disable" onclick="toggleStatus('${v.id}', 'disable')" title="Khóa voucher">
-//                        <span class="material-symbols-outlined">block</span>
-//                    </button>` :
-//                    `<button class="btn-toggle enable" onclick="toggleStatus('${v.id}', 'enable')" title="Mở lại">
-//                        <span class="material-symbols-outlined">check_circle</span>
-//                    </button>`
-//                }
-//            </td>
-//        </tr>
-//    `).join("");
-//}
 function renderVouchers(vouchers) {
     const tbody = document.getElementById("voucherTableBody");
     const pagination = document.getElementById("pagination");
     if (!tbody) return;
 
-    // FILTER
     let filtered = vouchers;
     if (currentFilterStatus !== "ALL") {
         filtered = vouchers.filter(v => v.status === currentFilterStatus);
     }
 
-    // PAGINATION
     const totalPages = Math.ceil(filtered.length / pageSize);
     if (currentPage > totalPages) currentPage = 1;
 
     const start = (currentPage - 1) * pageSize;
     const paginated = filtered.slice(start, start + pageSize);
 
-    // EMPTY
     if (paginated.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 50px; color: #888;">Không có dữ liệu voucher</td></tr>`;
         pagination.innerHTML = "";
         return;
     }
 
-    // RENDER TABLE
     tbody.innerHTML = paginated.map(v => `
         <tr>
             <td style="font-weight: 900;">${v.code}</td>
@@ -153,38 +139,17 @@ function renderVouchers(vouchers) {
 
     renderPagination(totalPages);
 }
+
 function renderPagination(totalPages) {
     const container = document.getElementById("pagination");
     if (!container) return;
 
     let html = "";
-
-    // Prev
-    html += `
-        <button ${currentPage === 1 ? "disabled" : ""}
-            onclick="changePage(${currentPage - 1})">
-            ‹
-        </button>
-    `;
-
-    // Page numbers
+    html += `<button ${currentPage === 1 ? "disabled" : ""} onclick="changePage(${currentPage - 1})">‹</button>`;
     for (let i = 1; i <= totalPages; i++) {
-        html += `
-            <button class="${i === currentPage ? 'active' : ''}"
-                onclick="changePage(${i})">
-                ${i}
-            </button>
-        `;
+        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
     }
-
-    // Next
-    html += `
-        <button ${currentPage === totalPages ? "disabled" : ""}
-            onclick="changePage(${currentPage + 1})">
-            ›
-        </button>
-    `;
-
+    html += `<button ${currentPage === totalPages ? "disabled" : ""} onclick="changePage(${currentPage + 1})">›</button>`;
     container.innerHTML = html;
 }
 
@@ -224,10 +189,9 @@ document.getElementById("voucherForm").onsubmit = async (e) => {
     e.preventDefault();
     const id = document.getElementById("voucherId").value;
     
-    // Thu thập dữ liệu
     const data = {
         code: document.getElementById("code").value.trim().toUpperCase(),
-        discountType: document.getElementById("discountType").value, // Sẽ là PERCENT hoặc AMOUNT
+        discountType: document.getElementById("discountType").value,
         discountValue: parseFloat(document.getElementById("discountValue").value),
         minOrderValue: parseFloat(document.getElementById("minOrderValue").value) || 0,
         maxDiscount: document.getElementById("maxDiscount").value ? parseFloat(document.getElementById("maxDiscount").value) : null,
@@ -247,20 +211,25 @@ document.getElementById("voucherForm").onsubmit = async (e) => {
         });
 
         if (res.ok) {
+            notify.toast(id ? "Cập nhật voucher thành công!" : "Tạo voucher mới thành công!");
             closeVoucherModal();
             loadVouchers();
         } else {
             const errText = await res.text();
-            alert("Lỗi từ server: " + (errText || res.status));
+            notify.popup("Lỗi từ server", errText || "Không thể thực hiện yêu cầu.", "error");
         }
     } catch (e) {
         console.error(e);
-        alert("Lỗi kết nối server.");
+        notify.popup("Lỗi kết nối", "Không thể kết nối đến server.", "error");
     }
 };
 
 async function toggleStatus(id, action) {
-    if (!confirm(`Xác nhận ${action === 'enable' ? 'kích hoạt' : 'khóa'} voucher?`)) return;
+    const confirmed = await notify.confirm(
+        "Xác nhận", 
+        `Bạn có chắc chắn muốn ${action === 'enable' ? 'kích hoạt' : 'khóa'} voucher này?`
+    );
+    if (!confirmed) return;
     
     const method = (action === 'enable') ? "PUT" : "DELETE";
     const suffix = (action === 'enable') ? "enable" : "disable";
@@ -270,9 +239,15 @@ async function toggleStatus(id, action) {
             method: method,
             headers: getAuthHeaders()
         });
-        if (res.ok) loadVouchers();
+        if (res.ok) {
+            notify.toast("Cập nhật trạng thái thành công!");
+            loadVouchers();
+        } else {
+            notify.popup("Thất bại", "Không thể thay đổi trạng thái voucher.", "error");
+        }
     } catch (e) {
         console.error(e);
+        notify.popup("Lỗi hệ thống", "Đã xảy ra lỗi khi gọi API.", "error");
     }
 }
 
@@ -283,12 +258,11 @@ function editVoucher(id) {
     document.getElementById("modalTitle").innerText = "CẬP NHẬT VOUCHER";
     document.getElementById("voucherId").value = v.id;
     document.getElementById("code").value = v.code;
-    document.getElementById("discountType").value = v.discountType; // Sẽ tự chọn PERCENT/AMOUNT
+    document.getElementById("discountType").value = v.discountType;
     document.getElementById("discountValue").value = v.discountValue;
     document.getElementById("minOrderValue").value = v.minOrderValue || 0;
     document.getElementById("maxDiscount").value = v.maxDiscount || "";
     
-    // Chuyển định dạng ngày cho datetime-local (yyyy-MM-ddThh:mm)
     if (v.startDate) document.getElementById("startDate").value = v.startDate.substring(0, 16);
     if (v.endDate) document.getElementById("endDate").value = v.endDate.substring(0, 16);
     
