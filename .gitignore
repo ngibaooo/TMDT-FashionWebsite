@@ -5,4 +5,4 @@ target/
 node_modules/
 # Upload images
 uploads/
-.env
+application.properties
