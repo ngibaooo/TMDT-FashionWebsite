@@ -1,10 +1,9 @@
 /**
- * EAZY VIBES - USERS CORE
- * Sửa lỗi: Thực hiện sắp xếp tại chỗ (Local Sort) để không phụ thuộc Backend
+ * EAZY VIBES - USERS CORE (FIXED OVERLAP ISSUE)
  */
 
 const API_USERS = "http://localhost:8080/api/users";
-let allUsers = []; // Biến lưu trữ dữ liệu gốc từ Server
+let allUsers = []; 
 let currentRole = "ALL";
 let currentKeyword = "";
 let currentSort = "newest";
@@ -23,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadUsers();
 });
 
-// 1. TẢI DỮ LIỆU GỐC
 async function loadUsers() {
     const tbody = document.getElementById("userTableBody");
     try {
@@ -38,10 +36,7 @@ async function loadUsers() {
         }
 
         const data = await res.json();
-        // Lưu dữ liệu thô vào biến toàn cục
         allUsers = data.content || data;
-        
-        // Tiến hành lọc và sắp xếp trước khi hiển thị
         applyFilterAndSort();
 
     } catch (e) {
@@ -50,11 +45,9 @@ async function loadUsers() {
     }
 }
 
-// 2. HÀM TỔNG HỢP: LỌC ROLE + SẮP XẾP (LOCAL)
 function applyFilterAndSort() {
-    let list = [...allUsers]; // Tạo bản sao để không làm hỏng mảng gốc
+    let list = [...allUsers]; 
 
-    // Bước A: Lọc theo Vai trò
     if (currentRole !== "ALL") {
         list = list.filter(u => u.role === currentRole);
     }
@@ -65,71 +58,37 @@ function applyFilterAndSort() {
             );
     }
 
-    // Bước B: Sắp xếp theo ngày (Local Sorting)
     list.sort((a, b) => {
         const dateA = new Date(a.createdAt || 0);
         const dateB = new Date(b.createdAt || 0);
-
-        if (currentSort === "newest") {
-            return dateB - dateA; // Mới nhất lên đầu
-        } else {
-            return dateA - dateB; // Cũ nhất lên đầu
-        }
+        return currentSort === "newest" ? dateB - dateA : dateA - dateB;
     });
 
-//    renderUsers(list);
- // 👉 PAGINATION
     totalPages = Math.ceil(list.length / pageSize);
-    if (currentPage >= totalPages) {
-        currentPage = 0;
-    }
+    if (currentPage >= totalPages) currentPage = 0;
 
     const start = currentPage * pageSize;
-    const paginatedList = list.slice(start, start + pageSize);
-
-    renderUsers(paginatedList);
+    renderUsers(list.slice(start, start + pageSize));
     renderPagination();
 }
+
 function renderPagination() {
     const container = document.getElementById("pagination");
     if (!container) return;
-
     let html = "";
-
-    // PREV
-    html += `
-        <button ${currentPage === 0 ? "disabled" : ""}
-            onclick="changePage(${currentPage - 1})">
-            ←
-        </button>
-    `;
-
-    // PAGE
+    html += `<button ${currentPage === 0 ? "disabled" : ""} onclick="changePage(${currentPage - 1})">←</button>`;
     for (let i = 0; i < totalPages; i++) {
-        html += `
-            <button class="${i === currentPage ? 'active' : ''}"
-                onclick="changePage(${i})">
-                ${i + 1}
-            </button>
-        `;
+        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i + 1}</button>`;
     }
-
-    // NEXT
-    html += `
-        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
-            onclick="changePage(${currentPage + 1})">
-            →
-        </button>
-    `;
-
+    html += `<button ${currentPage === totalPages - 1 ? "disabled" : ""} onclick="changePage(${currentPage + 1})">→</button>`;
     container.innerHTML = html;
 }
+
 function changePage(page) {
     currentPage = page;
     applyFilterAndSort();
 }
 
-// 3. HIỂN THỊ DỮ LIỆU
 function renderUsers(users) {
     const tbody = document.getElementById("userTableBody");
     if (!tbody) return;
@@ -171,54 +130,30 @@ function renderUsers(users) {
                     </span>
                 </button>
             </td>
-        </tr>
-    `}).join("");
+        </tr>`;
+    }).join("");
 }
 
-// 4. SỰ KIỆN LỌC ROLE
 function filterByRole(role, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    
     currentRole = role;
     currentPage = 0;
-    applyFilterAndSort(); // Lọc lại mảng hiện có
+    applyFilterAndSort();
 }
 
-// 5. SỰ KIỆN SORT (LOCAL)
 function changeSort(sortValue) {
     currentSort = sortValue;
     currentPage = 0;
-    applyFilterAndSort(); // Sắp xếp lại mảng hiện có
+    applyFilterAndSort();
 }
 
-// 6. TÌM KIẾM NHANH (LOCAL)
-//function searchUsers() {
-//    const keyword = document.getElementById("userSearch").value.toLowerCase();
-//    const filtered = allUsers.filter(u =>
-//        (u.name && u.name.toLowerCase().includes(keyword)) ||
-//        u.email.toLowerCase().includes(keyword)
-//    );
-//    renderUsers(filtered);
-//}
 function searchUsers() {
-//    const keyword = document.getElementById("userSearch").value.toLowerCase();
-
-//    let filtered = allUsers.filter(u =>
-//        (u.name && u.name.toLowerCase().includes(keyword)) ||
-//        u.email.toLowerCase().includes(keyword)
-//    );
     currentKeyword = document.getElementById("userSearch").value.toLowerCase();
     currentPage = 0;
     applyFilterAndSort();
-
-//    totalPages = Math.ceil(filtered.length / pageSize);
-//    const start = currentPage * pageSize;
-//    renderUsers(filtered.slice(start, start + pageSize));
-//    renderPagination();
 }
 
-// 7. MODAL & KHÓA TÀI KHOẢN
 function openUserModal(id, name, status) {
     const isLocked = (status === 'LOCKED');
     document.getElementById("modalTitle").innerText = isLocked ? "MỞ KHÓA TÀI KHOẢN" : "KHÓA TÀI KHOẢN";
@@ -229,54 +164,68 @@ function openUserModal(id, name, status) {
 
 function closeUserModal() { document.getElementById("userModal").style.display = "none"; }
 
-//async function toggleUserStatus(id, targetStatus) {
-//    try {
-//        const token = localStorage.getItem("token");
-//        let url = (targetStatus === 'LOCKED') ? `${API_USERS}/${id}` : `${API_USERS}/${id}/unlock`;
-//        let method = (targetStatus === 'LOCKED') ? "DELETE" : "PUT";
-//        const res = await fetch(url, { method: method, headers: { "Authorization": "Bearer " + token } });
-//        if (res.ok) { closeUserModal(); loadUsers(); }
-//    } catch (e) { console.error(e); }
-//}
 async function toggleUserStatus(id, targetStatus) {
+    // FIX QUAN TRỌNG: Đóng modal ngay lập tức để không che khuất thông báo lỗi phía sau
+    closeUserModal();
+
     try {
         const token = localStorage.getItem("token");
-
-        let url = (targetStatus === 'LOCKED')
-            ? `${API_USERS}/${id}`
-            : `${API_USERS}/${id}/unlock`;
-
-        let method = (targetStatus === 'LOCKED')
-            ? "DELETE"
-            : "PUT";
+        let url = (targetStatus === 'LOCKED') ? `${API_USERS}/${id}` : `${API_USERS}/${id}/unlock`;
+        let method = (targetStatus === 'LOCKED') ? "DELETE" : "PUT";
 
         const res = await fetch(url, {
             method: method,
-            headers: {
-                "Authorization": "Bearer " + token
-            }
+            headers: { "Authorization": "Bearer " + token }
         });
 
-        // 🔥 FIX QUAN TRỌNG
         if (!res.ok) {
             let errorMsg = "Có lỗi xảy ra";
-
             try {
                 const data = await res.json();
                 errorMsg = data.message || JSON.stringify(data);
             } catch {
                 errorMsg = await res.text();
             }
-
-            alert(errorMsg); // 👈 HIỂN THỊ LỖI THẬT
+// --- BẮT ĐẦU: LỌC BỎ CÁC ĐOẠN CHỮ THỪA TỪ BACKEND ---
+            // 1. Xóa chữ "400 BAD_REQUEST"
+            errorMsg = errorMsg.replace(/400 BAD_REQUEST/g, "");
+            // 2. Xóa đoạn trạng thái "(PENDING / SHIPPING / PAID)"
+            errorMsg = errorMsg.replace(/\(PENDING \/ SHIPPING \/ PAID\)/g, "");
+            // 3. Xóa các dấu ngoặc kép thừa (nếu có)
+            errorMsg = errorMsg.replace(/"/g, "");
+            // 4. Xóa khoảng trắng thừa ở hai đầu
+            errorMsg = errorMsg.trim();
+            // --- KẾT THÚC ---
+            // HIỂN THỊ THÔNG BÁO LỖI (Giờ đã nằm trên cùng vì modal đã đóng)
+            Swal.fire({
+                title: "ĐƠN HÀNG CHƯA HOÀN TẤT",
+                text: errorMsg,
+                icon: "error",
+                confirmButtonText: "ĐÃ HIỂU",
+                confirmButtonColor: "#000"
+            });
             return;
         }
 
-        closeUserModal();
+        // Thông báo thành công
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: targetStatus === 'LOCKED' ? 'Đã khóa tài khoản' : 'Đã mở khóa tài khoản',
+            showConfirmButton: false,
+            timer: 3000
+        });
+
         loadUsers();
 
     } catch (e) {
         console.error(e);
-        alert("Lỗi kết nối server");
+        Swal.fire({
+            title: "LỖI KẾT NỐI",
+            text: "Không thể liên lạc với máy chủ.",
+            icon: "error",
+            confirmButtonColor: "#000"
+        });
     }
 }

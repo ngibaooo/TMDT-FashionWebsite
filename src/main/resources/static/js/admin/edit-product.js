@@ -4,6 +4,28 @@ const API_CATEGORIES = "http://localhost:8080/api/admin/categories";
 
 let productId = null;
 
+// ===== HELPER: THÔNG BÁO CHUYÊN NGHIỆP =====
+const notify = {
+    toast: (msg, icon = 'success') => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+        Toast.fire({ icon: icon, title: msg });
+    },
+    popup: (title, msg, icon = 'warning') => {
+        return Swal.fire({
+            title: title,
+            text: msg,
+            icon: icon,
+            confirmButtonColor: '#000'
+        });
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("images").addEventListener("change", previewNewImage);
     const role = localStorage.getItem("role");
@@ -36,77 +58,96 @@ async function loadProduct() {
 
     } catch (e) {
         console.error("Load detail error:", e);
+        notify.popup("Lỗi", "Không thể tải chi tiết sản phẩm", "error");
     }
 }
 
 async function updateProduct() {
+    const name = document.getElementById("name").value.trim();
+    const price = document.getElementById("price").value;
+
+    // Kiểm tra dữ liệu đầu vào trước khi gửi
+    if (!name) {
+        notify.popup("Thiếu thông tin", "Tên sản phẩm không được để trống!", "warning");
+        return;
+    }
+    if (!price || price <= 0) {
+        notify.popup("Thiếu thông tin", "Giá sản phẩm phải lớn hơn 0!", "warning");
+        return;
+    }
+
     try {
         const token = localStorage.getItem("token");
-
         const formData = new FormData();
 
-        formData.append("name", document.getElementById("name").value);
+        formData.append("name", name);
         formData.append("description", document.getElementById("description").value);
-        formData.append("price", parseFloat(document.getElementById("price").value));
-        formData.append("oldPrice", parseFloat(document.getElementById("oldPrice").value));
+        formData.append("price", parseFloat(price));
+        formData.append("oldPrice", parseFloat(document.getElementById("oldPrice").value) || 0);
         formData.append("categoryId", document.getElementById("category").value);
 
-        // ảnh
         const files = document.getElementById("images").files;
         for (let i = 0; i < files.length; i++) {
             formData.append("images", files[i]);
         }
 
+        // Hiện hiệu ứng chờ (Loading)
+        Swal.fire({
+            title: 'Đang cập nhật...',
+            text: 'Vui lòng chờ trong giây lát',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
         const res = await fetch(API_UPDATE + productId, {
             method: "PATCH",
             headers: {
                 "Authorization": "Bearer " + token
-                // kh set Content-Type
             },
             body: formData
         });
 
         if (res.ok) {
-            alert("Cập nhật thành công!");
+            await notify.popup("Thành công", "Sản phẩm đã được cập nhật!", "success");
             window.location.href = "/admin/products";
         } else {
-            alert("Cập nhật thất bại!");
+            const errData = await res.json();
+            notify.popup("Thất bại", errData.message || "Cập nhật sản phẩm không thành công", "error");
         }
 
     } catch (e) {
         console.error("Update error:", e);
+        notify.popup("Lỗi hệ thống", "Không thể kết nối đến máy chủ", "error");
     }
 }
+
 async function loadCategories(selectedId) {
     const token = localStorage.getItem("token");
+    try {
+        const res = await fetch(API_CATEGORIES, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        const data = await res.json();
+        const select = document.getElementById("category");
+        const list = data.content || data;
 
-    const res = await fetch(API_CATEGORIES, {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    });
-
-    const data = await res.json();
-
-    const select = document.getElementById("category");
-
-    const list = data.content || data;
-
-    select.innerHTML = list.map(c => `
-        <option value="${c.id}" ${c.id === selectedId ? "selected" : ""}>
-            ${c.name}
-        </option>
-    `).join("");
+        select.innerHTML = list.map(c => `
+            <option value="${c.id}" ${c.id === selectedId ? "selected" : ""}>
+                ${c.name}
+            </option>
+        `).join("");
+    } catch (e) {
+        console.error("Load category error:", e);
+    }
 }
+
 function previewNewImage(event) {
     const file = event.target.files[0];
-
     if (!file) return;
 
     const preview = document.getElementById("preview");
-
-    // tạo url tạm
     const imageUrl = URL.createObjectURL(file);
-
     preview.src = imageUrl;
 }
