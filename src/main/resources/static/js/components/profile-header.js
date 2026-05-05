@@ -9,34 +9,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ===== CART =====
-    const cartIcon = document.getElementById("cartIcon");
+//    const cartIcon = document.getElementById("cartIcon");
+//
+//    if (cartIcon) {
+//        cartIcon.onclick = async () => {
+//            if (!token) {
+//                alert("Vui lòng đăng nhập");
+//                return window.location.href = "/login";
+//            }
+//
+//            try {
+//                const res = await fetch("/api/users/me", {
+//                    headers: { Authorization: "Bearer " + token }
+//                });
+//
+//                const user = await res.json();
+//
+//                if (user.status === "LOCKED") {
+//                    alert("Tài khoản của bạn đã bị khóa");
+//                    return window.location.href = "/";
+//                }
+//
+//                window.location.href = "/user/cart";
+//
+//            } catch (err) {
+//                console.error(err);
+//            }
+//        };
+//    }
 
-    if (cartIcon) {
-        cartIcon.onclick = async () => {
-            if (!token) {
-                alert("Vui lòng đăng nhập");
-                return window.location.href = "/login";
-            }
-
-            try {
-                const res = await fetch("/api/users/me", {
-                    headers: { Authorization: "Bearer " + token }
-                });
-
-                const user = await res.json();
-
-                if (user.status === "LOCKED") {
-                    alert("Tài khoản của bạn đã bị khóa");
-                    return window.location.href = "/";
-                }
-
-                window.location.href = "/user/cart";
-
-            } catch (err) {
-                console.error(err);
-            }
-        };
-    }
 
     // ===== ACCOUNT =====
     const accountIcon = document.getElementById("accountIcon");
@@ -92,4 +93,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = "/login";
         };
     }
+});
+const BASE_URL = "http://localhost:8080";
+
+async function syncCartBadge() {
+    const badge = document.getElementById("cart-badge");
+    const token = localStorage.getItem("token");
+
+    if (!badge) return;
+
+    if (!token) {
+        badge.innerText = "0";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BASE_URL}/api/cart`, {
+            headers: { Authorization: "Bearer " + token }
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            const total = (data.items || []).reduce((sum, i) => sum + i.quantity, 0);
+
+            badge.innerText = total;
+            badge.style.backgroundColor = total > 0 ? "#ff0000" : "#808080";
+        }
+    } catch (err) {
+        console.warn("Cart badge error");
+    }
+}
+document.addEventListener("DOMContentLoaded", () => {
+    syncCartBadge();
 });

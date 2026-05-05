@@ -1,120 +1,168 @@
-/**
-
- * EAZY VIBES - TOPS LOGIC (FIXED)
-
- * Giải quyết lỗi mất sản phẩm khi dùng bộ lọc.
-
- */
+// ===== GLOBAL =====
+let currentPage = 0;
+let totalPages = 0;
 
 const TOPS_ID = "c1";
 
+if (typeof window.BASE_URL === 'undefined') {
+    window.BASE_URL = "http://localhost:8080";
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    fetchTops();
-
+document.addEventListener("DOMContentLoaded", () => {
+    fetchTops(true);
 });
 
-async function fetchTops() {
-
-    const grid = document.getElementById('tops-grid');
-
-    const sort = document.getElementById('sort-select').value;
-
-    const priceRange = document.getElementById('filter-price').value;
-
-    const size = document.getElementById('filter-size').value;
-
+// ===== FETCH =====
+async function fetchTops(reset = false) {
+    const grid = document.getElementById("tops-grid");
     if (!grid) return;
 
+    if (reset) currentPage = 0;
 
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">ĐANG TẢI...</p>`;
 
-    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444;">ĐANG TẢI DỮ LIỆU ÁO...</p>';
+    try {
+        const sort = document.getElementById("sort-select")?.value;
+        const price = document.getElementById("filter-price")?.value;
+        const size = document.getElementById("filter-size")?.value;
 
+        let params = new URLSearchParams();
+        params.append("page", currentPage);
+        params.append("size", 4);
 
+        // luôn gửi category
+        params.append("categoryId", TOPS_ID);
 
-    // TRACE FLOW: Xác định Endpoint
-
-    let isFiltering = (priceRange || size);
-
-    let url = `/api/products/category/${TOPS_ID}?page=0&size=12&sort=${sort}`;
-
-    if (isFiltering) {
-
-        url = `/api/products/filter?page=0&size=12&sort=${sort}`;
-
-        if (size) url += `&productSize=${size.toUpperCase().trim()}`;
-
-        if (priceRange) {
-
-            const [min, max] = priceRange.split('-');
-
-            url += `&minPrice=${min}`;
-
-            if (max !== '2000000' && max !== '5000000') url += `&maxPrice=${max}`;
-
+        // filter price
+        if (price) {
+            const [min, max] = price.split("-");
+            params.append("minPrice", min);
+            if (max) params.append("maxPrice", max);
         }
 
+        // filter size
+        if (size) {
+            params.append("productSize", size.toUpperCase().trim());
+        }
+
+        // sort
+        if (sort) {
+            params.append("sort", sort);
+        }
+
+        // luôn dùng filter API
+        const url = `${window.BASE_URL}/api/products/filter?${params.toString()}`;
+
+        console.log("CALL API:", url);
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API_ERROR");
+
+        const data = await res.json();
+        const products = data.content || [];
+
+        totalPages = data.totalPages || 1;
+        currentPage = data.number || 0;
+
+        renderProducts(products);
+        renderPagination();
+
+    } catch (err) {
+        console.error(err);
+        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:red;">LỖI LOAD DATA</p>`;
     }
-   try {
+}
 
-        const response = await fetch(url);
+// ===== RENDER =====
+function renderProducts(products) {
+    const grid = document.getElementById("tops-grid");
+    grid.innerHTML = "";
 
-        if (!response.ok) throw new Error("API_ERROR");
-
-      const data = await response.json();
-        let products = data.content || data || [];
-
-        console.log("Dữ liệu từ Server:", products);
-
-        if (isFiltering) {
-
-            products = products.filter(p => {
-
-                // Kiểm tra tất cả các trường hợp có thể chứa ID danh mục từ DTO của bạn
-
-                const catIdFromObject = p.category ? p.category.id : null;
-
-                const catIdDirect = p.categoryId;
-
-                const catName = p.categoryName; // Đề phòng trường hợp Backend trả về tên
-               // Nếu khớp c1 hoặc tên là Áo (đề phòng DB dùng tiếng Việt)
-
-                return (catIdFromObject === TOPS_ID || catIdDirect === TOPS_ID || catName === "Áo");
-
-            });
-
-        }
-       if (products.length === 0) {
-
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 100px; color: #555;">CHƯA CÓ MẪU ÁO NÀO KHỚP VỚI BỘ LỌC.</p>';
-
-            return;
-
-        }
-      grid.innerHTML = products.map(p => {
-            let displayImg = '/images/default.jpg';
-            if (p.images && p.images.length > 0) {
-                const imgPath = p.images[0];
-                displayImg = imgPath.startsWith('http') ? imgPath : `http://localhost:8080${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
-            }
-            return `
-                <a href="/products/${p.id}" class="product-card">
-                    <div class="img-box">
-                        <img src="${displayImg}"
-                             alt="${p.name}"
-                             onerror="this.onerror=null; this.src='/images/default.jpg'">
-                    </div>
-                    <div class="product-info">
-                        <h3>${p.name}</h3>
-                        <div class="price">${new Intl.NumberFormat('vi-VN').format(p.price)}đ</div>
-                    </div>
-                </a>
-            `;
-        }).join('');
-    } catch (error) {
-        console.error("Lỗi fetch TOPS:", error);
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ff4d4d; padding: 50px;">LỖI TẢI DỮ LIỆU. VUI LÒNG THỬ LẠI.</p>';
-
+    if (!products || products.length === 0) {
+        grid.innerHTML = `
+            <p style="grid-column:1/-1;text-align:center;padding:100px;color:#555;">
+                KHÔNG CÓ SẢN PHẨM
+            </p>`;
+        return;
     }
+
+    grid.innerHTML = products.map(p => {
+        const img = (p.images && p.images.length > 0)
+            ? p.images[0]
+            : "/images/default.jpg";
+
+        const finalImg = img.startsWith("http")
+            ? img
+            : `${window.BASE_URL}${img.startsWith("/") ? "" : "/"}${img}`;
+
+        return `
+            <a href="/products/${p.id}" class="product-card">
+                <div class="img-box">
+                    <img src="${finalImg}"
+                         onerror="this.src='/images/default.jpg'">
+                </div>
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <p class="price">${formatMoney(p.price)}</p>
+                </div>
+            </a>
+        `;
+    }).join("");
+}
+
+// ===== PAGINATION =====
+function renderPagination() {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    container.innerHTML += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    let start = Math.max(0, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 3);
+
+    for (let i = start; i < end; i++) {
+        container.innerHTML += `
+            <button class="${i === currentPage ? "active" : ""}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    container.innerHTML += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+}
+
+// ===== CHANGE PAGE =====
+function changePage(page) {
+    if (page < 0 || page >= totalPages) return;
+
+    currentPage = page;
+    fetchTops();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// ===== FORMAT =====
+function formatMoney(amount) {
+    return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND"
+    }).format(amount || 0);
 }

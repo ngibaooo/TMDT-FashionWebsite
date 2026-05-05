@@ -5,13 +5,13 @@ font-family: 'Inter', sans-serif;
 
 /* MAIN */
 .main {
-padding: 30px 50px;
+padding: 40px 50px;
 }
 
 .title {
 font-size: 40px;
 font-weight: 900;
-margin-bottom: 30px;
+
 }
 
 /* LAYOUT */
@@ -130,4 +130,20 @@ margin-bottom: 10px;
 .ez-swal-popup {
     border-radius: 12px !important;
     font-family: 'Inter', sans-serif !important;
+}
+/* FIX KHÔNG BỊ HEADER ĐÈ */
+
+
+/* FIX FOOTER LUÔN DƯỚI */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
 }

@@ -59,3 +59,29 @@ body { font-family: 'Inter', sans-serif; background-color: var(--black); color: 
 .product-card.out-of-stock:hover {
     transform: none;
 }
+/* ===== PAGINATION ===== */
+.pagination {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pagination button {
+    background: transparent;
+    border: 1px solid var(--gray-border);
+    color: white;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.pagination button.active {
+    background: white;
+    color: black;
+}
+
+.pagination button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}

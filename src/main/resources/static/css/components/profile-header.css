@@ -9,6 +9,11 @@
     color: #fff;
     border-bottom: 1px solid #222;
 }
+.icon {
+    font-size: 22px;
+    cursor: pointer;
+    color: #fff;
+}
 
 /* LOGO */
 .logo {

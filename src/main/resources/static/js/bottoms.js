@@ -1,96 +1,169 @@
-/**
- * EAZY VIBES - BOTTOMS LOGIC (FIXED)
- * Giải quyết lỗi hiện sai sản phẩm danh mục khác khi dùng bộ lọc.
- * ID DANH MỤC TRONG DB: c2 (Quần)
- */
-const BOTTOMS_ID = "c2"; 
+// ===== GLOBAL =====
+const BOTTOMS_ID = "c2";
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchBottoms();
+let currentPage = 0;
+let totalPages = 0;
+
+if (typeof window.BASE_URL === 'undefined') {
+    window.BASE_URL = "http://localhost:8080";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchBottoms(true);
 });
 
-async function fetchBottoms() {
-    const grid = document.getElementById('bottoms-grid');
-    const sort = document.getElementById('sort-select').value;
-    const priceRange = document.getElementById('filter-price').value;
-    const size = document.getElementById('filter-size').value;
+// ===== FETCH =====
+async function fetchBottoms(reset = false) {
+    const grid = document.getElementById("bottoms-grid");
 
     if (!grid) return;
 
-    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #444;">ĐANG TẢI DỮ LIỆU QUẦN...</p>';
+    if (reset) currentPage = 0;
 
-    // TRACE FLOW: Xác định trạng thái lọc
-    let isFiltering = (priceRange || size);
-    let url = `/api/products/category/${BOTTOMS_ID}?page=0&size=12&sort=${sort}`;
-
-    if (isFiltering) {
-        // CẢNH BÁO: API này hiện TẤT CẢ sản phẩm, cần lọc lại ở Frontend
-        url = `/api/products/filter?page=0&size=12&sort=${sort}`;
-        
-        if (size) url += `&productSize=${size.toUpperCase().trim()}`;
-        if (priceRange) {
-            const [min, max] = priceRange.split('-');
-            url += `&minPrice=${min}`;
-            if (max !== '2000000' && max !== '5000000') url += `&maxPrice=${max}`;
-        }
-    }
+    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;">ĐANG TẢI...</p>`;
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("API_ERROR");
+        const sort = document.getElementById("sort-select")?.value;
+        const price = document.getElementById("filter-price")?.value;
+        const size = document.getElementById("filter-size")?.value;
 
-        const data = await response.json();
-        
-        // Trích xuất mảng sản phẩm từ Page object
-        let products = data.content || data || [];
+        let params = new URLSearchParams();
+        params.append("page", currentPage);
+        params.append("size", 4); // số sản phẩm mỗi trang
 
-        // DEBUG: Xem cấu trúc dữ liệu thực tế tại Console (F12)
-        console.log("Dữ liệu Quần từ Server:", products);
+        // ===== SORT =====
+        if (sort) params.append("sort", sort);
 
-        /**
-         * GIẢI PHÁP ROOT CAUSE: Lọc lại ở Frontend để giữ đúng ID c2
-         */
-        if (isFiltering) {
-            products = products.filter(p => {
-                const catIdFromObject = p.category ? p.category.id : null;
-                const catIdDirect = p.categoryId;
-                const catName = p.categoryName; 
-
-                // Kiểm tra khớp mã c2 hoặc tên Quần (đề phòng dữ liệu DB)
-                return (catIdFromObject === BOTTOMS_ID || catIdDirect === BOTTOMS_ID || catName === "Quần");
-            });
+        // ===== FILTER =====
+        if (price) {
+            const [min, max] = price.split("-");
+            params.append("minPrice", min);
+            if (max) params.append("maxPrice", max);
         }
 
-        if (products.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 100px; color: #555;">HIỆN KHÔNG CÓ SẢN PHẨM QUẦN NÀO KHỚP VỚI BỘ LỌC.</p>';
-            return;
+        if (size) {
+            params.append("productSize", size.toUpperCase().trim());
         }
 
-        grid.innerHTML = products.map(p => {
-            // Đồng bộ xử lý ảnh: http://localhost:8080 + đường dẫn ảnh
-            let displayImg = '/images/default.jpg';
-            if (p.images && p.images.length > 0) {
-                const imgPath = p.images[0];
-                displayImg = imgPath.startsWith('http') ? imgPath : `http://localhost:8080${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
-            }
+        // ===== QUAN TRỌNG: luôn filter + category =====
+        params.append("categoryId", BOTTOMS_ID);
 
-            return `
-                <a href="/products/${p.id}" class="product-card">
-                    <div class="img-box">
-                        <img src="${displayImg}"
-                             alt="${p.name}"
-                             onerror="this.onerror=null; this.src='/images/default.jpg'">
-                    </div>
-                    <div class="product-info">
-                        <h3>${p.name}</h3>
-                        <div class="price">${new Intl.NumberFormat('vi-VN').format(p.price)}đ</div>
-                    </div>
-                </a>
-            `;
-        }).join('');
+        const url = `${window.BASE_URL}/api/products/filter?${params.toString()}`;
 
-    } catch (error) {
-        console.error("Lỗi fetch BOTTOMS:", error);
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #ff4d4d; padding: 50px;">KHÔNG THỂ TẢI DỮ LIỆU. VUI LÒNG THỬ LẠI.</p>';
+        console.log("CALL API:", url);
+
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API_ERROR");
+
+        const data = await res.json();
+
+        const products = data.content || [];
+
+        // ===== PAGINATION =====
+        totalPages = data.totalPages || 1;
+        currentPage = data.number || 0;
+
+        renderProducts(products);
+        renderPagination();
+
+    } catch (err) {
+        console.error(err);
+        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:red;">LỖI LOAD DATA</p>`;
     }
+}
+
+// ===== RENDER PRODUCTS =====
+function renderProducts(products) {
+    const grid = document.getElementById("bottoms-grid");
+    grid.innerHTML = "";
+
+    if (!products || products.length === 0) {
+        grid.innerHTML = `
+            <p style="grid-column:1/-1;text-align:center;padding:100px;color:#555;">
+                KHÔNG CÓ SẢN PHẨM
+            </p>`;
+        return;
+    }
+
+    grid.innerHTML = products.map(p => {
+        const img = (p.images && p.images.length > 0)
+            ? p.images[0]
+            : "/images/default.jpg";
+
+        const finalImg = img.startsWith("http")
+            ? img
+            : `${window.BASE_URL}${img.startsWith("/") ? "" : "/"}${img}`;
+
+        return `
+            <a href="/products/${p.id}" class="product-card">
+                <div class="img-box">
+                    <img src="${finalImg}"
+                         onerror="this.src='/images/default.jpg'">
+                </div>
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <p class="price">${formatMoney(p.price)}</p>
+                </div>
+            </a>
+        `;
+    }).join("");
+}
+
+// ===== PAGINATION =====
+function renderPagination() {
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    // PREV
+    container.innerHTML += `
+        <button ${currentPage === 0 ? "disabled" : ""}
+            onclick="changePage(${currentPage - 1})">
+            ←
+        </button>
+    `;
+
+    let start = Math.max(0, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 3);
+
+    for (let i = start; i < end; i++) {
+        container.innerHTML += `
+            <button class="${i === currentPage ? "active" : ""}"
+                onclick="changePage(${i})">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // NEXT
+    container.innerHTML += `
+        <button ${currentPage === totalPages - 1 ? "disabled" : ""}
+            onclick="changePage(${currentPage + 1})">
+            →
+        </button>
+    `;
+}
+
+// ===== CHANGE PAGE =====
+function changePage(page) {
+    if (page < 0 || page >= totalPages) return;
+
+    currentPage = page;
+    fetchBottoms();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+// ===== FORMAT =====
+function formatMoney(amount) {
+    return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND"
+    }).format(amount || 0);
 }
