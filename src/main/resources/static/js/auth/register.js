@@ -47,7 +47,7 @@ const notify = {
 // 1. VALIDATE MẬT KHẨU REALTIME
 passwordInput.addEventListener("input", () => {
     const value = passwordInput.value;
-    const isValid = value.length >= 8 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9]/.test(value); 
+    const isValid = value.length >= 8 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9]/.test(value);
 
     if (isValid) {
         passwordHint.style.color = "#4CAF50";
@@ -80,8 +80,6 @@ function togglePassword(id, el) {
         el.innerText = "visibility"; // Sử dụng icon mắt thường
     }
 }
-
-// 4. XỬ LÝ ĐĂNG KÝ
 async function handleRegister(event) {
     event.preventDefault();
 
@@ -92,9 +90,18 @@ async function handleRegister(event) {
     const password = passwordInput.value;
     const confirmPassword = confirmInput.value;
 
+    // ✅ THÊM DÒNG NÀY
+    const otp = document.getElementById("otp").value.trim();
+
     // Kiểm tra dữ liệu đầu vào
     if (!name || !email || !phone || !address || !password) {
         notify.toast("Vui lòng điền đầy đủ các trường thông tin!", "warning");
+        return;
+    }
+
+    // ✅ CHECK OTP
+    if (!otp) {
+        notify.toast("Vui lòng nhập OTP!", "warning");
         return;
     }
 
@@ -114,6 +121,9 @@ async function handleRegister(event) {
         formData.append("phone", phone);
         formData.append("address", address);
         formData.append("password", password);
+
+        // ✅ FIX QUAN TRỌNG NHẤT
+        formData.append("otp", otp);
 
         const res = await fetch(API_REGISTER, {
             method: "POST",
@@ -138,5 +148,59 @@ async function handleRegister(event) {
         notify.toast("Lỗi hệ thống. Vui lòng thử lại sau!", "error");
         btnRegister.innerText = "TẠO TÀI KHOẢN NGAY";
         btnRegister.disabled = false;
+    }
+}
+//async function sendOtp() {
+//    const email = document.getElementById("email").value;
+//
+//    if (!email) {
+//        notify.toast("Nhập email trước!", "warning");
+//        return;
+//    }
+//
+//    try {
+//        const res = await fetch("http://localhost:8080/api/auth/send-otp", {
+//            method: "POST",
+//            headers: {"Content-Type": "application/json"},
+//            body: JSON.stringify({ email })
+//        });
+//
+//        if (res.ok) {
+//            notify.toast("OTP đã gửi về email!");
+//        } else {
+//            notify.toast("Không gửi được OTP", "error");
+//        }
+//    } catch {
+//        notify.toast("Lỗi server", "error");
+//    }
+//}
+async function sendOtp() {
+    const email = document.getElementById("email").value.trim();
+
+    if (!email) {
+        notify.toast("Vui lòng nhập email trước!", "warning");
+        return;
+    }
+
+    try {
+        const res = await fetch("http://localhost:8080/api/auth/send-otp", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            notify.toast("OTP đã gửi về email!");
+        } else {
+            notify.toast(data.message || "Không gửi được OTP", "error");
+        }
+
+    } catch (err) {
+        console.error(err);
+        notify.toast("Lỗi server", "error");
     }
 }

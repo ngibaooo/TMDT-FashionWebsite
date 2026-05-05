@@ -30,4 +30,9 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
     }
+    @PostMapping("/send-otp")
+    public ResponseEntity<?> sendOtp(@RequestBody Map<String, String> req) {
+        authService.sendOtp(req.get("email"));
+        return ResponseEntity.ok(Map.of("message", "Đã gửi OTP"));
+    }
 }

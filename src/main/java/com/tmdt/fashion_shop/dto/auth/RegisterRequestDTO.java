@@ -25,4 +25,6 @@ public class RegisterRequestDTO {
     private String address;
 
     private MultipartFile avatar;
+    @NotBlank(message = "OTP không được để trống")
+    private String otp;
 }

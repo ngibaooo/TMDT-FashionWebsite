@@ -2,11 +2,14 @@ package com.tmdt.fashion_shop.service.auth;
 import com.tmdt.fashion_shop.dto.auth.LoginRequestDTO;
 import com.tmdt.fashion_shop.dto.auth.LoginResponseDTO;
 import com.tmdt.fashion_shop.dto.auth.RegisterRequestDTO;
+import com.tmdt.fashion_shop.entity.Otp;
 import com.tmdt.fashion_shop.entity.User;
 import com.tmdt.fashion_shop.enums.UserRole;
 import com.tmdt.fashion_shop.enums.UserStatus;
+import com.tmdt.fashion_shop.repository.OtpRepository;
 import com.tmdt.fashion_shop.repository.UserRepository;
 import com.tmdt.fashion_shop.service.file.FileService;
+import com.tmdt.fashion_shop.service.gmail.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,13 +25,20 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final FileService fileService;
+    private final MailService mailService;
     private final PasswordValidatorService passwordValidator;
+    private final OtpRepository otpRepository;
 
     @Override
     public User register(RegisterRequestDTO request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email đã tồn tại");
+        }
+        boolean valid = verifyOtp(request.getEmail(), request.getOtp());
+
+        if (!valid) {
+            throw new RuntimeException("OTP không hợp lệ");
         }
 
         if (userRepository.existsByPhone(request.getPhone())) {
@@ -89,5 +99,33 @@ public class AuthServiceImpl implements AuthService {
                 user.getRole().name(),
                 user.getAvatar()
         );
+    }
+    @Override
+    public void sendOtp(String email) {
+        String code = String.valueOf((int)(Math.random() * 900000) + 100000);
+
+        Otp otp = new Otp();
+        otp.setEmail(email);
+        otp.setCode(code);
+        otp.setExpiredAt(LocalDateTime.now().plusMinutes(5));
+        otp.setUsed(false);
+
+        otpRepository.save(otp);
+
+        mailService.sendOtp(email, code);
+    }
+    @Override
+    public boolean verifyOtp(String email, String code) {
+        Otp otp = otpRepository.findTopByEmailOrderByExpiredAtDesc(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy OTP"));
+
+        if (otp.isUsed()) return false;
+        if (!otp.getCode().equals(code)) return false;
+        if (otp.getExpiredAt().isBefore(LocalDateTime.now())) return false;
+
+        otp.setUsed(true);
+        otpRepository.save(otp);
+
+        return true;
     }
 }
