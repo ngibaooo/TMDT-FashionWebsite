@@ -27,6 +27,7 @@ public interface ProductService {
             ProductSize productSize,
             String color,
             String categoryId,
+            Boolean isSale,
             Pageable pageable
     );
     Page<ProductDTO> getNewProducts(Pageable pageable);

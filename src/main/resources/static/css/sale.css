@@ -94,3 +94,36 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* PAGINATION */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.pagination button {
+    background: transparent;
+    border: 1px solid var(--gray-border);
+    color: var(--white);
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.pagination button:hover {
+    background: var(--white);
+    color: var(--black);
+}
+
+.pagination button.active {
+    background: var(--white);
+    color: var(--black);
+}
+
+.pagination button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}

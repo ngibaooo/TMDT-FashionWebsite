@@ -108,9 +108,10 @@ public class ProductController {
             @RequestParam(required = false) ProductSize productSize,
             @RequestParam(required = false) String color,
             @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) Boolean isSale,
             Pageable pageable
     ) {
-        return productService.filter(minPrice, maxPrice, productSize, color, categoryId, pageable);
+        return productService.filter(minPrice, maxPrice, productSize, color, categoryId, isSale, pageable);
     }
     @GetMapping("/admin/filter")
     @PreAuthorize("hasRole('ADMIN')")

@@ -168,6 +168,7 @@ public class ProductServiceImpl implements ProductService {
                                    ProductSize productSize,
                                    String color,
                                     String categoryId,
+                                   Boolean isSale,
                                    Pageable pageable) {
 
 //        return productRepository.findAll(
@@ -181,6 +182,11 @@ public class ProductServiceImpl implements ProductService {
         if (categoryId != null) {
             spec = spec.and((root, query, cb) ->
                     cb.equal(root.get("category").get("id"), categoryId)
+            );
+        }
+        if (isSale != null && isSale) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThan(root.get("oldPrice"), root.get("price"))
             );
         }
 
