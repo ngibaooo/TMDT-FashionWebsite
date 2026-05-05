@@ -143,22 +143,37 @@ input:focus {
 
 /* BUTTON */
 button {
-    margin-top: 30px;
-    padding: 16px;
-    width: 100%;
-    background: #fff;
-    color: #000;
-    border: none;
-    font-weight: 900;
-    font-size: 14px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.3s;
+     display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+
+        width: 100%;
+        padding: 14px;
+
+        background: #111;
+        border: 1px solid #333;
+        color: #fff;
+
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
 }
 
 button:hover {
-    background: #ffcc00;
+    border-color: #555;
+        background: #1a1a1a;
+        transform: translateY(-2px);
 }
+button:active {
+    transform: scale(0.97);
+}
+
 
 button:disabled {
     background: #555;
@@ -207,4 +222,96 @@ a:hover {
     font-family: 'Space Grotesk', sans-serif !important;
     font-weight: 900 !important;
     letter-spacing: -1px;
+}
+/* ===== DIVIDER ===== */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 25px 0;
+    gap: 15px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #333;
+}
+
+.divider span {
+    font-size: 11px;
+    color: #777;
+    letter-spacing: 2px;
+}
+
+/* ===== SOCIAL LOGIN ===== */
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* GOOGLE BUTTON - PREMIUM STYLE */
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    width: 100%;
+    padding: 14px;
+
+    background: #111;
+    border: 1px solid #333;
+    color: #fff;
+
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ICON */
+.btn-google img {
+    width: 18px;
+    height: 18px;
+}
+
+/* HOVER EFFECT (SANG CHẢNH) */
+.btn-google:hover {
+    border-color: #555;
+    background: #1a1a1a;
+    transform: translateY(-2px);
+}
+
+/* GLOW EFFECT */
+.btn-google::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.btn-google:hover::after {
+    opacity: 1;
+}
+
+/* CLICK EFFECT */
+.btn-google:active {
+    transform: scale(0.97);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .btn-google {
+        padding: 12px;
+        font-size: 12px;
+    }
 }

@@ -35,8 +35,20 @@
             <!-- ICON CON MẮT -->
             <span class="material-symbols-outlined toggle-password" onclick="togglePasswordVisibility()">visibility</span>
         </div>
-        
+
         <button id="btn-login" onclick="login()">ĐĂNG NHẬP</button>
+        <!-- DIVIDER -->
+        <div class="divider">
+            <span>HOẶC</span>
+        </div>
+
+        <!-- SOCIAL LOGIN -->
+        <div class="social-login">
+            <button class="btn-google" onclick="loginWithGoogle()">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="google">
+                <span>Tiếp tục với Google</span>
+            </button>
+        </div>
         
         <p>Chưa có tài khoản?</p>
         <a th:href="@{/register}">Tạo tài khoản</a>

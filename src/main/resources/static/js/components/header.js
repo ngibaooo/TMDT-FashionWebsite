@@ -3,7 +3,21 @@
  */
 const BASE_URL = "http://localhost:8080";
 let ezSearchDebounce = null;
+function handleOAuth2Redirect() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
 
+    if (token) {
+        // Lưu token
+        localStorage.setItem("token", token);
+
+        // Xoá token khỏi URL (cho đẹp)
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        // Reload để sync UI
+        window.location.reload();
+    }
+}
 function getEzImageUrl(path) {
     if (!path || path === "" || path === "null" || path === "undefined") return "/images/default.jpg";
     if (path.startsWith("http")) return path;
@@ -72,6 +86,7 @@ window.syncGlobalCartBadge = async function() {
 window.addEventListener("cartUpdated", () => window.syncGlobalCartBadge());
 
 document.addEventListener("DOMContentLoaded", () => {
+    handleOAuth2Redirect(); // 🔥 THÊM DÒNG NÀY
     window.syncGlobalCartBadge();
     loadHeaderAvatar();
     if (typeof initEzSearchLogic === 'function') initEzSearchLogic();

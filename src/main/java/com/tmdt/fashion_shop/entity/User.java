@@ -29,4 +29,6 @@ public class User {
     private UserStatus status;
 
     private LocalDateTime createdAt;
+    @Column(name = "provider")
+    private String provider; // LOCAL | GOOGLE
 }

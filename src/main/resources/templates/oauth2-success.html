@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đang đăng nhập...</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body style="background:#000; color:#fff; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
+
+<h2>ĐANG XỬ LÝ ĐĂNG NHẬP GOOGLE...</h2>
+
+<script>
+    // Lấy token từ URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+        // Lưu vào localStorage giống login thường
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", "CUSTOMER"); // mặc định
+
+        Swal.fire({
+            icon: "success",
+            title: "Đăng nhập Google thành công!",
+            background: "#000",
+            color: "#fff",
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        // Redirect về trang chủ
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 1500);
+
+    } else {
+        Swal.fire({
+            icon: "error",
+            title: "Lỗi đăng nhập Google",
+            text: "Không nhận được token",
+            background: "#000",
+            color: "#fff"
+        });
+    }
+</script>
+
+</body>
+</html>
