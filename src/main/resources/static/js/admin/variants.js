@@ -1,6 +1,6 @@
 /**
  * EAZY VIBES - VARIANTS CORE ENGINE
- * FIX: Tích hợp SweetAlert2 thay thế alert/confirm mặc định
+ * Dịch JSON lỗi từ Backend thành câu văn thân thiện.
  */
 
 const API_VARIANTS = "/api/variants";
@@ -11,8 +11,8 @@ let currentP = 0;
 let statusF = "ALL";
 let sizeF = "";
 let keywordF = "";
+let currentVariantsList = [];
 
-// Helper thông báo đồng bộ
 const notify = {
     toast: (msg, icon = 'success') => {
         Swal.fire({
@@ -27,24 +27,24 @@ const notify = {
     popup: (title, msg, icon = 'warning') => {
         return Swal.fire({
             title: title,
-            text: msg,
+            html: msg,
             icon: icon,
             confirmButtonColor: '#000'
         });
-    },
-    confirm: async (title, text) => {
-        const result = await Swal.fire({
-            title: title,
-            text: text,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Đồng ý',
-            cancelButtonText: 'Hủy',
-            confirmButtonColor: '#000',
-            cancelButtonColor: '#d33'
-        });
-        return result.isConfirmed;
     }
+};
+notify.confirm = async (title, text) => {
+    const result = await Swal.fire({
+        title: title,
+        text: text,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Hủy',
+        confirmButtonColor: '#000',
+        cancelButtonColor: '#d33'
+    });
+    return result.isConfirmed;
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -60,7 +60,7 @@ async function initPage() {
 
 function fixImageUrl(url) {
     if (!url || url === "null") return PLACE_IMG;
-    let cleanUrl = url.trim();
+    let cleanUrl = String(url).trim();
     if (!cleanUrl.startsWith('/uploads/') && !cleanUrl.startsWith('http')) cleanUrl = '/uploads/' + cleanUrl;
     cleanUrl = cleanUrl.replace(/\/uploads\/\/uploads\//g, '/uploads/');
     try { return encodeURI(decodeURI(cleanUrl)); } catch (e) { return cleanUrl; }
@@ -82,7 +82,9 @@ async function loadVariants(page = 0) {
             headers: { "Authorization": `Bearer ${token.trim()}` }
         });
         const data = await res.json();
-        renderTable(data.content || []);
+        
+        currentVariantsList = data.content || [];
+        renderTable(currentVariantsList);
         renderPagination(data);
     } catch (err) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:50px; color:red; font-weight:900;">LỖI TẢI DỮ LIỆU</td></tr>`;
@@ -111,10 +113,13 @@ function renderTable(list) {
                 <span class="status status-${(v.status || 'ACTIVE').toLowerCase()}">${v.status}</span>
             </td>
             <td style="text-align:right;">
-                ${v.status === 'ACTIVE' ? 
-                    `<button onclick="toggleStatus('${v.id}', 'disable')" class="btn-action-del"><span class="material-symbols-outlined" style="color:#FF4D4F;">block</span></button>` : 
-                    `<button onclick="toggleStatus('${v.id}', 'enable')" class="btn-action-del"><span class="material-symbols-outlined" style="color:#00A86B;">refresh</span></button>`
-                }
+                <div style="display:flex; justify-content:flex-end; gap:8px;">
+                    <button onclick="openEditModal('${v.id}')" class="btn-action-del" title="Sửa"><span class="material-symbols-outlined" style="color:#111;">edit_square</span></button>
+                    ${v.status === 'ACTIVE' ? 
+                        `<button onclick="toggleStatus('${v.id}', 'disable')" class="btn-action-del"><span class="material-symbols-outlined" style="color:#FF4D4F;">block</span></button>` : 
+                        `<button onclick="toggleStatus('${v.id}', 'enable')" class="btn-action-del"><span class="material-symbols-outlined" style="color:#00A86B;">refresh</span></button>`
+                    }
+                </div>
             </td>
         </tr>
     `).join("");
@@ -145,8 +150,7 @@ if (addForm) {
                 closeModal('addModal');
                 loadVariants(0); 
             } else {
-                const errMsg = await res.text();
-                notify.popup("Thất bại", errMsg || "Không thể tạo biến thể", "error");
+                notify.popup("Thất bại", "Tạo biến thể thất bại", "error");
             }
         } catch (err) {
             notify.popup("Lỗi kết nối", "Không thể liên lạc với máy chủ.", "error");
@@ -159,11 +163,7 @@ if (addForm) {
 
 async function toggleStatus(id, action) {
     const isEnable = action === 'enable';
-    const confirmed = await notify.confirm(
-        "Xác nhận", 
-        isEnable ? "Bạn có chắc muốn khôi phục biến thể này?" : "Bạn có chắc muốn khóa biến thể này?"
-    );
-    
+    const confirmed = await notify.confirm("Xác nhận", isEnable ? "Khôi phục biến thể này?" : "Khóa biến thể này?");
     if (!confirmed) return;
 
     const token = localStorage.getItem("token");
@@ -207,29 +207,11 @@ function renderPagination(data) {
     if (!container) return;
 
     let html = "";
-    html += `
-        <button ${currentP === 0 ? "disabled" : ""}
-            onclick="loadVariants(${currentP - 1})">
-            ←
-        </button>
-    `;
-
+    html += `<button ${currentP === 0 ? "disabled" : ""} onclick="loadVariants(${currentP - 1})">←</button>`;
     for (let i = 0; i < data.totalPages; i++) {
-        html += `
-            <button class="${i === currentP ? 'active' : ''}"
-                onclick="loadVariants(${i})">
-                ${i + 1}
-            </button>
-        `;
+        html += `<button class="${i === currentP ? 'active' : ''}" onclick="loadVariants(${i})">${i + 1}</button>`;
     }
-
-    html += `
-        <button ${currentP === data.totalPages - 1 ? "disabled" : ""}
-            onclick="loadVariants(${currentP + 1})">
-            →
-        </button>
-    `;
-
+    html += `<button ${currentP === data.totalPages - 1 ? "disabled" : ""} onclick="loadVariants(${currentP + 1})">→</button>`;
     container.innerHTML = html;
 }
 
@@ -244,4 +226,106 @@ async function loadProductsForSelect() {
         select.innerHTML = '<option value="">-- CHỌN SẢN PHẨM GỐC --</option>' + 
             items.map(p => `<option value="${p.id}">${p.name.toUpperCase()}</option>`).join("");
     } catch (e) {}
+}
+
+function openEditModal(id) {
+    const variant = currentVariantsList.find(v => v.id == id);
+    if (!variant) return;
+    
+    // Gỡ chặn: Cho phép mở form dù INACTIVE để test hiển thị thông báo lỗi
+    document.getElementById("edit-id").value = variant.id;
+    document.getElementById("edit-product-name").value = variant.productName || variant.productId;
+    document.getElementById("edit-size").value = variant.size;
+    document.getElementById("edit-color").value = variant.color;
+    document.getElementById("edit-quantity").value = variant.quantity;
+    document.getElementById("edit-current-image").src = fixImageUrl(variant.image);
+    
+    openModal('editModal');
+}
+
+const editForm = document.getElementById("editVariantForm");
+const btnSubmitEdit = document.getElementById("btnSubmitEditForm");
+
+if (editForm) {
+    editForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const id = document.getElementById("edit-id").value;
+        
+        const payloadJSON = {
+            size: String(document.getElementById("edit-size").value).trim().toUpperCase(),
+            color: String(document.getElementById("edit-color").value).trim(),
+            quantity: parseInt(document.getElementById("edit-quantity").value, 10) || 0
+        };
+
+        btnSubmitEdit.disabled = true;
+        btnSubmitEdit.innerText = "ĐANG LƯU DỮ LIỆU...";
+
+        try {
+            const resPut = await fetch(`${API_VARIANTS}/${id}`, {
+                method: "PUT",
+                headers: { 
+                    "Authorization": `Bearer ${token.trim()}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(payloadJSON) 
+            });
+
+            if (!resPut.ok) {
+                // ==========================================
+                // FIX: Dịch JSON lỗi thành thông báo thân thiện
+                // ==========================================
+                const errorText = await resPut.text(); 
+                let errorMessage = "Đã xảy ra lỗi không xác định."; // Giá trị mặc định
+                
+                try {
+                    // Cố gắng phân tách JSON nếu nó là cấu trúc {"message": "..."}
+                    const errObj = JSON.parse(errorText);
+                    if (errObj.message) {
+                        errorMessage = errObj.message; // Sẽ lấy được chữ "Variant đã bị vô hiệu hóa"
+                    }
+                } catch(e) {
+                    // Nếu Backend trả về đoạn mã thô (không phải json), thì hiện thô
+                    errorMessage = errorText; 
+                }
+                
+                notify.popup("Cập nhập thất bại", `Lý do: <b>${errorMessage}</b>`, "error");
+                return;
+            }
+
+            // Nhịp 2: Cập nhật Ảnh
+            const imgInput = editForm.querySelector('input[type="file"]');
+            if (imgInput && imgInput.files.length > 0) {
+                btnSubmitEdit.innerText = "ĐANG TẢI ẢNH LÊN...";
+                const imgData = new FormData();
+                for (let i = 0; i < imgInput.files.length; i++) {
+                    imgData.append("files", imgInput.files[i]); 
+                }
+
+                const resPostImg = await fetch(`${API_VARIANTS}/${id}/images`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token.trim()}` },
+                    body: imgData
+                });
+
+                if (!resPostImg.ok) {
+                    notify.popup("Cảnh báo", `Lưu chữ thành công nhưng lỗi tải ảnh.`, "warning");
+                    loadVariants(currentP);
+                    return;
+                }
+            }
+
+            notify.toast("Cập nhập biến thể thành công");
+            editForm.reset();
+            closeModal('editModal');
+            loadVariants(currentP); 
+
+        } catch (err) {
+            notify.popup("Lỗi hệ thống", "Không thể liên lạc với máy chủ.", "error");
+        } finally {
+            btnSubmitEdit.disabled = false;
+            btnSubmitEdit.innerText = "CẬP NHẬT BIẾN THỂ";
+        }
+    };
 }

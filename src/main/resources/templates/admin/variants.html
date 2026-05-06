@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>EAZY VIBES | BIẾN THỂ</title>
-    <!-- Thêm thư viện để chạy thông báo -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="/css/admin/variants.css">
     <link rel="stylesheet" href="/css/components/admin-sidebar.css">
@@ -76,6 +75,7 @@
     </div>
 </div>
 
+<!-- MODAL THÊM MỚI -->
 <div id="addModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -114,6 +114,56 @@
             <div class="modal-footer" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
                 <button type="submit" id="btnSubmitForm" class="btn-confirm">XÁC NHẬN LƯU</button>
                 <button type="button" class="btn-cancel" onclick="closeModal('addModal')">HỦY BỎ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL CHỈNH SỬA -->
+<div id="editModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>CHỈNH SỬA BIẾN THỂ</h2>
+            <p>Cập nhật thông tin phân loại</p>
+        </div>
+        <form id="editVariantForm">
+            <input type="hidden" id="edit-id" name="id">
+            
+            <div class="form-group">
+                <label>SẢN PHẨM GỐC (Không thể đổi)</label>
+                <input type="text" id="edit-product-name" disabled style="background: #f5f5f5; color: #888;">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>KÍCH CỠ (SIZE)</label>
+                    <select id="edit-size" name="size" required>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>MÀU SẮC</label>
+                    <input type="text" id="edit-color" name="color" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>SỐ LƯỢNG TỒN KHO</label>
+                <input type="number" id="edit-quantity" name="quantity" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label>HÌNH ẢNH MỚI (Bỏ trống nếu giữ nguyên)</label>
+                <div style="margin-bottom: 8px;">
+                    <img id="edit-current-image" src="" alt="Ảnh hiện tại" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd;">
+                </div>
+                <input type="file" name="images" multiple accept="image/*">
+            </div>
+            <div class="modal-footer" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                <button type="submit" id="btnSubmitEditForm" class="btn-confirm">CẬP NHẬT BIẾN THỂ</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('editModal')">HỦY BỎ</button>
             </div>
         </form>
     </div>

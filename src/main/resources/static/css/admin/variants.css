@@ -175,3 +175,8 @@ tbody td { padding: 20px; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
     opacity: 0.4;
     cursor: not-allowed;
 }
+
+/* FIX XUNG ĐỘT Z-INDEX CHO SWEETALERT */
+.swal2-container {
+    z-index: 99999 !important;
+}
